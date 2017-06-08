@@ -11,9 +11,5 @@ public class CaseYellowServerGatewayApplication {
 
 	public static void main(String[] args) {
 		ApplicationContext ctx = SpringApplication.run(CaseYellowServerGatewayApplication.class, args);
-
-		String[] beansNames = ctx.getBeanDefinitionNames();
-		Stream.of(beansNames).sorted().forEach(System.out::println);
-
 	}
 }

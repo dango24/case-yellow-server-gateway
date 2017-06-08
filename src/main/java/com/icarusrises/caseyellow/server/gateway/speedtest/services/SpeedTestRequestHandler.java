@@ -1,11 +1,12 @@
 package com.icarusrises.caseyellow.server.gateway.speedtest.services;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by dango on 6/4/17.
  */
-@Service
+@Service("orenefes")
 public class SpeedTestRequestHandler implements SpeedTestService {
 
     @Override
