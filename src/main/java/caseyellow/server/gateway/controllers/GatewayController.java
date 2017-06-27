@@ -1,6 +1,5 @@
 package caseyellow.server.gateway.controllers;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
