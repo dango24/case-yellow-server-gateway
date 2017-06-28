@@ -2,8 +2,10 @@ package caseyellow.server.gateway.controllers;
 
 import caseyellow.server.gateway.exceptions.TestException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,7 +21,7 @@ public class GatewayControllerImpl implements GatewayController {
 
     @Override
     public String getNextSpeedTestWebSite() {
-        return "hot";
+        return "atnt";
     }
 
     @Override
