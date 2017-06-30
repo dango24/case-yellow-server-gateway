@@ -20,20 +20,19 @@ public class GatewayControllerImpl implements GatewayController {
 
     @Override
     public String getNextSpeedTestWebSite() {
-        return "atnt";
+        return "ookla";
     }
 
     @Override
     public List<String> getNextUrls(@RequestParam("comparison-count") int numOfComparisonPerTest) {
-        System.out.println(numOfComparisonPerTest);
-        return Arrays.asList("http://mirrors.kodi.tv/releases/osx/x86_64/kodi-17.3-Krypton-x86_64.dmg",
+        return Arrays.asList("http://mirrors.kodi.tv/releases/osx/x86_64/kodi-17.3-Krypton-x86_64.dmg");/*,
                              "https://ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe",
-                             "https://storage.googleapis.com/golang/go1.7.1.windows-amd64.msi");
+                             "https://storage.googleapis.com/golang/go1.7.1.windows-amd64.msi"*/
     }
 
     @Override
     public boolean saveTest(@RequestBody @NotEmpty JsonNode test) {
-        System.out.println(test.asText());
+        System.out.println(test.toString());
         return true;
     }
 
