@@ -1,11 +1,10 @@
 package caseyellow.server.gateway.controllers;
 
 import caseyellow.server.gateway.exceptions.TestException;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -32,8 +31,16 @@ public class GatewayControllerImpl implements GatewayController {
                              "https://storage.googleapis.com/golang/go1.7.1.windows-amd64.msi");
     }
 
+    @Override
+    public boolean saveTest(@RequestBody @NotEmpty JsonNode test) {
+        System.out.println(test.asText());
+        return true;
+    }
+
     @ExceptionHandler(TestException.class)
     public void handleTestException(TestException testException, HttpServletResponse response) throws IOException {
         response.sendError(HttpStatus.NOT_FOUND.value(), testException.getMessage());
     }
+
+
 }
