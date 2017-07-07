@@ -1,8 +1,5 @@
 package caseyellow.server.gateway.domain.model.test;
 
-
-import ch.qos.logback.core.util.SystemInfo;
-
 import java.util.List;
 
 /**
