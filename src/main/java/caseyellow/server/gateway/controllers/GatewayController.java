@@ -1,19 +1,19 @@
 package caseyellow.server.gateway.controllers;
 
-import caseyellow.server.gateway.domain.model.Test;
-import caseyellow.server.gateway.enums.ErrorResponse;
+import caseyellow.server.gateway.domain.Test;
+import caseyellow.server.gateway.domain.ErrorResponse;
+import caseyellow.server.gateway.domain.interfaces.CentralService;
 import caseyellow.server.gateway.exceptions.InternalException;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static caseyellow.server.gateway.enums.ErrorResponse.INTERNAL_ERROR_CODE;
+import static caseyellow.server.gateway.domain.ErrorResponse.INTERNAL_ERROR_CODE;
 
 /**
  * Created by dango on 6/25/17.
@@ -22,25 +22,33 @@ import static caseyellow.server.gateway.enums.ErrorResponse.INTERNAL_ERROR_CODE;
 @RequestMapping("/gateway")
 public class GatewayController {
 
+    private CentralService centralService;
+
     @ResponseStatus(value = HttpStatus.OK)
-    @GetMapping(value = "/next-web-site", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/next-web-site",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
     public String getNextSpeedTestWebSite() {
-        return "ookla";
+
+        return centralService.getNextSpeedTestWebSite();
     }
 
     @ResponseStatus(value = HttpStatus.OK)
-    @GetMapping(value = "/next-urls", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/next-urls",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
     public List<String> getNextUrls(@RequestParam("comparison-count") int numOfComparisonPerTest) {
 
-        return Arrays.asList("http://mirrors.kodi.tv/releases/osx/x86_64/kodi-17.3-Krypton-x86_64.dmg",
-                             "https://ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe",
-                             "https://storage.googleapis.com/golang/go1.7.1.windows-amd64.msi");
+        return centralService.getNextUrls(numOfComparisonPerTest);
     }
 
     @ResponseStatus(value = HttpStatus.OK)
-    @PostMapping(value = "/save-test",  consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/save-test",
+                 consumes = MediaType.APPLICATION_JSON_VALUE,
+                 produces = MediaType.APPLICATION_JSON_VALUE)
     public void saveTest(@RequestBody @NotEmpty Test test) {
-        System.out.println(test.toString());
+
+        centralService.saveTest(test);
     }
 
     @ExceptionHandler(InternalException.class)
@@ -50,7 +58,7 @@ public class GatewayController {
                                                         ex.getMessage());
 
         return ResponseEntity.status(INTERNAL_ERROR_CODE)
-                             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
+                             .contentType(MediaType.APPLICATION_JSON)
                              .body(errorResponse);
     }
 
@@ -58,8 +66,12 @@ public class GatewayController {
     public ResponseEntity<ErrorResponse> handleException(Exception ex)  {
 
         return ResponseEntity.status(INTERNAL_ERROR_CODE)
-                             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
+                             .contentType(MediaType.APPLICATION_JSON)
                              .body(new ErrorResponse(ex.getMessage()));
     }
 
+    @Autowired
+    public void setCentralService(CentralService centralService) {
+        this.centralService = centralService;
+    }
 }

@@ -1,4 +1,4 @@
-package caseyellow.server.gateway.domain.model;
+package caseyellow.server.gateway.domain;
 
 import java.util.List;
 

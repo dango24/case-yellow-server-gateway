@@ -1,4 +1,4 @@
-package caseyellow.server.gateway.enums;
+package caseyellow.server.gateway.domain;
 
 /**
  * Created by dango on 8/7/17.
