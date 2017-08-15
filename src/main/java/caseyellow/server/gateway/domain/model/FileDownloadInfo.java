@@ -1,4 +1,4 @@
-package caseyellow.server.gateway.domain.model.test;
+package caseyellow.server.gateway.domain.model;
 
 /**
  * Created by Dan on 04/10/2016.
