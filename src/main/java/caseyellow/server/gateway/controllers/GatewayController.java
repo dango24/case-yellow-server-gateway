@@ -51,6 +51,7 @@ public class GatewayController {
         centralService.saveTest(test);
     }
 
+
     @ExceptionHandler(InternalException.class)
     public ResponseEntity<ErrorResponse> handleInternalException(InternalException ex)  {
 

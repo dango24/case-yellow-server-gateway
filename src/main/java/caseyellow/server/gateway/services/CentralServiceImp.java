@@ -4,6 +4,7 @@ import caseyellow.server.gateway.domain.Test;
 import caseyellow.server.gateway.domain.interfaces.CentralService;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,11 +20,11 @@ public class CentralServiceImp implements CentralService {
 
     @Override
     public String getNextSpeedTestWebSite() {
-        return null;
+        return "dango";
     }
 
     @Override
     public List<String> getNextUrls(int numOfComparisonPerTest) {
-        return null;
+        return Arrays.asList("dan", "golan");
     }
 }
