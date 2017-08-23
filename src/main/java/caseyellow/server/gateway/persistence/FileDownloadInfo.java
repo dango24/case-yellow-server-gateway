@@ -1,10 +1,11 @@
-package caseyellow.server.gateway.domain;
+package caseyellow.server.gateway.persistence;
 
 /**
  * Created by Dan on 04/10/2016.
  */
 public class FileDownloadInfo {
 
+    private Long id;
     private String fileName;
     private String fileURL;
     private long   fileSizeInBytes;
@@ -26,6 +27,7 @@ public class FileDownloadInfo {
         fileDownloadedTimeInMs = fileDownloadInfoBuilder.fileDownloadedTimeInMs;
         startDownloadingTimestamp = fileDownloadInfoBuilder.startDownloadingTimestamp;
     }
+
 
     public String getFileURL() {
         return fileURL;

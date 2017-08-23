@@ -1,4 +1,16 @@
 server.port : 8888
+spring.h2.console.enabled : true
+spring.h2.console.path : /console
+
+logging:
+  level:
+    org.springframework.web: "ERROR"
+    caseyellow.server.gateway: "ERROR"
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
+  file: "/home/dango/sandbox/my_personal_projects/case-yellow-server-gateway/logs/gatway_log.log"
+
 config:
   app-name: Gateway
   app-description: ${app-name} is the the handler from user requests

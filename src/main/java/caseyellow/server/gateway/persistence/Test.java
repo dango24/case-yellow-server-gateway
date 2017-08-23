@@ -1,4 +1,4 @@
-package caseyellow.server.gateway.domain;
+package caseyellow.server.gateway.persistence;
 
 import java.util.List;
 
@@ -12,8 +12,7 @@ public class Test {
     private String speedTestWebsiteIdentifier;
     private List<ComparisonInfo> comparisonInfoTests;
 
-    public Test() {
-    }
+    public Test() {}
 
     private Test(TestBuilder testBuilder) {
         this.testID = testBuilder.testID;
@@ -21,7 +20,6 @@ public class Test {
         this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsite;
         this.comparisonInfoTests = testBuilder.comparisonInfoTests;
     }
-
 
     public String getTestID() {
         return testID;
@@ -59,10 +57,8 @@ public class Test {
         comparisonInfoTests.add(comparisonInfo);
     }
 
-    // TestBuilder Helper
     public static class TestBuilder {
 
-        // Fields
         private String testID;
         private SystemInfo systemInfo;
         private String speedTestWebsite;
