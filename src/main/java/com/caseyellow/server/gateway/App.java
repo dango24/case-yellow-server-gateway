@@ -1,4 +1,4 @@
-package caseyellow.server.gateway;
+package com.caseyellow.server.gateway;
 
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
@@ -16,9 +16,7 @@ public class App extends SpringBootServletInitializer {
 	 */
 	public static void main(String[] args) {
 		SpringApplication.run(App.class, args);
-		logger.error("dangooooooooooooo");
-		logger.info("esfir");
-		logger.debug("orennn");
+		logger.error("Client version is here");
 	}
 
 	/**

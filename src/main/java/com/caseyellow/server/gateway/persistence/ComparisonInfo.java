@@ -1,4 +1,4 @@
-package caseyellow.server.gateway.persistence;
+package com.caseyellow.server.gateway.persistence;
 
 /**
  * Created by Dan on 12/10/2016.

@@ -4,12 +4,13 @@ spring.h2.console.path : /console
 
 logging:
   level:
-    org.springframework.web: "ERROR"
-    caseyellow.server.gateway: "ERROR"
+    org.springframework.web: ERROR
+    caseyellow.server.gateway: INFO
+    org.hibernate: ERROR
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
-  file: "/home/dango/sandbox/my_personal_projects/case-yellow-server-gateway/logs/gatway_log.log"
+  file: /home/dango/sandbox/my_personal_projects/case-yellow-server-gateway/logs/gatway_log.log
 
 config:
   app-name: Gateway

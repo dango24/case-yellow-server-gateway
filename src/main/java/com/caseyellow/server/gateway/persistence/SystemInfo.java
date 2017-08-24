@@ -1,10 +1,9 @@
-package caseyellow.server.gateway.domain;
+package com.caseyellow.server.gateway.persistence;
 
 
 /**
  * Created by Dan on 12/10/2016.
  */
-
 
 public class SystemInfo {
 

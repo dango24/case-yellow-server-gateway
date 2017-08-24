@@ -1,4 +1,4 @@
-package caseyellow.server.gateway.persistence;
+package com.caseyellow.server.gateway.persistence;
 
 import java.util.List;
 
