@@ -1,9 +1,10 @@
-package com.caseyellow.server.gateway.persistence;
+package com.caseyellow.server.gateway.domain;
 
 
 /**
  * Created by Dan on 12/10/2016.
  */
+
 
 public class SystemInfo {
 
@@ -40,7 +41,7 @@ public class SystemInfo {
 
     @Override
     public String toString() {
-        return "SystemInfo{" +
+        return "SystemInfoDAO{" +
                 "operatingSystem='" + operatingSystem + '\'' +
                 ", browser='" + browser + '\'' +
                 ", publicIP='" + publicIP + '\'' +

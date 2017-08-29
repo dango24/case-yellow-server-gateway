@@ -1,4 +1,4 @@
-package com.caseyellow.server.gateway.persistence;
+package com.caseyellow.server.gateway.domain;
 
 /**
  * Created by Dan on 04/10/2016.
@@ -26,7 +26,6 @@ public class FileDownloadInfo {
         fileDownloadedTimeInMs = fileDownloadInfoBuilder.fileDownloadedTimeInMs;
         startDownloadingTimestamp = fileDownloadInfoBuilder.startDownloadingTimestamp;
     }
-
 
     public String getFileURL() {
         return fileURL;
@@ -68,10 +67,6 @@ public class FileDownloadInfo {
 
     public void setFileDownloadRateKBPerSec(double fileDownloadRateKBPerSec) {
         this.fileDownloadRateKBPerSec = fileDownloadRateKBPerSec;
-    }
-
-    public void setFileURL(String fileURL) {
-        this.fileURL = fileURL;
     }
 
     @Override

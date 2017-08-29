@@ -1,20 +1,32 @@
 package com.caseyellow.server.gateway.persistence;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * Created by Dan on 24/10/2016.
  */
-public class Test {
+@Entity
+@Table(name = "test")
+public class TestDAO {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(nullable = false)
     private String testID;
-    private SystemInfo systemInfo;
+
+    @Embedded
+    private SystemInfoDAO systemInfo;
+
     private String speedTestWebsiteIdentifier;
+
     private List<ComparisonInfo> comparisonInfoTests;
 
-    public Test() {}
+    public TestDAO() {}
 
-    private Test(TestBuilder testBuilder) {
+    private TestDAO(TestBuilder testBuilder) {
         this.testID = testBuilder.testID;
         this.systemInfo = testBuilder.systemInfo;
         this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsite;
@@ -37,11 +49,11 @@ public class Test {
         this.speedTestWebsiteIdentifier = speedTestWebsiteIdentifier;
     }
 
-    public SystemInfo getSystemInfo() {
+    public SystemInfoDAO getSystemInfo() {
         return systemInfo;
     }
 
-    public void setSystemInfo(SystemInfo systemInfo) {
+    public void setSystemInfo(SystemInfoDAO systemInfo) {
         this.systemInfo = systemInfo;
     }
 
@@ -57,10 +69,12 @@ public class Test {
         comparisonInfoTests.add(comparisonInfo);
     }
 
+
+
     public static class TestBuilder {
 
         private String testID;
-        private SystemInfo systemInfo;
+        private SystemInfoDAO systemInfo;
         private String speedTestWebsite;
         private List<ComparisonInfo> comparisonInfoTests;
 
@@ -68,7 +82,7 @@ public class Test {
             this.testID = testID;
         }
 
-        public TestBuilder addSystemInfo(SystemInfo systemInfo) {
+        public TestBuilder addSystemInfo(SystemInfoDAO systemInfo) {
             this.systemInfo = systemInfo;
             return this;
         }
@@ -83,8 +97,8 @@ public class Test {
             return this;
         }
 
-        public Test build() {
-            return new Test(this);
+        public TestDAO build() {
+            return new TestDAO(this);
         }
     }
 }

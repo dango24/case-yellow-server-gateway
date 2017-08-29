@@ -1,14 +1,15 @@
-package com.caseyellow.server.gateway.persistence;
+package com.caseyellow.server.gateway.domain;
 
 /**
  * Created by Dan on 12/10/2016.
  */
 public class ComparisonInfo {
 
-    private FileDownloadInfo fileDownloadInfo;
     private SpeedTestWebSiteDownloadInfo speedTestWebSiteDownloadInfo;
+    private FileDownloadInfo fileDownloadInfo;
 
-    public ComparisonInfo() {}
+    public ComparisonInfo() {
+    }
 
     public ComparisonInfo(SpeedTestWebSiteDownloadInfo speedTestWebSiteDownloadInfo, FileDownloadInfo fileDownloadInfo) {
         this.speedTestWebSiteDownloadInfo = speedTestWebSiteDownloadInfo;
@@ -23,11 +24,4 @@ public class ComparisonInfo {
         return fileDownloadInfo;
     }
 
-    public void setFileDownloadInfo(FileDownloadInfo fileDownloadInfo) {
-        this.fileDownloadInfo = fileDownloadInfo;
-    }
-
-    public void setSpeedTestWebSiteDownloadInfo(SpeedTestWebSiteDownloadInfo speedTestWebSiteDownloadInfo) {
-        this.speedTestWebSiteDownloadInfo = speedTestWebSiteDownloadInfo;
-    }
 }
