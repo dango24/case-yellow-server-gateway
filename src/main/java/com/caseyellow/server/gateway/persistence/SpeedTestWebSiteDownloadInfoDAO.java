@@ -1,17 +1,25 @@
 package com.caseyellow.server.gateway.persistence;
 
+import javax.persistence.*;
+
 /**
  * Created by Dan on 12/10/2016.
  */
-public class SpeedTestWebSiteDownloadInfo {
+@Entity
+@Table(name = "speed_test_webSite_download_info")
+public class SpeedTestWebSiteDownloadInfoDAO {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String urlAddress;
     private String speedTestIdentifier;
     private long startMeasuringTimestamp;
 
-    public SpeedTestWebSiteDownloadInfo() {}
+    public SpeedTestWebSiteDownloadInfoDAO() {}
 
-    public SpeedTestWebSiteDownloadInfo(String urlAddress, String speedTestIdentifier, long startMeasuringTimestamp) {
+    public SpeedTestWebSiteDownloadInfoDAO(String urlAddress, String speedTestIdentifier, long startMeasuringTimestamp) {
         this.urlAddress = urlAddress;
         this.speedTestIdentifier = speedTestIdentifier;
         this.startMeasuringTimestamp = startMeasuringTimestamp;

@@ -1,9 +1,17 @@
 package com.caseyellow.server.gateway.persistence;
 
+import javax.persistence.*;
+
 /**
  * Created by Dan on 04/10/2016.
  */
-public class FileDownloadInfo {
+@Entity
+@Table(name = "file_download_info")
+public class FileDownloadInfoDAO {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String fileName;
     private String fileURL;
@@ -12,13 +20,13 @@ public class FileDownloadInfo {
     private long   fileDownloadedTimeInMs;
     private long   startDownloadingTimestamp;
 
-    public FileDownloadInfo() {}
+    public FileDownloadInfoDAO() {}
 
-    public FileDownloadInfo(String url) {
+    public FileDownloadInfoDAO(String url) {
         fileURL = url;
     }
 
-    public FileDownloadInfo(FileDownloadInfoBuilder fileDownloadInfoBuilder) {
+    public FileDownloadInfoDAO(FileDownloadInfoBuilder fileDownloadInfoBuilder) {
         fileName = fileDownloadInfoBuilder.fileName;
         fileURL = fileDownloadInfoBuilder.fileURL;
         fileSizeInBytes = fileDownloadInfoBuilder.fileSizeInBytes;
@@ -76,7 +84,7 @@ public class FileDownloadInfo {
 
     @Override
     public String toString() {
-        return "FileDownloadInfo{" +
+        return "FileDownloadInfoDAO{" +
                 "fileURL='" + fileURL + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", fileSizeInBytes=" + fileSizeInBytes +
@@ -129,8 +137,8 @@ public class FileDownloadInfo {
             return this;
         }
 
-        public FileDownloadInfo build() {
-            return new FileDownloadInfo(this);
+        public FileDownloadInfoDAO build() {
+            return new FileDownloadInfoDAO(this);
         }
     }
 }

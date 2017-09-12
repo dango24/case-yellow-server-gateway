@@ -71,7 +71,7 @@ public class FileDownloadInfo {
 
     @Override
     public String toString() {
-        return "FileDownloadInfo{" +
+        return "FileDownloadInfoDAO{" +
                 "fileURL='" + fileURL + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", fileSizeInBytes=" + fileSizeInBytes +

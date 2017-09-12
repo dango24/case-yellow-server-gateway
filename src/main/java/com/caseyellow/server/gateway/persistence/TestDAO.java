@@ -22,7 +22,9 @@ public class TestDAO {
 
     private String speedTestWebsiteIdentifier;
 
-    private List<ComparisonInfo> comparisonInfoTests;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "test_id")
+    private List<ComparisonInfoDAO> comparisonInfoDAOTests;
 
     public TestDAO() {}
 
@@ -30,7 +32,7 @@ public class TestDAO {
         this.testID = testBuilder.testID;
         this.systemInfo = testBuilder.systemInfo;
         this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsite;
-        this.comparisonInfoTests = testBuilder.comparisonInfoTests;
+        this.comparisonInfoDAOTests = testBuilder.comparisonInfoDAOTests;
     }
 
     public String getTestID() {
@@ -57,16 +59,16 @@ public class TestDAO {
         this.systemInfo = systemInfo;
     }
 
-    public List<ComparisonInfo> getComparisonInfoTests() {
-        return comparisonInfoTests;
+    public List<ComparisonInfoDAO> getComparisonInfoDAOTests() {
+        return comparisonInfoDAOTests;
     }
 
-    public void setComparisonInfoTests(List<ComparisonInfo> speedTests) {
-        this.comparisonInfoTests = speedTests;
+    public void setComparisonInfoDAOTests(List<ComparisonInfoDAO> speedTests) {
+        this.comparisonInfoDAOTests = speedTests;
     }
 
-    public void addComparisonInfo(ComparisonInfo comparisonInfo) {
-        comparisonInfoTests.add(comparisonInfo);
+    public void addComparisonInfo(ComparisonInfoDAO comparisonInfoDAO) {
+        comparisonInfoDAOTests.add(comparisonInfoDAO);
     }
 
 
@@ -76,7 +78,7 @@ public class TestDAO {
         private String testID;
         private SystemInfoDAO systemInfo;
         private String speedTestWebsite;
-        private List<ComparisonInfo> comparisonInfoTests;
+        private List<ComparisonInfoDAO> comparisonInfoDAOTests;
 
         public TestBuilder(String testID) {
             this.testID = testID;
@@ -92,8 +94,8 @@ public class TestDAO {
             return this;
         }
 
-        public TestBuilder addComparisonInfoTests(List<ComparisonInfo> comparisonInfoTests) {
-            this.comparisonInfoTests = comparisonInfoTests;
+        public TestBuilder addComparisonInfoTests(List<ComparisonInfoDAO> comparisonInfoDAOTests) {
+            this.comparisonInfoDAOTests = comparisonInfoDAOTests;
             return this;
         }
 

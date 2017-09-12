@@ -1,12 +1,20 @@
 server.port : 8888
-spring.h2.console.enabled : true
-spring.h2.console.path : /console
+
+# H2
+spring.h2.console.enabled: true
+spring.h2.console.path: /console
+
+# Datasource
+spring.datasource.url: jdbc:h2:file:~/test
+spring.datasource.username: sa
+spring.datasource.password:
+spring.datasource.driver-class-name: org.h2.Driver
 
 logging:
   level:
     org.springframework.web: ERROR
     caseyellow.server.gateway: INFO
-    org.hibernate: ERROR
+    org.hibernate: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
