@@ -1,6 +1,6 @@
 package com.caseyellow.server.central.services;
 
-import com.caseyellow.server.central.domain.test.service.TestService;
+import com.caseyellow.server.central.domain.test.services.TestService;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;

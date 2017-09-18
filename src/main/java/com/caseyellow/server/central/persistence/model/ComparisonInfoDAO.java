@@ -1,4 +1,4 @@
-package com.caseyellow.server.central.persistence;
+package com.caseyellow.server.central.persistence.model;
 
 import javax.persistence.*;
 

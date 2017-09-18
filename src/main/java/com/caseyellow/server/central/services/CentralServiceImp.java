@@ -1,7 +1,7 @@
 package com.caseyellow.server.central.services;
 
 import com.caseyellow.server.central.domain.test.model.Test;
-import com.caseyellow.server.central.domain.test.service.TestService;
+import com.caseyellow.server.central.domain.test.services.TestService;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
