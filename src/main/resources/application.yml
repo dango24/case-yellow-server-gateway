@@ -18,7 +18,7 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
-  file: /home/dango/sandbox/my_personal_projects/case-yellow-server-gateway/logs/gatway_log.log
+  file: /home/dango/sandbox/my_personal_projects/case-yellow-server-central/logs/gatway_log.log
 
 config:
   app-name: Gateway

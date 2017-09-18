@@ -1,4 +1,4 @@
-package com.caseyellow.server.gateway.persistence;
+package com.caseyellow.server.central.persistence;
 
 import javax.persistence.*;
 
@@ -34,7 +34,6 @@ public class FileDownloadInfoDAO {
         fileDownloadedTimeInMs = fileDownloadInfoBuilder.fileDownloadedTimeInMs;
         startDownloadingTimestamp = fileDownloadInfoBuilder.startDownloadingTimestamp;
     }
-
 
     public String getFileURL() {
         return fileURL;

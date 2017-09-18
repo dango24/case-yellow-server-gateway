@@ -1,6 +1,6 @@
-package com.caseyellow.server.gateway.services;
+package com.caseyellow.server.central.services;
 
-import com.caseyellow.server.gateway.domain.interfaces.CentralService;
+import com.caseyellow.server.central.domain.test.service.TestService;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,10 +19,10 @@ import static org.junit.Assert.*;
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CentralServiceImpTest {
 
-    private CentralService centralService;
+    private TestService centralService;
 
     @Autowired
-    public void setCentralService(CentralService centralService) {
+    public void setCentralService(TestService centralService) {
         this.centralService = centralService;
     }
 

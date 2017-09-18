@@ -1,7 +1,7 @@
-package com.caseyellow.server.gateway.services;
+package com.caseyellow.server.central.services;
 
-import com.caseyellow.server.gateway.domain.Test;
-import com.caseyellow.server.gateway.domain.interfaces.CentralService;
+import com.caseyellow.server.central.domain.test.model.Test;
+import com.caseyellow.server.central.domain.test.service.TestService;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -11,11 +11,13 @@ import java.util.List;
  * Created by dango on 8/15/17.
  */
 @Service
-public class CentralServiceImp implements CentralService {
+public class CentralServiceImp implements TestService {
 
     @Override
     public void saveTest(Test test) {
 
+        /*CompletableFuture.supplyAsync(() -> test)
+                         .thenAccept()*/
     }
 
     @Override

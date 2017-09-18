@@ -1,4 +1,4 @@
-package com.caseyellow.server.gateway.persistence;
+package com.caseyellow.server.central.persistence;
 
 import javax.persistence.*;
 import java.util.List;

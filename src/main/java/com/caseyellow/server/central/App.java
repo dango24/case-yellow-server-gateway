@@ -1,4 +1,4 @@
-package com.caseyellow.server.gateway;
+package com.caseyellow.server.central;
 
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;

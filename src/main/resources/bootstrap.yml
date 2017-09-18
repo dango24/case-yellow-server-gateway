@@ -1,2 +1,2 @@
-spring.application.name: case-yellow-gateway
+spring.application.name: case-yellow-central
 spring.cloud.config.uri: http://localhost:8001
