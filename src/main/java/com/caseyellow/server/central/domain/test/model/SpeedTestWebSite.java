@@ -3,16 +3,16 @@ package com.caseyellow.server.central.domain.test.model;
 /**
  * Created by Dan on 12/10/2016.
  */
-public class SpeedTestWebSiteDownloadInfo {
+public class SpeedTestWebSite {
 
     private String urlAddress;
     private String speedTestIdentifier;
     private long startMeasuringTimestamp;
 
-    public SpeedTestWebSiteDownloadInfo() {
+    public SpeedTestWebSite() {
     }
 
-    public SpeedTestWebSiteDownloadInfo(String urlAddress, String speedTestIdentifier, long startMeasuringTimestamp) {
+    public SpeedTestWebSite(String urlAddress, String speedTestIdentifier, long startMeasuringTimestamp) {
         this.urlAddress = urlAddress;
         this.speedTestIdentifier = speedTestIdentifier;
         this.startMeasuringTimestamp = startMeasuringTimestamp;

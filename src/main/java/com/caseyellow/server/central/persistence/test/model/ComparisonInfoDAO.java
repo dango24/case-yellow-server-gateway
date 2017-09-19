@@ -1,4 +1,4 @@
-package com.caseyellow.server.central.persistence.model;
+package com.caseyellow.server.central.persistence.test.model;
 
 import javax.persistence.*;
 
@@ -13,22 +13,22 @@ public class ComparisonInfoDAO {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_download_info_id", unique = true)
     private FileDownloadInfoDAO fileDownloadInfoDAO;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "speed_test_webSite_download_info_id", unique = true)
-    private SpeedTestWebSiteDownloadInfoDAO speedTestWebSiteDownloadInfoDAO;
+    private SpeedTestWebSiteDAO speedTestWebSiteDownloadInfoDAO;
 
     public ComparisonInfoDAO() {}
 
-    public ComparisonInfoDAO(SpeedTestWebSiteDownloadInfoDAO speedTestWebSiteDownloadInfoDAO, FileDownloadInfoDAO fileDownloadInfoDAO) {
+    public ComparisonInfoDAO(SpeedTestWebSiteDAO speedTestWebSiteDownloadInfoDAO, FileDownloadInfoDAO fileDownloadInfoDAO) {
         this.speedTestWebSiteDownloadInfoDAO = speedTestWebSiteDownloadInfoDAO;
         this.fileDownloadInfoDAO = fileDownloadInfoDAO;
     }
 
-    public SpeedTestWebSiteDownloadInfoDAO getSpeedTestWebSiteDownloadInfoDAO() {
+    public SpeedTestWebSiteDAO getSpeedTestWebSiteDownloadInfoDAO() {
         return speedTestWebSiteDownloadInfoDAO;
     }
 
@@ -40,7 +40,7 @@ public class ComparisonInfoDAO {
         this.fileDownloadInfoDAO = fileDownloadInfoDAO;
     }
 
-    public void setSpeedTestWebSiteDownloadInfoDAO(SpeedTestWebSiteDownloadInfoDAO speedTestWebSiteDownloadInfoDAO) {
+    public void setSpeedTestWebSiteDownloadInfoDAO(SpeedTestWebSiteDAO speedTestWebSiteDownloadInfoDAO) {
         this.speedTestWebSiteDownloadInfoDAO = speedTestWebSiteDownloadInfoDAO;
     }
 }

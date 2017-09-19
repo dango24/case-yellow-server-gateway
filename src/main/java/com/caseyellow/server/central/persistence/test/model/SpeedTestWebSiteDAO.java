@@ -1,4 +1,4 @@
-package com.caseyellow.server.central.persistence.model;
+package com.caseyellow.server.central.persistence.test.model;
 
 import javax.persistence.*;
 
@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "speed_test_webSite_download_info")
-public class SpeedTestWebSiteDownloadInfoDAO {
+public class SpeedTestWebSiteDAO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,8 +20,14 @@ public class SpeedTestWebSiteDownloadInfoDAO {
     private double downloadRateInMbps; // Mega bit per second
     private long startMeasuringTimestamp;
 
-    public SpeedTestWebSiteDownloadInfoDAO() {}
+    public SpeedTestWebSiteDAO() {
+        isAnalyzed = false;
+    }
 
+    public SpeedTestWebSiteDAO(String speedTestIdentifier) {
+        this();
+        this.setSpeedTestIdentifier(speedTestIdentifier);
+    }
 
     public String getUrlAddress() {
         return urlAddress;
@@ -69,5 +75,15 @@ public class SpeedTestWebSiteDownloadInfoDAO {
 
     public void setAnalyzed(boolean analyzed) {
         isAnalyzed = analyzed;
+    }
+
+    @Override
+    public String toString() {
+        return "SpeedTestWebSiteDAO{" +
+                "isAnalyzed=" + isAnalyzed +
+                ", urlAddress='" + urlAddress + '\'' +
+                ", speedTestIdentifier='" + speedTestIdentifier + '\'' +
+                ", downloadRateInMbps=" + downloadRateInMbps +
+                '}';
     }
 }

@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.services;
 
+import com.caseyellow.server.central.App;
 import com.caseyellow.server.central.domain.test.services.TestService;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
@@ -16,7 +17,7 @@ import static org.junit.Assert.*;
  * Created by dango on 8/20/17.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes= App.class)
 public class CentralServiceImpTest {
 
     private TestService centralService;

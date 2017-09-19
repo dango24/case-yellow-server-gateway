@@ -5,18 +5,18 @@ package com.caseyellow.server.central.domain.test.model;
  */
 public class ComparisonInfo {
 
-    private SpeedTestWebSiteDownloadInfo speedTestWebSiteDownloadInfo;
+    private SpeedTestWebSite speedTestWebSiteDownloadInfo;
     private FileDownloadInfo fileDownloadInfo;
 
     public ComparisonInfo() {
     }
 
-    public ComparisonInfo(SpeedTestWebSiteDownloadInfo speedTestWebSiteDownloadInfo, FileDownloadInfo fileDownloadInfo) {
+    public ComparisonInfo(SpeedTestWebSite speedTestWebSiteDownloadInfo, FileDownloadInfo fileDownloadInfo) {
         this.speedTestWebSiteDownloadInfo = speedTestWebSiteDownloadInfo;
         this.fileDownloadInfo = fileDownloadInfo;
     }
 
-    public SpeedTestWebSiteDownloadInfo getSpeedTestWebSiteDownloadInfo() {
+    public SpeedTestWebSite getSpeedTestWebSiteDownloadInfo() {
         return speedTestWebSiteDownloadInfo;
     }
 

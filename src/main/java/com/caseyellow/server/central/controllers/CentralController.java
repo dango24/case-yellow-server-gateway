@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.controllers;
 
+import com.caseyellow.server.central.domain.SpeedTestWebSite.SpeedTestWebSiteService;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.exceptions.ErrorResponse;
 import com.caseyellow.server.central.domain.test.services.TestService;
@@ -22,15 +23,21 @@ import static com.caseyellow.server.central.exceptions.ErrorResponse.INTERNAL_ER
 @RequestMapping("/central")
 public class CentralController {
 
-    private TestService centralService;
+    private TestService testService;
+    private SpeedTestWebSiteService speedTestWebSiteService;
+
+    @Autowired
+    public CentralController(TestService centralService, SpeedTestWebSiteService speedTestWebSiteService) {
+        this.testService = centralService;
+        this.speedTestWebSiteService = speedTestWebSiteService;
+    }
 
     @ResponseStatus(value = HttpStatus.OK)
     @GetMapping(value = "/next-web-site",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
     public String getNextSpeedTestWebSite() {
-
-        return centralService.getNextSpeedTestWebSite();
+        return speedTestWebSiteService.getNextSpeedTestWebSite();
     }
 
     @ResponseStatus(value = HttpStatus.OK)
@@ -39,16 +46,16 @@ public class CentralController {
                 produces = MediaType.APPLICATION_JSON_VALUE)
     public List<String> getNextUrls(@RequestParam("comparison-count") int numOfComparisonPerTest) {
 
-        return centralService.getNextUrls(numOfComparisonPerTest);
+        return speedTestWebSiteService.getNextUrls(numOfComparisonPerTest);
     }
 
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
     @PostMapping(value = "/save-test",
                  consumes = MediaType.APPLICATION_JSON_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)
     public void saveTest(@RequestBody @NotEmpty Test test) {
 
-        centralService.saveTest(test);
+        testService.saveTest(test);
     }
 
     @ExceptionHandler(InternalException.class)
@@ -67,10 +74,5 @@ public class CentralController {
         return ResponseEntity.status(INTERNAL_ERROR_CODE)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(new ErrorResponse(ex.getMessage()));
-    }
-
-    @Autowired
-    public void setCentralService(TestService centralService) {
-        this.centralService = centralService;
     }
 }
