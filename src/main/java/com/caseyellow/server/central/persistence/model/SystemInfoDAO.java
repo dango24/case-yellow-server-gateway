@@ -39,6 +39,22 @@ public class SystemInfoDAO {
         return connection;
     }
 
+    public void setOperatingSystem(String operatingSystem) {
+        this.operatingSystem = operatingSystem;
+    }
+
+    public void setBrowser(String browser) {
+        this.browser = browser;
+    }
+
+    public void setPublicIP(String publicIP) {
+        this.publicIP = publicIP;
+    }
+
+    public void setConnection(String connection) {
+        this.connection = connection;
+    }
+
     @Override
     public String toString() {
         return "SystemInfoDAO{" +

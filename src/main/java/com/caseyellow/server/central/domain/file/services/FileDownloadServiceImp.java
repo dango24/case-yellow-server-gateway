@@ -26,7 +26,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
         List<String> nextUrls;
 
         if (numOfComparisonPerTest < 0) {
-            throw new IllegalArgumentException("numOfComparisonPerTest must be a positive number.");
+            throw new IllegalArgumentException("numOfComparisonPerTest must be a positive number. received: " + numOfComparisonPerTest);
         } else if (numOfComparisonPerTest == 0) {
             return Collections.emptyList();
         }

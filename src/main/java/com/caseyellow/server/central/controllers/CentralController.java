@@ -48,7 +48,6 @@ public class CentralController {
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
     public List<String> getNextUrls(@RequestParam("comparison-count") int numOfComparisonPerTest) {
-
         return fileDownloadService.getNextUrls(numOfComparisonPerTest);
     }
 
@@ -57,7 +56,6 @@ public class CentralController {
                  consumes = MediaType.APPLICATION_JSON_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)
     public void saveTest(@RequestBody @NotEmpty Test test) {
-
         testService.saveTest(test);
     }
 
