@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 
 
@@ -54,10 +56,39 @@ public class FileDownloadServiceImpTest {
         fileDownloadInfoRepository.deleteAll();
     }
 
+    @Test (expected = IllegalArgumentException.class)
+    public void getNextUrlsWithNegativeArgument() throws Exception {
+        fileDownloadService.getNextUrls(-1);
+    }
+
     @Test
-    public void getNextUrlsWith1argument() throws Exception {
+    public void getNextUrlsWithNonArgument() throws Exception {
+        List<String> nextUrls =  fileDownloadService.getNextUrls(0);
+        assertThat(nextUrls, empty());
+    }
+
+    @Test
+    public void getNextUrlsWith1Argument() throws Exception {
         List<String> nextUrls =  fileDownloadService.getNextUrls(1);
         assertThat(nextUrls, containsInAnyOrder(KODI));
+    }
+
+    @Test
+    public void getNextUrlsWith2Argument() throws Exception {
+        List<String> nextUrls =  fileDownloadService.getNextUrls(2);
+        assertThat(nextUrls, containsInAnyOrder(KODI, POSTGRESQL));
+    }
+
+    @Test
+    public void getNextUrlsWith3Argument() throws Exception {
+        List<String> nextUrls =  fileDownloadService.getNextUrls(3);
+        assertThat(nextUrls, containsInAnyOrder(KODI, POSTGRESQL, ITUNES));
+    }
+
+    @Test
+    public void getNextUrlsWithBigNumOfComparisonPerTest() throws Exception {
+        List<String> nextUrls =  fileDownloadService.getNextUrls(1000000);
+        assertThat(nextUrls, containsInAnyOrder(KINECT, KODI, POSTGRESQL, ITUNES, FIREFOX, GO, JAVA_SDK));
     }
 
 }
