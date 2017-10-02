@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -32,7 +31,6 @@ public class FileDownloadServiceImpTest {
     private static final String POSTGRESQL = "http://get.enterprisedb.com/postgresql/postgresql-9.6.0-1-windows-x64.exe";
     private static final String KINECT = "https://download.microsoft.com/download/F/2/D/F2D1012E-3BC6-49C5-B8B3-5ACFF58AF7B8/KinectSDK-v2.0_1409-Setup.exe";
     private static final String ITUNES = " https://secure-appldnld.apple.com/itunes12/031-69284-20160802-7E7B2D20-552B-11E6-B2B9-696CECD541CE/iTunes64Setup.exe";
-
 
     @Autowired
     private FileDownloadInfoRepository fileDownloadInfoRepository;
@@ -83,6 +81,13 @@ public class FileDownloadServiceImpTest {
     public void getNextUrlsWith3Argument() throws Exception {
         List<String> nextUrls =  fileDownloadService.getNextUrls(3);
         assertThat(nextUrls, containsInAnyOrder(KODI, POSTGRESQL, ITUNES));
+    }
+
+    @Test
+    public void getNextUrlsWithAddMoreRecords() throws Exception {
+        IntStream.range(0, 10).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(KODI)));
+        List<String> nextUrls =  fileDownloadService.getNextUrls(1);
+        assertThat(nextUrls, containsInAnyOrder(POSTGRESQL));
     }
 
     @Test

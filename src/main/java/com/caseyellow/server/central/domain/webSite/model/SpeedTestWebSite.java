@@ -5,6 +5,7 @@ package com.caseyellow.server.central.domain.webSite.model;
  */
 public class SpeedTestWebSite {
 
+    private boolean succeed;
     private String urlAddress;
     private String speedTestIdentifier;
     private long startMeasuringTimestamp;
@@ -13,6 +14,11 @@ public class SpeedTestWebSite {
     }
 
     public SpeedTestWebSite(String urlAddress, String speedTestIdentifier, long startMeasuringTimestamp) {
+        this(false, urlAddress, speedTestIdentifier, startMeasuringTimestamp);
+    }
+
+    public SpeedTestWebSite(boolean succeed, String urlAddress, String speedTestIdentifier, long startMeasuringTimestamp) {
+        this.succeed = succeed;
         this.urlAddress = urlAddress;
         this.speedTestIdentifier = speedTestIdentifier;
         this.startMeasuringTimestamp = startMeasuringTimestamp;
@@ -40,5 +46,13 @@ public class SpeedTestWebSite {
 
     public void setStartMeasuringTimestamp(long startMeasuringTimestamp) {
         this.startMeasuringTimestamp = startMeasuringTimestamp;
+    }
+
+    public boolean isSucceed() {
+        return succeed;
+    }
+
+    public void setSucceed(boolean succeed) {
+        this.succeed = succeed;
     }
 }
