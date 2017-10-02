@@ -6,6 +6,7 @@ import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.SystemInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
+import com.caseyellow.server.central.exceptions.SaveTestException;
 import com.caseyellow.server.central.persistence.repository.FileDownloadInfoRepository;
 import com.caseyellow.server.central.persistence.repository.SpeedTestWebSiteRepository;
 import com.caseyellow.server.central.persistence.repository.TestRepository;
@@ -19,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
@@ -85,5 +87,26 @@ public class TestServiceImplTest {
 
        assertTrue(speedTestWebSiteRepository.findAll().size() == NUM_OF_SUCCEED_TEST);
        assertTrue(fileDownloadInfoRepository.findAll().size() == NUM_OF_SUCCEED_TEST);
+    }
+
+    @org.junit.Test
+    public void saveTestWithNull() {
+        List<ComparisonInfo> comparisonInfoList =
+            IntStream.range(0, NUM_OF_FAILED_TEST)
+                     .mapToObj(i -> new ComparisonInfo(new SpeedTestWebSite(true), null))
+                     .collect(Collectors.toList());
+
+        Test test = new Test.TestBuilder("Esfir")
+                            .addComparisonInfoTests(comparisonInfoList)
+                            .addSystemInfo(new SystemInfo())
+                            .addSpeedTestWebsiteIdentifier("hot")
+                            .build();
+
+
+        testService.saveTest(test);
+
+        assertTrue(testRepository.findAll().isEmpty());
+        assertTrue(speedTestWebSiteRepository.findAll().isEmpty());
+        assertTrue(fileDownloadInfoRepository.findAll().isEmpty());
     }
 }

@@ -4,7 +4,9 @@ import com.caseyellow.server.central.common.DAOConverter;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.exceptions.SaveTestException;
+import com.caseyellow.server.central.persistence.model.TestDAO;
 import com.caseyellow.server.central.persistence.repository.TestRepository;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class TestServiceImpl implements TestService {
 
+    private Logger logger = Logger.getLogger(TestServiceImpl.class);
+
     private TestRepository testRepository;
 
     @Autowired
@@ -26,14 +30,15 @@ public class TestServiceImpl implements TestService {
     @Override
     public void saveTest(Test test) {
         CompletableFuture.supplyAsync(() -> test)
-                         .exceptionally(this::handleSaveTestException)
                          .thenApply(this::removeUnsuccessfulTests)
                          .thenApply(DAOConverter::convertTestToTestDAO)
+                         .exceptionally(this::handleSaveTestException)
                          .thenAccept(testRepository::save);
     }
 
-    private Test handleSaveTestException(Throwable throwable) throws SaveTestException {
-        throw new SaveTestException(throwable.getMessage());
+    private TestDAO handleSaveTestException(Throwable throwable) throws SaveTestException {
+        logger.error("Failed To save test, " + throwable.getMessage(), throwable);
+        return null;
     }
 
     private Test removeUnsuccessfulTests(Test test) {
