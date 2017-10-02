@@ -21,8 +21,8 @@ public class TestServiceImpl implements TestService {
     @Override
     public void saveTest(Test test) {
         CompletableFuture.supplyAsync(() -> test)
-//                         .exceptionally(this::saveTestExceptionHandler)
                          .thenApply(DAOConverter::convertTestToTestDAO)
                          .thenAccept(testRepository::save);
     }
+
 }

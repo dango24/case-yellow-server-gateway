@@ -58,22 +58,4 @@ public class CentralController {
     public void saveTest(@RequestBody @NotEmpty Test test) {
         testService.saveTest(test);
     }
-
-    @ExceptionHandler(InternalException.class)
-    public ResponseEntity<ErrorResponse> handleInternalException(InternalException ex)  {
-
-        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
-
-        return ResponseEntity.status(INTERNAL_ERROR_CODE)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(errorResponse);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception ex)  {
-
-        return ResponseEntity.status(INTERNAL_ERROR_CODE)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(new ErrorResponse(ex.getMessage()));
-    }
 }

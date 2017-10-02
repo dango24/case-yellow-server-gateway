@@ -68,7 +68,7 @@ public interface DAOConverter {
     }
 
     static <T extends Object, R extends Object> List<R> convertModelToDto(Function<T, R> convectorFunction,
-                                                                           Collection<T> modelCollection) {
+                                                                          Collection<T> modelCollection) {
         if (isNull(modelCollection) || modelCollection.isEmpty()) {
             return emptyList();
         }
@@ -79,7 +79,7 @@ public interface DAOConverter {
     }
 
     static <T extends Object, R extends Object> List<R> convertDtoToModel(Function<T, R> convectorFunction,
-                                                                           Collection<T> dtoCollection) {
+                                                                          Collection<T> dtoCollection) {
         return convertModelToDto(convectorFunction, dtoCollection);
     }
 }
