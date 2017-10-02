@@ -3,13 +3,13 @@ package com.caseyellow.server.central.domain.test.services;
 import com.caseyellow.server.central.common.DAOConverter;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
+import com.caseyellow.server.central.exceptions.SaveTestException;
 import com.caseyellow.server.central.persistence.repository.TestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,9 +26,14 @@ public class TestServiceImpl implements TestService {
     @Override
     public void saveTest(Test test) {
         CompletableFuture.supplyAsync(() -> test)
+                         .exceptionally(this::handleSaveTestException)
                          .thenApply(this::removeUnsuccessfulTests)
                          .thenApply(DAOConverter::convertTestToTestDAO)
                          .thenAccept(testRepository::save);
+    }
+
+    private Test handleSaveTestException(Throwable throwable) throws SaveTestException {
+        throw new SaveTestException(throwable.getMessage());
     }
 
     private Test removeUnsuccessfulTests(Test test) {

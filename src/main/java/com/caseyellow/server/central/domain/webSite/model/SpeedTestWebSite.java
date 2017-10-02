@@ -13,6 +13,10 @@ public class SpeedTestWebSite {
     public SpeedTestWebSite() {
     }
 
+    public SpeedTestWebSite(boolean succeed) {
+        this.succeed = succeed;
+    }
+
     public SpeedTestWebSite(String urlAddress, String speedTestIdentifier, long startMeasuringTimestamp) {
         this(false, urlAddress, speedTestIdentifier, startMeasuringTimestamp);
     }
