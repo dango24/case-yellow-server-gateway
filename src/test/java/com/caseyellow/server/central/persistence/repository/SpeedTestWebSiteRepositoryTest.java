@@ -1,7 +1,7 @@
-package com.caseyellow.server.central.persistence.test.repository;
+package com.caseyellow.server.central.persistence.repository;
 
 import com.caseyellow.server.central.App;
-import com.caseyellow.server.central.persistence.test.model.SpeedTestWebSiteDAO;
+import com.caseyellow.server.central.persistence.model.SpeedTestWebSiteDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

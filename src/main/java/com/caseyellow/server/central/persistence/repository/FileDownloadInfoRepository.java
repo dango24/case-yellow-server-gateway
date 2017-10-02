@@ -1,6 +1,6 @@
-package com.caseyellow.server.central.persistence.test.repository;
+package com.caseyellow.server.central.persistence.repository;
 
-import com.caseyellow.server.central.persistence.test.model.FileDownloadInfoDAO;
+import com.caseyellow.server.central.persistence.model.FileDownloadInfoDAO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

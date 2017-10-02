@@ -1,10 +1,8 @@
-package com.caseyellow.server.central.domain.SpeedTestWebSite;
+package com.caseyellow.server.central.domain.webSite.services;
 
-import com.caseyellow.server.central.persistence.test.repository.SpeedTestWebSiteRepository;
+import com.caseyellow.server.central.persistence.repository.SpeedTestWebSiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created by dango on 9/19/17.
@@ -22,10 +20,5 @@ public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
     @Override
     public String getNextSpeedTestWebSite() {
         return speedTestWebSiteRepository.findMinIdentifier();
-    }
-
-    @Override
-    public List<String> getNextUrls(int numOfComparisonPerTest) {
-        return null;
     }
 }

@@ -8,8 +8,5 @@ import java.util.List;
  * Created by dango on 8/15/17.
  */
 public interface TestService {
-
     void saveTest(Test test);
-    String getNextSpeedTestWebSite();
-    List<String> getNextUrls(int numOfComparisonPerTest);
 }

@@ -1,6 +1,6 @@
-package com.caseyellow.server.central.persistence.test.repository;
+package com.caseyellow.server.central.persistence.repository;
 
-import com.caseyellow.server.central.persistence.test.model.TestDAO;
+import com.caseyellow.server.central.persistence.model.TestDAO;
 import org.springframework.data.repository.CrudRepository;
 
 /**

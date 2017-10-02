@@ -1,4 +1,4 @@
-package com.caseyellow.server.central.domain.test.model;
+package com.caseyellow.server.central.domain.file.model;
 
 /**
  * Created by Dan on 04/10/2016.

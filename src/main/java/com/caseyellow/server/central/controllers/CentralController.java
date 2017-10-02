@@ -1,9 +1,10 @@
 package com.caseyellow.server.central.controllers;
 
-import com.caseyellow.server.central.domain.SpeedTestWebSite.SpeedTestWebSiteService;
+import com.caseyellow.server.central.domain.webSite.services.SpeedTestWebSiteService;
 import com.caseyellow.server.central.domain.test.model.Test;
-import com.caseyellow.server.central.exceptions.ErrorResponse;
+import com.caseyellow.server.central.domain.file.services.FileDownloadService;
 import com.caseyellow.server.central.domain.test.services.TestService;
+import com.caseyellow.server.central.exceptions.ErrorResponse;
 import com.caseyellow.server.central.exceptions.InternalException;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +25,17 @@ import static com.caseyellow.server.central.exceptions.ErrorResponse.INTERNAL_ER
 public class CentralController {
 
     private TestService testService;
+    private FileDownloadService fileDownloadService;
     private SpeedTestWebSiteService speedTestWebSiteService;
 
     @Autowired
-    public CentralController(TestService centralService, SpeedTestWebSiteService speedTestWebSiteService) {
-        this.testService = centralService;
+    public CentralController(TestService testService, FileDownloadService fileDownloadService, SpeedTestWebSiteService speedTestWebSiteService) {
+        this.fileDownloadService = fileDownloadService;
         this.speedTestWebSiteService = speedTestWebSiteService;
+        this.testService = testService;
     }
 
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/next-web-site",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
@@ -40,16 +43,16 @@ public class CentralController {
         return speedTestWebSiteService.getNextSpeedTestWebSite();
     }
 
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/next-urls",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
     public List<String> getNextUrls(@RequestParam("comparison-count") int numOfComparisonPerTest) {
 
-        return speedTestWebSiteService.getNextUrls(numOfComparisonPerTest);
+        return fileDownloadService.getNextUrls(numOfComparisonPerTest);
     }
 
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping(value = "/save-test",
                  consumes = MediaType.APPLICATION_JSON_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)

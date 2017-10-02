@@ -1,13 +1,11 @@
-package com.caseyellow.server.central.persistence.test.repository;
+package com.caseyellow.server.central.persistence.repository;
 
-import com.caseyellow.server.central.persistence.test.model.SpeedTestWebSiteDAO;
+import com.caseyellow.server.central.persistence.model.SpeedTestWebSiteDAO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -27,8 +25,8 @@ public interface SpeedTestWebSiteRepository extends JpaRepository<SpeedTestWebSi
                                                  .collect(groupingBy(Function.identity(), counting()));
 
         return identifiers.entrySet().stream()
-                                     .min(Comparator.comparing(entry -> entry.getValue()))
-                                     .map(entry -> entry.getKey())
+                                     .min(Map.Entry.comparingByValue())
+                                     .map(Map.Entry::getKey)
                                      .get();
     }
 }
