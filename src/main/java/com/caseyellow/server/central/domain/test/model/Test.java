@@ -18,7 +18,7 @@ public class Test {
     private Test(TestBuilder testBuilder) {
         this.testID = testBuilder.testID;
         this.systemInfo = testBuilder.systemInfo;
-        this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsite;
+        this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsiteIdentifier;
         this.comparisonInfoTests = testBuilder.comparisonInfoTests;
     }
 
@@ -65,7 +65,7 @@ public class Test {
         // Fields
         private String testID;
         private SystemInfo systemInfo;
-        private String speedTestWebsite;
+        private String speedTestWebsiteIdentifier;
         private List<ComparisonInfo> comparisonInfoTests;
 
         public TestBuilder(String testID) {
@@ -77,8 +77,8 @@ public class Test {
             return this;
         }
 
-        public TestBuilder addSpeedTestWebsite(String speedTestWebsite) {
-            this.speedTestWebsite = speedTestWebsite;
+        public TestBuilder addSpeedTestWebsiteIdentifier(String speedTestWebsite) {
+            this.speedTestWebsiteIdentifier = speedTestWebsite;
             return this;
         }
 

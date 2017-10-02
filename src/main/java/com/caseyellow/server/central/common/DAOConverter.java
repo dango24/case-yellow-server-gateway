@@ -41,7 +41,7 @@ public interface DAOConverter {
     static ComparisonInfoDAO convertComparisonInfoToComparisonInfoDAO(ComparisonInfo comparisonInfo) {
         ComparisonInfoDAO comparisonInfoDAO = new ComparisonInfoDAO();
         comparisonInfoDAO.setFileDownloadInfoDAO(convertFileDownloadInfoToFileDownloadInfoDAO(comparisonInfo.getFileDownloadInfo()));
-        comparisonInfoDAO.setSpeedTestWebSiteDownloadInfoDAO(convertSpeedTestWebSiteToSpeedTestWebSiteDAO(comparisonInfo.getSpeedTestWebSiteDownloadInfo()));
+        comparisonInfoDAO.setSpeedTestWebSiteDownloadInfoDAO(convertSpeedTestWebSiteToSpeedTestWebSiteDAO(comparisonInfo.getSpeedTestWebSite()));
 
         return comparisonInfoDAO;
     }

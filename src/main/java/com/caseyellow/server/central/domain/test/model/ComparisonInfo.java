@@ -8,19 +8,19 @@ import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
  */
 public class ComparisonInfo {
 
-    private SpeedTestWebSite speedTestWebSiteDownloadInfo;
+    private SpeedTestWebSite speedTestWebSite;
     private FileDownloadInfo fileDownloadInfo;
 
     public ComparisonInfo() {
     }
 
-    public ComparisonInfo(SpeedTestWebSite speedTestWebSiteDownloadInfo, FileDownloadInfo fileDownloadInfo) {
-        this.speedTestWebSiteDownloadInfo = speedTestWebSiteDownloadInfo;
+    public ComparisonInfo(SpeedTestWebSite speedTestWebSite, FileDownloadInfo fileDownloadInfo) {
+        this.speedTestWebSite = speedTestWebSite;
         this.fileDownloadInfo = fileDownloadInfo;
     }
 
-    public SpeedTestWebSite getSpeedTestWebSiteDownloadInfo() {
-        return speedTestWebSiteDownloadInfo;
+    public SpeedTestWebSite getSpeedTestWebSite() {
+        return speedTestWebSite;
     }
 
     public FileDownloadInfo getFileDownloadInfo() {
