@@ -8,4 +8,6 @@ import org.springframework.data.repository.CrudRepository;
  * Created by dango on 9/18/17.
  */
 public interface TestRepository extends JpaRepository<TestDAO, Long> {
+
+    TestDAO findByTestID(String testId);
 }

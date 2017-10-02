@@ -3,7 +3,6 @@ package com.caseyellow.server.central.domain.test.services;
 import com.caseyellow.server.central.common.DAOConverter;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
-import com.caseyellow.server.central.exceptions.SaveTestException;
 import com.caseyellow.server.central.persistence.model.TestDAO;
 import com.caseyellow.server.central.persistence.repository.TestRepository;
 import org.apache.log4j.Logger;
@@ -36,7 +35,7 @@ public class TestServiceImpl implements TestService {
                          .thenAccept(testRepository::save);
     }
 
-    private TestDAO handleSaveTestException(Throwable throwable) throws SaveTestException {
+    private TestDAO handleSaveTestException(Throwable throwable) {
         logger.error("Failed To save test, " + throwable.getMessage(), throwable);
         return null;
     }

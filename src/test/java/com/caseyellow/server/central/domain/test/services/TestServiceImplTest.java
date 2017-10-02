@@ -6,7 +6,6 @@ import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.SystemInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
-import com.caseyellow.server.central.exceptions.SaveTestException;
 import com.caseyellow.server.central.persistence.repository.FileDownloadInfoRepository;
 import com.caseyellow.server.central.persistence.repository.SpeedTestWebSiteRepository;
 import com.caseyellow.server.central.persistence.repository.TestRepository;
@@ -85,6 +84,7 @@ public class TestServiceImplTest {
 
        testService.saveTest(test);
 
+       assertNotNull(testRepository.findByTestID("Esfir"));
        assertTrue(speedTestWebSiteRepository.findAll().size() == NUM_OF_SUCCEED_TEST);
        assertTrue(fileDownloadInfoRepository.findAll().size() == NUM_OF_SUCCEED_TEST);
     }
