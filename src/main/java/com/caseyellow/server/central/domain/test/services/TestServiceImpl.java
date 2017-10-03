@@ -51,8 +51,8 @@ public class TestServiceImpl implements TestService {
                                                           .filter(comparisonInfo -> !comparisonInfo.getSpeedTestWebSite().isSucceed())
                                                           .collect(toList());
 
-        notifyComparisonInfoFailures(comparisonInfoFailures);
         test.setComparisonInfoTests(comparisonInfoSucceed);
+        notifyComparisonInfoFailures(comparisonInfoFailures);
 
         return test;
     }

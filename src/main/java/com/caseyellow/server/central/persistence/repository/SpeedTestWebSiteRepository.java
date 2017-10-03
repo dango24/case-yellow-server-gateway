@@ -24,9 +24,10 @@ public interface SpeedTestWebSiteRepository extends JpaRepository<SpeedTestWebSi
                                                  .map(SpeedTestWebSiteDAO::getSpeedTestIdentifier)
                                                  .collect(groupingBy(Function.identity(), counting()));
 
-        return identifiers.entrySet().stream()
-                                     .min(Map.Entry.comparingByValue())
-                                     .map(Map.Entry::getKey)
-                                     .get();
+        return identifiers.entrySet()
+                          .stream()
+                          .min(Map.Entry.comparingByValue())
+                          .map(Map.Entry::getKey)
+                          .get();
     }
 }

@@ -78,4 +78,15 @@ public class SpeedTestWebSiteRepositoryTest {
         String minIdentifier = speedTestWebSiteRepository.findMinIdentifier();
         assertEquals(BEZEQ_IDENTIFIER, minIdentifier);
     }
+
+    @Test
+    public void findMinAfterAddSpeedTestWebSite() {
+        String minIdentifier = speedTestWebSiteRepository.findMinIdentifier();
+        assertEquals(BEZEQ_IDENTIFIER, minIdentifier);
+
+        IntStream.range(0, 13).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
+
+        minIdentifier = speedTestWebSiteRepository.findMinIdentifier();
+        assertEquals(FAST_IDENTIFIER, minIdentifier);
+    }
 }
