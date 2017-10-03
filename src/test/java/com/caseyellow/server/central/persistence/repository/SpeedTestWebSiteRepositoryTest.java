@@ -10,30 +10,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
+import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.*;
 
 /**
  * Created by dango on 9/19/17.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= App.class)
+@SpringBootTest(classes = App.class)
 public class SpeedTestWebSiteRepositoryTest {
 
     private static final String HOT_IDENTIFIER = "hot";
     private static final String BEZEQ_IDENTIFIER = "bezeq";
     private static final String FAST_IDENTIFIER = "fast";
 
+    private static final String HOT_URL = "http://www.hot.net.il/heb/Internet/speed/";
+    private static final String BEZEQ_URL = "http://www.bezeq.co.il/internetandphone/internet/speedtest/";
+    private static final String FAST_URL = "https://www.fast.com";
+
     @Autowired
     private SpeedTestWebSiteRepository speedTestWebSiteRepository;
 
     @Before
     public void setUp() throws Exception {
-        IntStream.range(0, 10).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER)));
-        IntStream.range(0, 3).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
-        IntStream.range(0, 7).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(FAST_IDENTIFIER)));
+        IntStream.range(0, 10).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER, HOT_URL)));
+        IntStream.range(0, 3).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER, BEZEQ_URL)));
+        IntStream.range(0, 7).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(FAST_IDENTIFIER, FAST_URL)));
     }
 
     @After
@@ -88,5 +96,17 @@ public class SpeedTestWebSiteRepositoryTest {
 
         minIdentifier = speedTestWebSiteRepository.findMinIdentifier();
         assertEquals(FAST_IDENTIFIER, minIdentifier);
+    }
+
+    @Test
+    public void identifierToURLMapperTest() {
+        Map<String, String> expectedMapper = new HashMap<>();
+        expectedMapper.put(HOT_IDENTIFIER, HOT_URL);
+        expectedMapper.put(BEZEQ_IDENTIFIER, BEZEQ_URL);
+        expectedMapper.put(FAST_IDENTIFIER, FAST_URL);
+
+        Map<String, String> actualMapper = speedTestWebSiteRepository.getIdentifierToURLMapper();
+
+        assertThat(new HashSet<>(actualMapper.entrySet()), hasItems(expectedMapper.entrySet().toArray()));
     }
 }

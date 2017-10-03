@@ -4,12 +4,18 @@ import com.caseyellow.server.central.persistence.repository.SpeedTestWebSiteRepo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.util.Map;
+
 /**
  * Created by dango on 9/19/17.
  */
 @Service
 public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
 
+    private final static String DEFAULT_URL = "http://www.hot.net.il/heb/Internet/speed/";
+
+    private Map<String, String> identifierToURLMapper;
     private SpeedTestWebSiteRepository speedTestWebSiteRepository;
 
     @Autowired
@@ -17,8 +23,15 @@ public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
         this.speedTestWebSiteRepository = speedTestWebSiteRepository;
     }
 
+    @PostConstruct
+    public void init() {
+        identifierToURLMapper = speedTestWebSiteRepository.getIdentifierToURLMapper();
+    }
+
     @Override
-    public String getNextSpeedTestWebSite() {
-        return speedTestWebSiteRepository.findMinIdentifier();
+    public String getNextSpeedTestWebSiteURL() {
+        String nextSpeedTestIdentifier = speedTestWebSiteRepository.findMinIdentifier();
+
+        return identifierToURLMapper.getOrDefault(nextSpeedTestIdentifier, DEFAULT_URL);
     }
 }

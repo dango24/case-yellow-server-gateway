@@ -25,8 +25,13 @@ public class SpeedTestWebSiteDAO {
     }
 
     public SpeedTestWebSiteDAO(String speedTestIdentifier) {
+        this(speedTestIdentifier, null);
+    }
+
+    public SpeedTestWebSiteDAO(String speedTestIdentifier, String urlAddress) {
         this();
         this.setSpeedTestIdentifier(speedTestIdentifier);
+        this.setUrlAddress(urlAddress);
     }
 
     public String getUrlAddress() {

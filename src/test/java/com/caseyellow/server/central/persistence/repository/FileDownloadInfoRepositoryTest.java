@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
  * Created by dango on 9/19/17.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= App.class)
+@SpringBootTest(classes = App.class)
 public class FileDownloadInfoRepositoryTest {
 
     private static final String FIREFOX = "ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe";

@@ -18,7 +18,6 @@ import static org.junit.Assert.*;
 public class DAOConverterTest {
 
     private static final String HOT = "http://www.hot.net.il/heb/Internet/speed/";
-
     private static final String FIREFOX = "ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe";
 
     private static final String OS = "WIN10";
@@ -27,7 +26,7 @@ public class DAOConverterTest {
     private static final String IP = "192.1.1.1";
 
     private static final String TEST_ID = "oren_ha_efes";
-    public static final String SPEED_TEST_WEBSITE_IDENTIFIER = "hot";
+    private static final String SPEED_TEST_WEBSITE_IDENTIFIER = "hot";
 
     private SystemInfo systemInfo;
     private FileDownloadInfo fileDownloadInfo;

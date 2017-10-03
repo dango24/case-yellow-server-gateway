@@ -71,8 +71,6 @@ public class TestDAO {
         comparisonInfoDAOTests.add(comparisonInfoDAO);
     }
 
-
-
     public static class TestBuilder {
 
         private String testID;

@@ -21,7 +21,7 @@ import static org.junit.Assert.assertThat;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= App.class)
+@SpringBootTest(classes = App.class)
 public class FileDownloadServiceImpTest {
 
     private static final String FIREFOX = "ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe";

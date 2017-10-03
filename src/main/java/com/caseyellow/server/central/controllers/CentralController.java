@@ -1,21 +1,27 @@
 package com.caseyellow.server.central.controllers;
 
+import com.caseyellow.server.central.domain.webSite.model.UrlWrapper;
 import com.caseyellow.server.central.domain.webSite.services.SpeedTestWebSiteService;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.file.services.FileDownloadService;
 import com.caseyellow.server.central.domain.test.services.TestService;
-import com.caseyellow.server.central.exceptions.ErrorResponse;
-import com.caseyellow.server.central.exceptions.InternalException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-
-import static com.caseyellow.server.central.exceptions.ErrorResponse.INTERNAL_ERROR_CODE;
+import java.util.Map;
 
 /**
  * Created by dango on 6/25/17.
@@ -39,8 +45,10 @@ public class CentralController {
     @GetMapping(value = "/next-web-site",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getNextSpeedTestWebSite() {
-        return speedTestWebSiteService.getNextSpeedTestWebSite();
+    public UrlWrapper getNextSpeedTestWebSite() {
+        String urlAddress = speedTestWebSiteService.getNextSpeedTestWebSiteURL();
+
+        return new UrlWrapper(urlAddress);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -58,4 +66,32 @@ public class CentralController {
     public void saveTest(@RequestBody @NotEmpty Test test) {
         testService.saveTest(test);
     }
+
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PostMapping("/upload")
+    public String upload(@RequestParam("payload") String payload, MultipartRequest request/*@RequestParam("photo")@NotEmpty MultipartFile[] files*/) throws IOException {
+
+        Map<String, MultipartFile> map = request.getFileMap();
+
+        map.values().forEach(this::dango);
+        // Get the file and save it somewhere
+        UrlWrapper urlWrapper = new ObjectMapper().readValue(payload, UrlWrapper.class);
+
+
+
+        return "dango&esfir";
+    }
+
+    private void dango(MultipartFile file) {
+
+        try {
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get("/home/dango/Downloads/temp/" + file.getOriginalFilename());
+            Files.write(path, bytes);
+        } catch (Exception e) {
+            System.out.println("dango errroe");
+        }
+    }
+
 }

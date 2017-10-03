@@ -25,7 +25,7 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= App.class)
+@SpringBootTest(classes = App.class)
 public class TestServiceImplTest {
 
     private final static int NUM_OF_SUCCEED_TEST = 8;

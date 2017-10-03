@@ -1,5 +1,8 @@
 server.port : 8888
 
+# Profiles
+spring.profiles.active: dev
+
 # H2
 spring.h2.console.enabled: true
 spring.h2.console.path: /console
@@ -18,7 +21,7 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
-  file: /home/dango/sandbox/my_personal_projects/case-yellow-server-central/logs/gatway_log.log
+  file: /logs/gatway_log.log
 
 config:
   app-name: Gateway

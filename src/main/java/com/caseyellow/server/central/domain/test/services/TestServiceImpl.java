@@ -35,11 +35,6 @@ public class TestServiceImpl implements TestService {
                          .thenAccept(testRepository::save);
     }
 
-    private TestDAO handleSaveTestException(Throwable throwable) {
-        logger.error("Failed To save test, " + throwable.getMessage(), throwable);
-        return null;
-    }
-
     private Test removeUnsuccessfulTests(Test test) {
         List<ComparisonInfo> comparisonInfoSucceed = test.getComparisonInfoTests()
                                                          .stream()
@@ -60,6 +55,11 @@ public class TestServiceImpl implements TestService {
     private void notifyComparisonInfoFailures(List<ComparisonInfo> comparisonInfoFailures) {
         CompletableFuture.supplyAsync(() -> comparisonInfoFailures)
                          .thenAccept(this::notifyFailedTests);
+    }
+
+    private TestDAO handleSaveTestException(Throwable throwable) {
+        logger.error("Failed To save test, " + throwable.getMessage(), throwable);
+        return null;
     }
 
     private void notifyFailedTests(List<ComparisonInfo> comparisonInfoFailures) {
