@@ -9,7 +9,7 @@ public class FileDownloadInfo {
     private String fileURL;
     private long   fileSizeInBytes;
     private double fileDownloadRateKBPerSec;
-    private long   fileDownloadedTimeInMs;
+    private long   fileDownloadedDurationTimeInMs;
     private long   startDownloadingTimestamp;
 
     public FileDownloadInfo() {}
@@ -23,7 +23,7 @@ public class FileDownloadInfo {
         fileURL = fileDownloadInfoBuilder.fileURL;
         fileSizeInBytes = fileDownloadInfoBuilder.fileSizeInBytes;
         fileDownloadRateKBPerSec = fileDownloadInfoBuilder.fileDownloadRateKBPerSec;
-        fileDownloadedTimeInMs = fileDownloadInfoBuilder.fileDownloadedTimeInMs;
+        fileDownloadedDurationTimeInMs = fileDownloadInfoBuilder.fileDownloadedTimeInMs;
         startDownloadingTimestamp = fileDownloadInfoBuilder.startDownloadingTimestamp;
     }
 
@@ -39,10 +39,10 @@ public class FileDownloadInfo {
         this.fileSizeInBytes = fileSizeInBytes;
     }
 
-    public long getFileDownloadedTimeInMs() { return fileDownloadedTimeInMs; }
+    public long getFileDownloadedDurationTimeInMs() { return fileDownloadedDurationTimeInMs; }
 
-    public void setFileDownloadedTimeInMs(long fileDownloadedTimeInMs) {
-        this.fileDownloadedTimeInMs = fileDownloadedTimeInMs;
+    public void setFileDownloadedDurationTimeInMs(long fileDownloadedTimeInMs) {
+        this.fileDownloadedDurationTimeInMs = fileDownloadedTimeInMs;
     }
 
     public String getFileName() {
@@ -75,7 +75,7 @@ public class FileDownloadInfo {
                 "fileURL='" + fileURL + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", fileSizeInBytes=" + fileSizeInBytes +
-                ", fileDownloadedTimeInMs=" + fileDownloadedTimeInMs +
+                ", fileDownloadedTimeInMs=" + fileDownloadedDurationTimeInMs +
                 ", startDownloadingTimestamp=" + startDownloadingTimestamp +
                 '}';
     }

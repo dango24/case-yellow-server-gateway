@@ -7,11 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import static com.caseyellow.server.central.exceptions.ErrorResponse.INTERNAL_ERROR_CODE;
-
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
+    private static final int INTERNAL_ERROR_CODE = 420;
     private static final int ILLEGAL_ARGUMENT_ERROR_CODE = 601;
 
     @ExceptionHandler(InternalException.class)

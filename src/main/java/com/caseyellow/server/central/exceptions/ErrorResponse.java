@@ -5,8 +5,6 @@ package com.caseyellow.server.central.exceptions;
  */
 public class ErrorResponse {
 
-    public static final int INTERNAL_ERROR_CODE = 420;
-
     private int statusCode;
     private String errorMessage;
 

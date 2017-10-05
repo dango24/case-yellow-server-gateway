@@ -38,7 +38,7 @@ public class DAOConverterTest {
     public void setUp() throws Exception {
         systemInfo = new SystemInfo(OS, BROWSER, IP, CONNECTION);
         fileDownloadInfo = new FileDownloadInfo(FIREFOX);
-        fileDownloadInfo.setFileDownloadedTimeInMs(102030);
+        fileDownloadInfo.setFileDownloadedDurationTimeInMs(102030);
         fileDownloadInfo.setFileDownloadRateKBPerSec(4.5);
         fileDownloadInfo.setFileName("firefox");
         fileDownloadInfo.setFileSizeInBytes(23456);
@@ -96,7 +96,7 @@ public class DAOConverterTest {
     }
 
     private boolean isFileDownloadInfoEqualsToFileDownloadInfoDAO(FileDownloadInfoDAO fileDownloadInfoDAO, FileDownloadInfo fileDownloadInfo) {
-        return fileDownloadInfoDAO.getFileDownloadedTimeInMs() == fileDownloadInfo.getFileDownloadedTimeInMs() &&
+        return fileDownloadInfoDAO.getFileDownloadedTimeInMs() == fileDownloadInfo.getFileDownloadedDurationTimeInMs() &&
                fileDownloadInfoDAO.getFileDownloadRateKBPerSec() == fileDownloadInfo.getFileDownloadRateKBPerSec() &&
                fileDownloadInfoDAO.getFileName().equals(fileDownloadInfo.getFileName()) &&
                fileDownloadInfoDAO.getFileSizeInBytes() == fileDownloadInfo.getFileSizeInBytes() &&

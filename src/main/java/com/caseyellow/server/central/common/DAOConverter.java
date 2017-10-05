@@ -49,7 +49,7 @@ public interface DAOConverter {
     static FileDownloadInfoDAO convertFileDownloadInfoToFileDownloadInfoDAO(FileDownloadInfo fileDownloadInfo) {
         FileDownloadInfoDAO fileDownloadInfoDAO = new FileDownloadInfoDAO.FileDownloadInfoBuilder(fileDownloadInfo.getFileName())
                                                                          .addFileDownloadRateKBPerSec(fileDownloadInfo.getFileDownloadRateKBPerSec())
-                                                                         .addFileDownloadedTimeInMs(fileDownloadInfo.getFileDownloadedTimeInMs())
+                                                                         .addFileDownloadedTimeInMs(fileDownloadInfo.getFileDownloadedDurationTimeInMs())
                                                                          .addFileSizeInBytes(fileDownloadInfo.getFileSizeInBytes())
                                                                          .addFileURL(fileDownloadInfo.getFileURL())
                                                                          .addStartDownloadingTime(fileDownloadInfo.getStartDownloadingTimestamp())
