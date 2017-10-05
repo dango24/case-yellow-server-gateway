@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -73,7 +74,7 @@ public class TestServiceImplTest {
     }
 
    @org.junit.Test
-    public void saveTest() {
+    public void saveTest() throws Exception {
        Test test = new Test.TestBuilder("Esfir")
                            .addComparisonInfoTests(comparisonInfoList)
                            .addSystemInfo(new SystemInfo())
@@ -83,6 +84,8 @@ public class TestServiceImplTest {
        assertTrue(testRepository.findAll().isEmpty());
 
        testService.saveTest(test);
+
+       TimeUnit.MILLISECONDS.sleep(700);
 
        assertNotNull(testRepository.findByTestID("Esfir"));
        assertTrue(speedTestWebSiteRepository.findAll().size() == NUM_OF_SUCCEED_TEST);
