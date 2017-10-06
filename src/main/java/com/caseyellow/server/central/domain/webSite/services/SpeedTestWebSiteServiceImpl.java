@@ -1,11 +1,9 @@
 package com.caseyellow.server.central.domain.webSite.services;
 
-import com.caseyellow.server.central.common.UrlMapper;
+import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
 import com.caseyellow.server.central.persistence.repository.SpeedTestWebSiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Created by dango on 9/19/17.
@@ -13,19 +11,17 @@ import javax.annotation.PostConstruct;
 @Service
 public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
 
-    private UrlMapper urlMapper;
+    private SpeedTestWebSiteFactory speedTestWebSiteFactory;
     private SpeedTestWebSiteRepository speedTestWebSiteRepository;
 
     @Autowired
-    public SpeedTestWebSiteServiceImpl(SpeedTestWebSiteRepository speedTestWebSiteRepository, UrlMapper urlMapper) {
+    public SpeedTestWebSiteServiceImpl(SpeedTestWebSiteRepository speedTestWebSiteRepository, SpeedTestWebSiteFactory speedTestWebSiteFactory) {
         this.speedTestWebSiteRepository = speedTestWebSiteRepository;
-        this.urlMapper = urlMapper;
+        this.speedTestWebSiteFactory = speedTestWebSiteFactory;
     }
 
     @Override
-    public String getNextSpeedTestWebSiteURL() {
-        String nextSpeedTestIdentifier = speedTestWebSiteRepository.findMinIdentifier();
-
-        return urlMapper.getSpeedTest(nextSpeedTestIdentifier);
+    public SpeedTestMetaData getNextSpeedTestWebSite() {
+        return speedTestWebSiteFactory.getSpeedTestWebSiteFromIdentifier(speedTestWebSiteRepository.findMinIdentifier());
     }
 }

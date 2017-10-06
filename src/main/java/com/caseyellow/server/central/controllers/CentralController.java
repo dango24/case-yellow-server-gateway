@@ -1,11 +1,10 @@
 package com.caseyellow.server.central.controllers;
 
-import com.caseyellow.server.central.domain.webSite.model.UrlWrapper;
+import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
 import com.caseyellow.server.central.domain.webSite.services.SpeedTestWebSiteService;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.file.services.FileDownloadService;
 import com.caseyellow.server.central.domain.test.services.TestService;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -45,10 +43,8 @@ public class CentralController {
     @GetMapping(value = "/next-web-site",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public UrlWrapper getNextSpeedTestWebSite() {
-        String urlAddress = speedTestWebSiteService.getNextSpeedTestWebSiteURL();
-
-        return new UrlWrapper(urlAddress);
+    public SpeedTestMetaData getNextSpeedTestWebSite() {
+        return speedTestWebSiteService.getNextSpeedTestWebSite();
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -76,7 +72,7 @@ public class CentralController {
 
         map.values().forEach(this::dango);
         // Get the file and save it somewhere
-        UrlWrapper urlWrapper = new ObjectMapper().readValue(payload, UrlWrapper.class);
+        SpeedTestMetaData urlWrapper = new ObjectMapper().readValue(payload, SpeedTestMetaData.class);
 
 
 

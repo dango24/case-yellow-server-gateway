@@ -66,7 +66,7 @@ public class ProdAppBootTest {
         when(urlMapper.getFileDownloadIdentifiers()).thenReturn(new HashSet<>(fileDownloadsList));
         when(urlMapper.getSpeedTestIdentifiers()).thenReturn(new HashSet<>(speedTestList));
 
-        prodAppBoot = new ProductionApplicationBoot(fileDownloadInfoRepository, speedTestWebSiteRepository, urlMapper);
+        prodAppBoot = new ProductionApplicationBoot(urlMapper, fileDownloadInfoRepository, speedTestWebSiteRepository);
     }
 
     @After
@@ -188,6 +188,9 @@ public class ProdAppBootTest {
 
     @Test
     public void initSomeRecordsTest() throws Exception {
+        assertTrue(speedTestWebSiteRepository.findAll().isEmpty());
+        assertTrue(fileDownloadInfoRepository.findAll().isEmpty());
+
         IntStream.range(0, 2).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER)));
         IntStream.range(0, 7).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
         IntStream.range(0, 5).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(OOKLA_IDENTIFIER)));
@@ -221,6 +224,9 @@ public class ProdAppBootTest {
 
     @Test
     public void initAllRecordsTest() throws Exception {
+        assertTrue(speedTestWebSiteRepository.findAll().isEmpty());
+        assertTrue(fileDownloadInfoRepository.findAll().isEmpty());
+
         IntStream.range(0, 2).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER)));
         IntStream.range(0, 7).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
         IntStream.range(0, 5).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(OOKLA_IDENTIFIER)));

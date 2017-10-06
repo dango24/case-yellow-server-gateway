@@ -18,24 +18,21 @@ import java.util.stream.Collectors;
 
 @Component
 @Profile("prod")
-public class ProductionApplicationBoot implements AppBoot {
+public class ProductionApplicationBoot {
 
     private UrlMapper urlMapper;
     private FileDownloadInfoRepository fileDownloadInfoRepository;
     private SpeedTestWebSiteRepository speedTestWebSiteRepository;
 
     @Autowired
-    public ProductionApplicationBoot(FileDownloadInfoRepository fileDownloadInfoRepository,
-                                     SpeedTestWebSiteRepository speedTestWebSiteRepository,
-                                     UrlMapper urlMapper) {
+    public ProductionApplicationBoot(UrlMapper urlMapper, FileDownloadInfoRepository fileDownloadInfoRepository, SpeedTestWebSiteRepository speedTestWebSiteRepository) {
         this.urlMapper = urlMapper;
         this.fileDownloadInfoRepository = fileDownloadInfoRepository;
         this.speedTestWebSiteRepository = speedTestWebSiteRepository;
     }
 
-    @Override
     @PostConstruct
-    public void init() throws AppBootException {
+    private void init() throws AppBootException {
         List<String> speedTestNotExistInDB = getSpeedTestNotExistInDB();
         List<String> fileDownloadNotExistInDB = getFileDownloadNotExistInDB();
 

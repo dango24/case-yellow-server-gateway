@@ -19,7 +19,7 @@ import java.util.List;
 
 @Component
 @Profile("integration")
-public class IntegrationApplicationBoot implements AppBoot {
+public class IntegrationApplicationBoot {
 
     private Logger logger = Logger.getLogger(IntegrationApplicationBoot.class);
 
@@ -31,7 +31,7 @@ public class IntegrationApplicationBoot implements AppBoot {
     }
 
     @PostConstruct
-    public void init() throws AppBootException {
+    private void init() throws AppBootException {
         try {
             addDummyTests();
 
