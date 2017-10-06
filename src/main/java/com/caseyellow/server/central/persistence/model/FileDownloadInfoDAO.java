@@ -23,7 +23,12 @@ public class FileDownloadInfoDAO {
     public FileDownloadInfoDAO() {}
 
     public FileDownloadInfoDAO(String url) {
-        fileURL = url;
+        this(null, url);
+    }
+
+    public FileDownloadInfoDAO(String name, String url) {
+        this.fileURL = url;
+        this.fileName = name;
     }
 
     public FileDownloadInfoDAO(FileDownloadInfoBuilder fileDownloadInfoBuilder) {

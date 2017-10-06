@@ -21,12 +21,16 @@ public interface SpeedTestWebSiteRepository extends JpaRepository<SpeedTestWebSi
 
     String DEFAULT_IDENTIFIER = "hot";
     String SELECT_IDENTIFIER_AND_URL_QUERY = "select DISTINCT SPEED_TEST_IDENTIFIER , URL_ADDRESS  from SPEED_TEST_WEB_SITE_DOWNLOAD_INFO";
+    String SELECT_IDENTIFIERS = "select DISTINCT SPEED_TEST_IDENTIFIER from SPEED_TEST_WEB_SITE_DOWNLOAD_INFO";
 
     Long countBySpeedTestIdentifier(String speedTestIdentifier);
     List<SpeedTestWebSiteDAO> findBySpeedTestIdentifier(String speedTestIdentifier);
 
     @Query(value = SELECT_IDENTIFIER_AND_URL_QUERY, nativeQuery = true)
     List<Object[]> selectIdentifierAndURL();
+
+    @Query(value = SELECT_IDENTIFIERS, nativeQuery = true)
+    List<String> getAllSpeedTestIdentifiers();
 
     default String findMinIdentifier() {
 
@@ -55,4 +59,5 @@ public interface SpeedTestWebSiteRepository extends JpaRepository<SpeedTestWebSi
                                   .collect(toMap(record -> String.valueOf(record[0]),
                                                  record -> String.valueOf(record[1])));
     }
+
 }

@@ -5,6 +5,8 @@ import com.caseyellow.server.central.persistence.repository.SpeedTestWebSiteRepo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Created by dango on 9/19/17.
  */
@@ -24,6 +26,6 @@ public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
     public String getNextSpeedTestWebSiteURL() {
         String nextSpeedTestIdentifier = speedTestWebSiteRepository.findMinIdentifier();
 
-        return urlMapper.get(nextSpeedTestIdentifier);
+        return urlMapper.getSpeedTest(nextSpeedTestIdentifier);
     }
 }

@@ -1,6 +1,5 @@
 package com.caseyellow.server.central.controllers;
 
-import com.caseyellow.server.central.exceptions.ErrorResponse;
 import com.caseyellow.server.central.exceptions.InternalException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +37,37 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(INTERNAL_ERROR_CODE)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(errorResponse);
+    }
+
+    public static class ErrorResponse {
+
+        private int statusCode;
+        private String errorMessage;
+
+        public ErrorResponse(String errorMessage) {
+            this(0, errorMessage);
+        }
+
+        public ErrorResponse(int statusCode, String errorMessage) {
+            this.statusCode = statusCode;
+            this.errorMessage = errorMessage;
+        }
+
+        public int getStatusCode() {
+            return statusCode;
+        }
+
+        public void setStatusCode(int statusCode) {
+            this.statusCode = statusCode;
+        }
+
+        public String getErrorMessage() {
+            return errorMessage;
+        }
+
+        public void setErrorMessage(String errorMessage) {
+            this.errorMessage = errorMessage;
+        }
     }
 
 }

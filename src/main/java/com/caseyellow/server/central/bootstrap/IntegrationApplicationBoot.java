@@ -19,14 +19,14 @@ import java.util.List;
 
 @Component
 @Profile("integration")
-public class IntegrationAppBoot implements AppBoot {
+public class IntegrationApplicationBoot implements AppBoot {
 
-    private Logger logger = Logger.getLogger(IntegrationAppBoot.class);
+    private Logger logger = Logger.getLogger(IntegrationApplicationBoot.class);
 
     private TestRepository testRepository;
 
     @Autowired
-    public IntegrationAppBoot(TestRepository testRepository) {
+    public IntegrationApplicationBoot(TestRepository testRepository) {
         this.testRepository = testRepository;
     }
 
@@ -42,7 +42,7 @@ public class IntegrationAppBoot implements AppBoot {
     }
 
     private void addDummyTests() throws URISyntaxException, IOException {
-        Path testsPath = Paths.get(IntegrationAppBoot.class.getResource("/dummy_tests.json").toURI());
+        Path testsPath = Paths.get(IntegrationApplicationBoot.class.getResource("/dummy_tests.json").toURI());
 
         new ObjectMapper().readValue(testsPath.toFile(), DummyTestsWrapper.class)
                           .getTests()

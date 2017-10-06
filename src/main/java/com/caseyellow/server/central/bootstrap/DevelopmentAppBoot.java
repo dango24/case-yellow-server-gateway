@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("prod")
-public class ProdAppBoot implements AppBoot {
+@Profile("dev")
+public class DevelopmentAppBoot implements AppBoot {
 
     @Override
     public void init() throws AppBootException {

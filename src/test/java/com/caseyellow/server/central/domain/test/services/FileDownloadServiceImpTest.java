@@ -28,7 +28,7 @@ public class FileDownloadServiceImpTest {
     private static final String GO = "storage.googleapis.com/golang/go1.7.1.windows-amd64.msi";
     private static final String JAVA_SDK = "sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip";
     private static final String KODI = "http://mirrors.kodi.tv/releases/osx/x86_64/kodi-17.3-Krypton-x86_64.dmg";
-    private static final String POSTGRESQL = "http://get.enterprisedb.com/postgresql/postgresql-9.6.0-1-windows-x64.exe";
+    private static final String POSTGRESQL = "http://getSpeedTest.enterprisedb.com/postgresql/postgresql-9.6.0-1-windows-x64.exe";
     private static final String KINECT = "https://download.microsoft.com/download/F/2/D/F2D1012E-3BC6-49C5-B8B3-5ACFF58AF7B8/KinectSDK-v2.0_1409-Setup.exe";
     private static final String ITUNES = " https://secure-appldnld.apple.com/itunes12/031-69284-20160802-7E7B2D20-552B-11E6-B2B9-696CECD541CE/iTunes64Setup.exe";
 
