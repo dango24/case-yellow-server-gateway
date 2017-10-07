@@ -67,17 +67,15 @@ public class CentralController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping("/upload")
-    public String upload(@RequestParam("payload") String payload, MultipartRequest request/*@RequestParam("photo")@NotEmpty MultipartFile[] files*/) throws IOException {
+    public void upload(@RequestParam("payload") String payload, MultipartRequest request/*@RequestParam("photo")@NotEmpty MultipartFile[] files*/) throws IOException {
 
         Map<String, MultipartFile> map = request.getFileMap();
 
         map.values().forEach(this::dango);
         // Get the file and save it somewhere
-        SpeedTestMetaData urlWrapper = new ObjectMapper().readValue(payload, SpeedTestMetaData.class);
+        Test test = new ObjectMapper().readValue(payload, Test.class);
 
-
-
-        return "dango&esfir";
+        System.out.println(test);
     }
 
     private void dango(MultipartFile file) {

@@ -68,4 +68,14 @@ public class SpeedTestWebSite {
     public void setKey(int key) {
         this.key = key;
     }
+
+    @Override
+    public String toString() {
+        return "SpeedTestWebSite{" +
+                "succeed=" + succeed +
+                ", urlAddress='" + urlAddress + '\'' +
+                ", speedTestIdentifier='" + speedTestIdentifier + '\'' +
+                ", startMeasuringTimestamp=" + startMeasuringTimestamp +
+                '}';
+    }
 }

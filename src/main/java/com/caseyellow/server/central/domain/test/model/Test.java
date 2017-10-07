@@ -59,6 +59,16 @@ public class Test {
         comparisonInfoTests.add(comparisonInfo);
     }
 
+    @Override
+    public String toString() {
+        return "Test{" +
+                "testID='" + testID + '\'' +
+                ", systemInfo=" + systemInfo +
+                ", speedTestWebsiteIdentifier='" + speedTestWebsiteIdentifier + '\'' +
+                ", comparisonInfoTests=" + comparisonInfoTests +
+                '}';
+    }
+
     // TestBuilder Helper
     public static class TestBuilder {
 
