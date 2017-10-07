@@ -24,9 +24,9 @@ public interface FileDownloadInfoRepository extends JpaRepository<FileDownloadIn
     @Query(value = SELECT_ALL_IDENTIFIERS_QUERY, nativeQuery = true)
     List<String> getAllFileIdentifiers();
 
-    default Map<String, Long> groupingFileDownloadInfoByUrl() {
+    default Map<String, Long> groupingFileDownloadInfoByName() {
         return findAll().stream()
-                        .map(FileDownloadInfoDAO::getFileURL)
+                        .map(FileDownloadInfoDAO::getFileName)
                         .collect(groupingBy(Function.identity(), counting()));
     }
 }

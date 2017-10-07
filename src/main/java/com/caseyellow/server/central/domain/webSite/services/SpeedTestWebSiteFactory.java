@@ -14,25 +14,27 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toMap;
+
 @Component
 public class SpeedTestWebSiteFactory {
 
     private final String SPEED_TEST_METADATA_LOCATION = "/speed_test_meta_data.json";
 
-    private Map<String, SpeedTestMetaData> speedTestDTOMap;
+    private Map<String, SpeedTestMetaData> speedTestMetaDataMap;
 
     @PostConstruct
     private void init() throws URISyntaxException, IOException {
         Path speedTestMetaData = Paths.get(SpeedTestWebSiteFactory.class.getResource(SPEED_TEST_METADATA_LOCATION).toURI());
         SpeedTestMetaDataWrapper speedTestMetaDataWrapper = new ObjectMapper().readValue(speedTestMetaData.toFile(), SpeedTestMetaDataWrapper.class);
 
-        speedTestDTOMap = speedTestMetaDataWrapper.getSpeedTestMetaData()
-                                                  .stream()
-                                                  .collect(Collectors.toMap(SpeedTestMetaData::getIdentifier, Function.identity()));
+        speedTestMetaDataMap = speedTestMetaDataWrapper.getSpeedTestMetaData()
+                                                       .stream()
+                                                       .collect(toMap(SpeedTestMetaData::getIdentifier, Function.identity()));
     }
 
     public SpeedTestMetaData getSpeedTestWebSiteFromIdentifier(String identifier) {
-        return speedTestDTOMap.get(identifier);
+        return speedTestMetaDataMap.get(identifier);
     }
 
     private static class SpeedTestMetaDataWrapper {

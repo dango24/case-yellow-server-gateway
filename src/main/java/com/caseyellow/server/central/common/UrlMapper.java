@@ -50,6 +50,6 @@ public class UrlMapper {
     }
 
     public String getFileDownload(String fileIdentifier) {
-        return speedTestUrls.getOrDefault(fileIdentifier, DEFAULT_FILE_DOWNLOAD_URL);
+        return fileDownloadUrls.getOrDefault(fileIdentifier, DEFAULT_FILE_DOWNLOAD_URL);
     }
 }

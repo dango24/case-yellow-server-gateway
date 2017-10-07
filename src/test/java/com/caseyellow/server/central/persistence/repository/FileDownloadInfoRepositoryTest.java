@@ -23,18 +23,22 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest(classes = App.class)
 public class FileDownloadInfoRepositoryTest {
 
-    private static final String FIREFOX = "ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe";
-    private static final String GO = "storage.googleapis.com/golang/go1.7.1.windows-amd64.msi";
-    private static final String JAVA_SDK = "sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip";
+    private static final String FIREFOX = "firefox";
+    private static final String GO = "go";
+    private static final String JAVA_SDK = "java-sdk";
+
+    private static final String FIREFOX_URL = "ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe";
+    private static final String GO_URL = "storage.googleapis.com/golang/go1.7.1.windows-amd64.msi";
+    private static final String JAVA_SDK_URL = "sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip";
 
     @Autowired
     private FileDownloadInfoRepository fileDownloadInfoRepository;
 
     @Before
     public void setUp() throws Exception {
-        IntStream.range(0, 100).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(FIREFOX)));
-        IntStream.range(0, 53).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(GO)));
-        IntStream.range(0, 61).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(JAVA_SDK)));
+        IntStream.range(0, 100).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(FIREFOX, FIREFOX_URL)));
+        IntStream.range(0, 53).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(GO, GO_URL)));
+        IntStream.range(0, 61).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(JAVA_SDK, JAVA_SDK_URL)));
     }
 
     @After
@@ -50,12 +54,12 @@ public class FileDownloadInfoRepositoryTest {
 
     @Test
     public void findByFileURL() throws Exception {
-        assertTrue(fileDownloadInfoRepository.findByFileURL(FIREFOX).size() == 100);
+        assertTrue(fileDownloadInfoRepository.findByFileURL(FIREFOX_URL).size() == 100);
     }
 
     @Test
     public void groupingFileDownloadInfoByUrl() throws Exception {
-        Map<String, Long> fileDownloadInfoMap= fileDownloadInfoRepository.groupingFileDownloadInfoByUrl();
+        Map<String, Long> fileDownloadInfoMap= fileDownloadInfoRepository.groupingFileDownloadInfoByName();
 
         assertTrue(fileDownloadInfoMap.size() == 3);
 

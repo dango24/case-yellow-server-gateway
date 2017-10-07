@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.controllers;
 
+import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
 import com.caseyellow.server.central.domain.webSite.services.SpeedTestWebSiteService;
 import com.caseyellow.server.central.domain.test.model.Test;
@@ -51,8 +52,8 @@ public class CentralController {
     @GetMapping(value = "/next-urls",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<String> getNextUrls(@RequestParam("comparison-count") int numOfComparisonPerTest) {
-        return fileDownloadService.getNextUrls(numOfComparisonPerTest);
+    public List<FileDownloadMetaData> getNextUrls(@RequestParam("comparison-count") int numOfComparisonPerTest) {
+        return fileDownloadService.getNextFileDownloadMetaData(numOfComparisonPerTest);
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
