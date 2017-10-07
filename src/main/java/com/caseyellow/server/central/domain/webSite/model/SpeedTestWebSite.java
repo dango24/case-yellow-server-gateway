@@ -5,6 +5,7 @@ package com.caseyellow.server.central.domain.webSite.model;
  */
 public class SpeedTestWebSite {
 
+    private int key;
     private boolean succeed;
     private String urlAddress;
     private String speedTestIdentifier;
@@ -58,5 +59,13 @@ public class SpeedTestWebSite {
 
     public void setSucceed(boolean succeed) {
         this.succeed = succeed;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
     }
 }
