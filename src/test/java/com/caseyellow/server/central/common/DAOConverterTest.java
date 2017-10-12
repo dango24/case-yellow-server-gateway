@@ -5,13 +5,11 @@ import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.SystemInfo;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
 import com.caseyellow.server.central.persistence.model.*;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
@@ -66,7 +64,7 @@ public class DAOConverterTest {
 
     @Test
     public void convertSystemInfoToSystemInfoDAO() throws Exception {
-        SystemInfoDAO systemInfoDAO = DAOConverter.convertSystemInfoToSystemInfoDAO(systemInfo);
+        SystemInfoDAO systemInfoDAO = DAOConverter.convertSystemInfoModelToDAO(systemInfo);
         assertNotNull(systemInfoDAO);
         assertEquals(systemInfoDAO.getBrowser(), systemInfo.getBrowser());
         assertEquals(systemInfoDAO.getConnection(), systemInfo.getConnection());
@@ -76,19 +74,19 @@ public class DAOConverterTest {
 
     @Test
     public void convertComparisonInfoToComparisonInfoDAO() throws Exception {
-        ComparisonInfoDAO comparisonInfoDAO = DAOConverter.convertComparisonInfoToComparisonInfoDAO(comparisonInfo);
+        ComparisonInfoDAO comparisonInfoDAO = DAOConverter.convertComparisonInfoModelToDAO(comparisonInfo);
         assertTrue(isComparisonInfoEqualsToComparisonInfoDAO(comparisonInfoDAO, comparisonInfo));
     }
 
     @Test
     public void convertFileDownloadInfoToFileDownloadInfoDAO() throws Exception {
-        FileDownloadInfoDAO fileDownloadInfoDAO = DAOConverter.convertFileDownloadInfoToFileDownloadInfoDAO(fileDownloadInfo);
+        FileDownloadInfoDAO fileDownloadInfoDAO = DAOConverter.convertFileDownloadInfoModelToDAO(fileDownloadInfo);
         assertTrue(isFileDownloadInfoEqualsToFileDownloadInfoDAO(fileDownloadInfoDAO, fileDownloadInfo));
     }
 
     @Test
     public void convertSpeedTestWebSiteToSpeedTestWebSiteDAO() throws Exception {
-        SpeedTestWebSiteDAO speedTestWebSiteDAO = DAOConverter.convertSpeedTestWebSiteToSpeedTestWebSiteDAO(speedTestWebSite);
+        SpeedTestWebSiteDAO speedTestWebSiteDAO = DAOConverter.convertSpeedTestWebSiteModelToDAO(speedTestWebSite);
         assertTrue(isSpeedTestWebSiteEqualsToSpeedTestWebSiteDAO(speedTestWebSiteDAO, speedTestWebSite));
     }
 

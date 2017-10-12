@@ -27,4 +27,11 @@ public class ComparisonInfo {
         return fileDownloadInfo;
     }
 
+    @Override
+    public String toString() {
+        return "ComparisonInfo{" +
+                "speedTestWebSite=" + speedTestWebSite +
+                ", fileDownloadInfo=" + fileDownloadInfo +
+                '}';
+    }
 }

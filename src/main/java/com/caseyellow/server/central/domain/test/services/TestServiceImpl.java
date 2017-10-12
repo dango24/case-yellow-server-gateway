@@ -3,6 +3,7 @@ package com.caseyellow.server.central.domain.test.services;
 import com.caseyellow.server.central.common.DAOConverter;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
+import com.caseyellow.server.central.domain.test.model.TestWrapper;
 import com.caseyellow.server.central.persistence.model.TestDAO;
 import com.caseyellow.server.central.persistence.repository.TestRepository;
 import org.apache.log4j.Logger;
@@ -27,15 +28,18 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public void saveTest(Test test) {
+    public void saveTest(TestWrapper test) {
         CompletableFuture.supplyAsync(() -> test)
                          .thenApply(this::removeUnsuccessfulTests)
+                         .thenApply(this::uploadToS3)
                          .thenApply(DAOConverter::convertTestToTestDAO)
                          .exceptionally(this::handleSaveTestException)
                          .thenAccept(testRepository::save);
     }
 
-    private Test removeUnsuccessfulTests(Test test) {
+    private TestWrapper removeUnsuccessfulTests(TestWrapper testWrapper) {
+        Test test = testWrapper.getTest();
+
         List<ComparisonInfo> comparisonInfoSucceed = test.getComparisonInfoTests()
                                                          .stream()
                                                          .filter(comparisonInfo -> comparisonInfo.getSpeedTestWebSite().isSucceed())
@@ -49,7 +53,11 @@ public class TestServiceImpl implements TestService {
         test.setComparisonInfoTests(comparisonInfoSucceed);
         notifyComparisonInfoFailures(comparisonInfoFailures);
 
-        return test;
+        return testWrapper;
+    }
+
+    private Test uploadToS3(TestWrapper testWrapper) {
+        return testWrapper.getTest();
     }
 
     private void notifyComparisonInfoFailures(List<ComparisonInfo> comparisonInfoFailures) {

@@ -14,6 +14,11 @@ public abstract class InternalException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
+    public InternalException(String message, Throwable cause, int errorCode) {
+        super(message, cause);
+        this.errorCode = errorCode;
+    }
+
     public int getErrorCode() {
         return errorCode;
     }

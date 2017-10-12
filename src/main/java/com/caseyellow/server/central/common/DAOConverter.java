@@ -20,14 +20,14 @@ public interface DAOConverter {
     static TestDAO convertTestToTestDAO(Test test) {
         TestDAO testDAO = new TestDAO.TestBuilder(test.getTestID())
                                      .addSpeedTestWebsite(test.getSpeedTestWebsiteIdentifier())
-                                     .addSystemInfo(convertSystemInfoToSystemInfoDAO(test.getSystemInfo()))
-                                     .addComparisonInfoTests(convertDtoToModel(DAOConverter::convertComparisonInfoToComparisonInfoDAO, test.getComparisonInfoTests()))
+                                     .addSystemInfo(convertSystemInfoModelToDAO(test.getSystemInfo()))
+                                     .addComparisonInfoTests(convertDtoToModel(DAOConverter::convertComparisonInfoModelToDAO, test.getComparisonInfoTests()))
                                      .build();
 
         return testDAO;
     }
 
-    static SystemInfoDAO convertSystemInfoToSystemInfoDAO(SystemInfo systemInfo) {
+    static SystemInfoDAO convertSystemInfoModelToDAO(SystemInfo systemInfo) {
         SystemInfoDAO systemInfoDAO = new SystemInfoDAO();
 
         systemInfoDAO.setBrowser(systemInfo.getBrowser());
@@ -38,15 +38,15 @@ public interface DAOConverter {
         return systemInfoDAO;
     }
 
-    static ComparisonInfoDAO convertComparisonInfoToComparisonInfoDAO(ComparisonInfo comparisonInfo) {
+    static ComparisonInfoDAO convertComparisonInfoModelToDAO(ComparisonInfo comparisonInfo) {
         ComparisonInfoDAO comparisonInfoDAO = new ComparisonInfoDAO();
-        comparisonInfoDAO.setFileDownloadInfoDAO(convertFileDownloadInfoToFileDownloadInfoDAO(comparisonInfo.getFileDownloadInfo()));
-        comparisonInfoDAO.setSpeedTestWebSiteDownloadInfoDAO(convertSpeedTestWebSiteToSpeedTestWebSiteDAO(comparisonInfo.getSpeedTestWebSite()));
+        comparisonInfoDAO.setFileDownloadInfoDAO(convertFileDownloadInfoModelToDAO(comparisonInfo.getFileDownloadInfo()));
+        comparisonInfoDAO.setSpeedTestWebSiteDownloadInfoDAO(convertSpeedTestWebSiteModelToDAO(comparisonInfo.getSpeedTestWebSite()));
 
         return comparisonInfoDAO;
     }
 
-    static FileDownloadInfoDAO convertFileDownloadInfoToFileDownloadInfoDAO(FileDownloadInfo fileDownloadInfo) {
+    static FileDownloadInfoDAO convertFileDownloadInfoModelToDAO(FileDownloadInfo fileDownloadInfo) {
         FileDownloadInfoDAO fileDownloadInfoDAO = new FileDownloadInfoDAO.FileDownloadInfoBuilder(fileDownloadInfo.getFileName())
                                                                          .addFileDownloadRateKBPerSec(fileDownloadInfo.getFileDownloadRateKBPerSec())
                                                                          .addFileDownloadedTimeInMs(fileDownloadInfo.getFileDownloadedDurationTimeInMs())
@@ -58,7 +58,7 @@ public interface DAOConverter {
         return fileDownloadInfoDAO;
     }
 
-    static SpeedTestWebSiteDAO convertSpeedTestWebSiteToSpeedTestWebSiteDAO(SpeedTestWebSite speedTestWebSite) {
+    static SpeedTestWebSiteDAO convertSpeedTestWebSiteModelToDAO(SpeedTestWebSite speedTestWebSite) {
         SpeedTestWebSiteDAO speedTestWebSiteDAO = new SpeedTestWebSiteDAO(speedTestWebSite.getSpeedTestIdentifier());
 
         speedTestWebSiteDAO.setStartMeasuringTimestamp(speedTestWebSite.getStartMeasuringTimestamp());

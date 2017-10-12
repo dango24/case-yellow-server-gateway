@@ -5,6 +5,7 @@ import com.caseyellow.server.central.domain.file.model.FileDownloadInfo;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.SystemInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
+import com.caseyellow.server.central.domain.test.model.TestWrapper;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
 import com.caseyellow.server.central.persistence.repository.FileDownloadInfoRepository;
 import com.caseyellow.server.central.persistence.repository.SpeedTestWebSiteRepository;
@@ -62,7 +63,7 @@ public class TestServiceImplTest {
 
     @org.junit.Test
     public void removeUnsuccessfulTests() throws Exception{
-        Method removeUnsuccessfulTestsMethod = TestServiceImpl.class.getDeclaredMethod("removeUnsuccessfulTests", Test.class);
+        Method removeUnsuccessfulTestsMethod = TestServiceImpl.class.getDeclaredMethod("removeUnsuccessfulTests", TestWrapper.class);
         removeUnsuccessfulTestsMethod.setAccessible(true);
 
         Test beforeRemoveUnsuccessfulTestsTest = new Test();
@@ -70,9 +71,9 @@ public class TestServiceImplTest {
 
         assertTrue(beforeRemoveUnsuccessfulTestsTest.getComparisonInfoTests().size() == NUM_OF_FAILED_TEST + NUM_OF_SUCCEED_TEST);
 
-        Test afterRemoveUnsuccessfulTestsTest = (Test)removeUnsuccessfulTestsMethod.invoke(testService, beforeRemoveUnsuccessfulTestsTest);
+        TestWrapper afterRemoveUnsuccessfulTestsTest = (TestWrapper)removeUnsuccessfulTestsMethod.invoke(testService, new TestWrapper(beforeRemoveUnsuccessfulTestsTest));
 
-        assertTrue(afterRemoveUnsuccessfulTestsTest.getComparisonInfoTests().size() == NUM_OF_SUCCEED_TEST);
+        assertTrue(afterRemoveUnsuccessfulTestsTest.getTest().getComparisonInfoTests().size() == NUM_OF_SUCCEED_TEST);
     }
 
    @org.junit.Test
@@ -85,7 +86,7 @@ public class TestServiceImplTest {
 
        assertTrue(testRepository.findAll().isEmpty());
 
-       testService.saveTest(test);
+       testService.saveTest(new TestWrapper(test));
 
        TimeUnit.MILLISECONDS.sleep(700);
 
@@ -108,7 +109,7 @@ public class TestServiceImplTest {
                             .build();
 
 
-        testService.saveTest(test);
+        testService.saveTest(new TestWrapper(test));
 
         assertTrue(testRepository.findAll().isEmpty());
         assertTrue(speedTestWebSiteRepository.findAll().isEmpty());
