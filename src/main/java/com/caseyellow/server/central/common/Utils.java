@@ -20,10 +20,11 @@ public interface Utils {
     static TestWrapper prepareTest(String payload, MultipartRequest request)  {
         try {
             Map<String, File> snapshotLocation =
-                    request.getFileMap().entrySet()
-                            .stream()
-                            .map(Utils::writeToFile)
-                            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+                    request.getFileMap()
+                           .entrySet()
+                           .stream()
+                           .map(Utils::writeToFile)
+                           .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
             Test test = new ObjectMapper().readValue(payload, Test.class);
 
@@ -35,7 +36,7 @@ public interface Utils {
     }
 
 
-    /*private*/ static Map.Entry<String, File> writeToFile(Map.Entry<String, MultipartFile> snapshot) {
+    static Map.Entry<String, File> writeToFile(Map.Entry<String, MultipartFile> snapshot) {
         String identifier = snapshot.getKey();
         MultipartFile file = snapshot.getValue();
 

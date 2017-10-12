@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -57,6 +58,16 @@ public class TestServiceImpl implements TestService {
     }
 
     private Test uploadToS3(TestWrapper testWrapper) {
+
+        System.out.println(
+                testWrapper.getSnapshotLocation()
+                           .values()
+                           .stream()
+                           .map(file -> new StringBuilder(String.valueOf(System.currentTimeMillis())).reverse().toString() + file.getName())
+                           .collect(joining(", "))
+        );
+
+
         return testWrapper.getTest();
     }
 
