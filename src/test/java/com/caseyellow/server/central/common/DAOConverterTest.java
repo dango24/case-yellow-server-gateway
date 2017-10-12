@@ -8,6 +8,7 @@ import com.caseyellow.server.central.persistence.model.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
 
+@ActiveProfiles("dev")
 public class DAOConverterTest {
 
     private static final String HOT = "http://www.hot.net.il/heb/Internet/speed/";

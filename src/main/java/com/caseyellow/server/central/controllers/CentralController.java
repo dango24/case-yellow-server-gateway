@@ -52,7 +52,7 @@ public class CentralController {
     @GetMapping(value = "/next-urls",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<FileDownloadMetaData> getFileDownloadMetaData(@RequestParam("comparison-count") int numOfComparisonPerTest) {
+    public List<FileDownloadMetaData> getFileDownloadMetaData(@RequestParam("num_of_comparison_per_test") int numOfComparisonPerTest) {
         return fileDownloadService.getNextFileDownloadMetaData(numOfComparisonPerTest);
     }
 

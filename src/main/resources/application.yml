@@ -1,7 +1,7 @@
 server.port : 8888
 
 # Profiles
-spring.profiles.active: dev
+spring.profiles.active: integration
 
 # H2
 spring.h2.console.enabled: true

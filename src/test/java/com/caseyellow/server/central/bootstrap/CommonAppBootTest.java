@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.lang.reflect.Method;
@@ -20,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -31,7 +31,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class)
-public class ProdAppBootTest {
+@ActiveProfiles("dev")
+public class CommonAppBootTest {
 
     private static final String HOT_IDENTIFIER = "HOT";
     private static final String ATNT_IDENTIFIER = "atnt";
@@ -56,7 +57,7 @@ public class ProdAppBootTest {
     @Autowired
     private FileDownloadService fileDownloadService;
 
-    private ProductionApplicationBoot prodAppBoot;
+    private CommonApplicationBoot commonAppBoot;
 
     @Before
     public void setUp() throws Exception {
@@ -66,7 +67,7 @@ public class ProdAppBootTest {
         when(urlMapper.getFileDownloadIdentifiers()).thenReturn(new HashSet<>(fileDownloadsList));
         when(urlMapper.getSpeedTestIdentifiers()).thenReturn(new HashSet<>(speedTestList));
 
-        prodAppBoot = new ProductionApplicationBoot(urlMapper, fileDownloadInfoRepository, speedTestWebSiteRepository);
+        commonAppBoot = new CommonApplicationBoot(urlMapper, fileDownloadInfoRepository, speedTestWebSiteRepository);
     }
 
     @After
@@ -78,10 +79,10 @@ public class ProdAppBootTest {
     @Test
     public void fileDownloadNoneMatchesTest() throws Exception{
 
-        Method getFileDownloadNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
+        Method getFileDownloadNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
         getFileDownloadNotExistInDBMethod.setAccessible(true);
 
-        List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(prodAppBoot);
+        List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(commonAppBoot);
 
         assertThat(Arrays.asList(FIREFOX_IDENTIFIER, GO_IDENTIFIER, JAVA_SDK_IDENTIFIER, POSTGRESQL_IDENTIFIER, KINECT_IDENTIFIER, ITUNES_IDENTIFIER),
                    containsInAnyOrder(fileDownloadNotExistInDB.toArray()));
@@ -93,10 +94,10 @@ public class ProdAppBootTest {
         IntStream.range(0, 4).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(POSTGRESQL_IDENTIFIER, null)));
         IntStream.range(0, 3).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(ITUNES_IDENTIFIER, null)));
 
-        Method getFileDownloadNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
+        Method getFileDownloadNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
         getFileDownloadNotExistInDBMethod.setAccessible(true);
 
-        List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(prodAppBoot);
+        List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(commonAppBoot);
 
         assertThat(Arrays.asList(FIREFOX_IDENTIFIER, KINECT_IDENTIFIER, JAVA_SDK_IDENTIFIER), containsInAnyOrder(fileDownloadNotExistInDB.toArray()));
     }
@@ -110,10 +111,10 @@ public class ProdAppBootTest {
         IntStream.range(0, 11).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(FIREFOX_IDENTIFIER, null)));
         IntStream.range(0, 9).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(KINECT_IDENTIFIER, null)));
 
-        Method getFileDownloadNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
+        Method getFileDownloadNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
         getFileDownloadNotExistInDBMethod.setAccessible(true);
 
-        List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(prodAppBoot);
+        List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(commonAppBoot);
 
         assertThat(Collections.emptyList(), containsInAnyOrder(fileDownloadNotExistInDB.toArray()));
     }
@@ -121,10 +122,10 @@ public class ProdAppBootTest {
     @Test
     public void speedTestNoneMatchesTest() throws Exception{
 
-        Method getSpeedTestNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
+        Method getSpeedTestNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
         getSpeedTestNotExistInDBMethod.setAccessible(true);
 
-        List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(prodAppBoot);
+        List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(commonAppBoot);
 
         assertThat(Arrays.asList(FAST_IDENTIFIER, SPEED_OF_IDENTIFIER, ATNT_IDENTIFIER, HOT_IDENTIFIER, BEZEQ_IDENTIFIER, OOKLA_IDENTIFIER),
                    containsInAnyOrder(speedTestNotExistInDB.toArray()));
@@ -136,10 +137,10 @@ public class ProdAppBootTest {
         IntStream.range(0, 7).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
         IntStream.range(0, 5).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(OOKLA_IDENTIFIER)));
 
-        Method getSpeedTestNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
+        Method getSpeedTestNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
         getSpeedTestNotExistInDBMethod.setAccessible(true);
 
-        List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(prodAppBoot);
+        List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(commonAppBoot);
 
         assertThat(Arrays.asList(FAST_IDENTIFIER, SPEED_OF_IDENTIFIER, ATNT_IDENTIFIER), containsInAnyOrder(speedTestNotExistInDB.toArray()));
     }
@@ -153,10 +154,10 @@ public class ProdAppBootTest {
         IntStream.range(0, 8).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(SPEED_OF_IDENTIFIER)));
         IntStream.range(0, 1).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(ATNT_IDENTIFIER)));
 
-        Method getSpeedTestNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
+        Method getSpeedTestNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
         getSpeedTestNotExistInDBMethod.setAccessible(true);
 
-        List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(prodAppBoot);
+        List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(commonAppBoot);
 
         assertThat(Collections.emptyList(), containsInAnyOrder(speedTestNotExistInDB.toArray()));
     }
@@ -166,9 +167,9 @@ public class ProdAppBootTest {
         assertTrue(speedTestWebSiteRepository.findAll().isEmpty());
         assertTrue(fileDownloadInfoRepository.findAll().isEmpty());
 
-        Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
+        Method initMethod = CommonApplicationBoot.class.getDeclaredMethod("init");
         initMethod.setAccessible(true);
-        initMethod.invoke(prodAppBoot);
+        initMethod.invoke(commonAppBoot);
 
         String[] actualSpeedTestIdentifiers =
                 speedTestWebSiteRepository.findAll()
@@ -200,9 +201,9 @@ public class ProdAppBootTest {
         IntStream.range(0, 2).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(JAVA_SDK_IDENTIFIER, null)));
         IntStream.range(0, 11).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(FIREFOX_IDENTIFIER, null)));
 
-        Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
+        Method initMethod = CommonApplicationBoot.class.getDeclaredMethod("init");
         initMethod.setAccessible(true);
-        initMethod.invoke(prodAppBoot);
+        initMethod.invoke(commonAppBoot);
 
         String[] actualSpeedTestIdentifiers =
                 speedTestWebSiteRepository.findAll()
@@ -242,9 +243,9 @@ public class ProdAppBootTest {
         IntStream.range(0, 9).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(KINECT_IDENTIFIER, null)));
 
 
-        Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
+        Method initMethod = CommonApplicationBoot.class.getDeclaredMethod("init");
         initMethod.setAccessible(true);
-        initMethod.invoke(prodAppBoot);
+        initMethod.invoke(commonAppBoot);
 
         String[] actualSpeedTestIdentifiers =
                 speedTestWebSiteRepository.findAll()
