@@ -10,15 +10,18 @@
     "flashAble": true,
     "haveStartButton": true,
     "buttonIds": [{
-      "identifier": "GO",
+      "identifier": "התחל",
+      "count": 1
+    }, {
+      "identifier": "בדיקה",
       "count": 1
     }],
     "finishIdentifiers": [{
       "identifier": "Mbps",
       "count": 2
     }, {
-      "identifier": "AGAIN",
-      "count": 1
+      "identifier": "גרף קישוריות",
+      "count": -1
     }]
   },
   {
