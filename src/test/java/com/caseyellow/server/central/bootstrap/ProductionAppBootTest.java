@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class)
 @ActiveProfiles("dev")
-public class CommonAppBootTest {
+public class ProductionAppBootTest {
 
     private static final String HOT_IDENTIFIER = "HOT";
     private static final String ATNT_IDENTIFIER = "atnt";
@@ -57,7 +57,7 @@ public class CommonAppBootTest {
     @Autowired
     private FileDownloadService fileDownloadService;
 
-    private CommonApplicationBoot commonAppBoot;
+    private ProductionApplicationBoot commonAppBoot;
 
     @Before
     public void setUp() throws Exception {
@@ -67,7 +67,7 @@ public class CommonAppBootTest {
         when(urlMapper.getFileDownloadIdentifiers()).thenReturn(new HashSet<>(fileDownloadsList));
         when(urlMapper.getSpeedTestIdentifiers()).thenReturn(new HashSet<>(speedTestList));
 
-        commonAppBoot = new CommonApplicationBoot(urlMapper, fileDownloadInfoRepository, speedTestWebSiteRepository);
+        commonAppBoot = new ProductionApplicationBoot(urlMapper, fileDownloadInfoRepository, speedTestWebSiteRepository);
     }
 
     @After
@@ -79,7 +79,7 @@ public class CommonAppBootTest {
     @Test
     public void fileDownloadNoneMatchesTest() throws Exception{
 
-        Method getFileDownloadNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
+        Method getFileDownloadNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
         getFileDownloadNotExistInDBMethod.setAccessible(true);
 
         List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(commonAppBoot);
@@ -94,7 +94,7 @@ public class CommonAppBootTest {
         IntStream.range(0, 4).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(POSTGRESQL_IDENTIFIER, null)));
         IntStream.range(0, 3).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(ITUNES_IDENTIFIER, null)));
 
-        Method getFileDownloadNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
+        Method getFileDownloadNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
         getFileDownloadNotExistInDBMethod.setAccessible(true);
 
         List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(commonAppBoot);
@@ -111,7 +111,7 @@ public class CommonAppBootTest {
         IntStream.range(0, 11).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(FIREFOX_IDENTIFIER, null)));
         IntStream.range(0, 9).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(KINECT_IDENTIFIER, null)));
 
-        Method getFileDownloadNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
+        Method getFileDownloadNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
         getFileDownloadNotExistInDBMethod.setAccessible(true);
 
         List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(commonAppBoot);
@@ -122,7 +122,7 @@ public class CommonAppBootTest {
     @Test
     public void speedTestNoneMatchesTest() throws Exception{
 
-        Method getSpeedTestNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
+        Method getSpeedTestNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
         getSpeedTestNotExistInDBMethod.setAccessible(true);
 
         List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(commonAppBoot);
@@ -137,7 +137,7 @@ public class CommonAppBootTest {
         IntStream.range(0, 7).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
         IntStream.range(0, 5).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(OOKLA_IDENTIFIER)));
 
-        Method getSpeedTestNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
+        Method getSpeedTestNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
         getSpeedTestNotExistInDBMethod.setAccessible(true);
 
         List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(commonAppBoot);
@@ -154,7 +154,7 @@ public class CommonAppBootTest {
         IntStream.range(0, 8).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(SPEED_OF_IDENTIFIER)));
         IntStream.range(0, 1).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(ATNT_IDENTIFIER)));
 
-        Method getSpeedTestNotExistInDBMethod = CommonApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
+        Method getSpeedTestNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
         getSpeedTestNotExistInDBMethod.setAccessible(true);
 
         List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(commonAppBoot);
@@ -167,7 +167,7 @@ public class CommonAppBootTest {
         assertTrue(speedTestWebSiteRepository.findAll().isEmpty());
         assertTrue(fileDownloadInfoRepository.findAll().isEmpty());
 
-        Method initMethod = CommonApplicationBoot.class.getDeclaredMethod("init");
+        Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
         initMethod.setAccessible(true);
         initMethod.invoke(commonAppBoot);
 
@@ -201,7 +201,7 @@ public class CommonAppBootTest {
         IntStream.range(0, 2).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(JAVA_SDK_IDENTIFIER, null)));
         IntStream.range(0, 11).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(FIREFOX_IDENTIFIER, null)));
 
-        Method initMethod = CommonApplicationBoot.class.getDeclaredMethod("init");
+        Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
         initMethod.setAccessible(true);
         initMethod.invoke(commonAppBoot);
 
@@ -243,7 +243,7 @@ public class CommonAppBootTest {
         IntStream.range(0, 9).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(KINECT_IDENTIFIER, null)));
 
 
-        Method initMethod = CommonApplicationBoot.class.getDeclaredMethod("init");
+        Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
         initMethod.setAccessible(true);
         initMethod.invoke(commonAppBoot);
 
