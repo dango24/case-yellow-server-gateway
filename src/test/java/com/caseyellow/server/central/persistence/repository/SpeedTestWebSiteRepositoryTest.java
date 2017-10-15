@@ -4,6 +4,7 @@ import com.caseyellow.server.central.App;
 import com.caseyellow.server.central.persistence.model.SpeedTestWebSiteDAO;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ import static org.junit.Assert.*;
 @ActiveProfiles("dev")
 public class SpeedTestWebSiteRepositoryTest {
 
+    private static final int HOT_COUNT = 10;
+    private static final int BEZEQ_COUNT = 3;
+    private static final int FAST_COUNT = 7;
+    private static final int TOTAL_COUNT = FAST_COUNT + HOT_COUNT + BEZEQ_COUNT;
+
     private static final String HOT_IDENTIFIER = "hot";
     private static final String BEZEQ_IDENTIFIER = "bezeq";
     private static final String FAST_IDENTIFIER = "fast";
@@ -41,9 +47,9 @@ public class SpeedTestWebSiteRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        IntStream.range(0, 10).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER, HOT_URL)));
-        IntStream.range(0, 3).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER, BEZEQ_URL)));
-        IntStream.range(0, 7).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(FAST_IDENTIFIER, FAST_URL)));
+        IntStream.range(0, HOT_COUNT).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER, HOT_URL)));
+        IntStream.range(0, BEZEQ_COUNT).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER, BEZEQ_URL)));
+        IntStream.range(0, FAST_COUNT).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(FAST_IDENTIFIER, FAST_URL)));
     }
 
     @After
@@ -54,33 +60,33 @@ public class SpeedTestWebSiteRepositoryTest {
     @Test
     public void allSpeedTestWebSiteAddedByFindAll() {
         List<SpeedTestWebSiteDAO> allSpeedTest = speedTestWebSiteRepository.findAll();
-        assertTrue(allSpeedTest.size() == 20);
+        assertTrue(allSpeedTest.size() == TOTAL_COUNT);
     }
 
     @Test
     public void allSpeedTestWebSiteAddedByCount() {
-        assertTrue(speedTestWebSiteRepository.count() == 20);
+        assertTrue(speedTestWebSiteRepository.count() == TOTAL_COUNT);
     }
 
     @Test
     public void countBySpeedTestIdentifierHot() {
-        assertTrue(speedTestWebSiteRepository.countBySpeedTestIdentifier(HOT_IDENTIFIER) == 10);
+        assertTrue(speedTestWebSiteRepository.countBySpeedTestIdentifier(HOT_IDENTIFIER) == HOT_COUNT);
     }
 
     @Test
     public void countBySpeedTestIdentifierBezeq() {
-        assertTrue(speedTestWebSiteRepository.countBySpeedTestIdentifier(BEZEQ_IDENTIFIER) == 3);
+        assertTrue(speedTestWebSiteRepository.countBySpeedTestIdentifier(BEZEQ_IDENTIFIER) == BEZEQ_COUNT);
     }
 
     @Test
     public void countBySpeedTestIdentifierFast() {
-        assertTrue(speedTestWebSiteRepository.countBySpeedTestIdentifier(FAST_IDENTIFIER) == 7);
+        assertTrue(speedTestWebSiteRepository.countBySpeedTestIdentifier(FAST_IDENTIFIER) == FAST_COUNT);
     }
 
     @Test
     public void findBySpeedTestIdentifierHot() {
         List<SpeedTestWebSiteDAO> allHotSpeedTest = speedTestWebSiteRepository.findBySpeedTestIdentifier(HOT_IDENTIFIER);
-        assertTrue(allHotSpeedTest.size() == 10);
+        assertTrue(allHotSpeedTest.size() == HOT_COUNT);
     }
 
     @Test
@@ -111,4 +117,18 @@ public class SpeedTestWebSiteRepositoryTest {
 
         assertThat(new HashSet<>(actualMapper.entrySet()), hasItems(expectedMapper.entrySet().toArray()));
     }
+
+    @Test
+    public void findByAnalyzedFalse() throws Exception {
+        int analyzedTestsCount = 20;
+        int unAnalyzedTestsCount = 5;
+        
+        IntStream.range(0, analyzedTestsCount).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER, HOT_URL, true)));
+        IntStream.range(0, unAnalyzedTestsCount).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER, BEZEQ_URL)));
+
+        assertTrue(speedTestWebSiteRepository.count() == TOTAL_COUNT + analyzedTestsCount + unAnalyzedTestsCount);
+
+        assertTrue(speedTestWebSiteRepository.findByAnalyzedFalse().size() == TOTAL_COUNT + unAnalyzedTestsCount);
+    }
+
 }

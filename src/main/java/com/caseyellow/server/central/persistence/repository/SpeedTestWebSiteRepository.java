@@ -24,6 +24,7 @@ public interface SpeedTestWebSiteRepository extends JpaRepository<SpeedTestWebSi
 
     Long countBySpeedTestIdentifier(String speedTestIdentifier);
     List<SpeedTestWebSiteDAO> findBySpeedTestIdentifier(String speedTestIdentifier);
+    List<SpeedTestWebSiteDAO> findByAnalyzedFalse();
 
     @Query(value = SELECT_IDENTIFIER_AND_URL_QUERY, nativeQuery = true)
     List<Object[]> selectIdentifierAndURL();

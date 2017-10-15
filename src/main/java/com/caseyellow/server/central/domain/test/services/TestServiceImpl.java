@@ -60,7 +60,7 @@ public class TestServiceImpl implements TestService {
     private Test uploadToS3(TestWrapper testWrapper) {
 
         System.out.println(
-                testWrapper.getSnapshotLocation()
+                testWrapper.getSnapshotLocalLocation()
                            .values()
                            .stream()
                            .map(file -> new StringBuilder(String.valueOf(System.currentTimeMillis())).reverse().toString() + file.getName())

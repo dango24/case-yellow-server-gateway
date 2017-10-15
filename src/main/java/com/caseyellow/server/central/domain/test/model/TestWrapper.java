@@ -29,7 +29,7 @@ public class TestWrapper {
         this.test = test;
     }
 
-    public Map<String, File> getSnapshotLocation() {
+    public Map<String, File> getSnapshotLocalLocation() {
         return snapshotLocation;
     }
 
