@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.controllers;
 
 import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
+import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.TestWrapper;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
 import com.caseyellow.server.central.domain.webSite.services.SpeedTestWebSiteService;
@@ -64,6 +65,14 @@ public class CentralController {
         TestWrapper testWrapper = prepareTest(payload, request);
 
         testService.saveTest(testWrapper);
+    }
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @GetMapping("/all-test")
+    public List<Test> getAllTests() {
+        logger.info("Received getAllTests GET request");
+
+        return testService.getAllTests();
     }
 
 }

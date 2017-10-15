@@ -27,6 +27,14 @@ public class ComparisonInfo {
         return fileDownloadInfo;
     }
 
+    public void setSpeedTestWebSite(SpeedTestWebSite speedTestWebSite) {
+        this.speedTestWebSite = speedTestWebSite;
+    }
+
+    public void setFileDownloadInfo(FileDownloadInfo fileDownloadInfo) {
+        this.fileDownloadInfo = fileDownloadInfo;
+    }
+
     @Override
     public String toString() {
         return "ComparisonInfo{" +

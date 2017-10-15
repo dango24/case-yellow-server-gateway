@@ -54,7 +54,7 @@ public class DAOConverterTest {
 
     @Test
     public void convertTestToTestDAO() throws Exception {
-        TestDAO testDAO = DAOConverter.convertTestToTestDAO(test);
+        TestDAO testDAO = DAOConverter.convertTestModelToDAO(test);
 
         assertNotNull(testDAO);
         assertEquals(testDAO.getTestID(), test.getTestID());

@@ -33,9 +33,17 @@ public class TestServiceImpl implements TestService {
         CompletableFuture.supplyAsync(() -> test)
                          .thenApply(this::removeUnsuccessfulTests)
                          .thenApply(this::uploadToS3)
-                         .thenApply(DAOConverter::convertTestToTestDAO)
+                         .thenApply(DAOConverter::convertTestModelToDAO)
                          .exceptionally(this::handleSaveTestException)
                          .thenAccept(testRepository::save);
+    }
+
+    @Override
+    public List<Test> getAllTests() {
+        return testRepository.findAll()
+                             .stream()
+                             .map(DAOConverter::convertTestDAOToModel)
+                             .collect(toList());
     }
 
     private TestWrapper removeUnsuccessfulTests(TestWrapper testWrapper) {

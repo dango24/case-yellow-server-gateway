@@ -17,14 +17,24 @@ import static java.util.stream.Collectors.toList;
 
 public interface DAOConverter {
 
-    static TestDAO convertTestToTestDAO(Test test) {
+    static TestDAO convertTestModelToDAO(Test test) {
         TestDAO testDAO = new TestDAO.TestBuilder(test.getTestID())
                                      .addSpeedTestWebsite(test.getSpeedTestWebsiteIdentifier())
                                      .addSystemInfo(convertSystemInfoModelToDAO(test.getSystemInfo()))
-                                     .addComparisonInfoTests(convertDtoToModel(DAOConverter::convertComparisonInfoModelToDAO, test.getComparisonInfoTests()))
+                                     .addComparisonInfoTests(convertDAOToModel(DAOConverter::convertComparisonInfoModelToDAO, test.getComparisonInfoTests()))
                                      .build();
 
         return testDAO;
+    }
+
+    static Test convertTestDAOToModel(TestDAO testDAO) {
+        Test test = new Test.TestBuilder(testDAO.getTestID())
+                            .addSpeedTestWebsiteIdentifier(testDAO.getSpeedTestWebsiteIdentifier())
+                            .addSystemInfo(convertSystemInfoDAOlToModel(testDAO.getSystemInfo()))
+                            .addComparisonInfoTests(convertModelToDto(DAOConverter::convertComparisonInfoDAOToModel, testDAO.getComparisonInfoDAOTests()))
+                            .build();
+
+        return test;
     }
 
     static SystemInfoDAO convertSystemInfoModelToDAO(SystemInfo systemInfo) {
@@ -38,6 +48,17 @@ public interface DAOConverter {
         return systemInfoDAO;
     }
 
+    static SystemInfo convertSystemInfoDAOlToModel(SystemInfoDAO systemInfoDAO) {
+        SystemInfo systemInfo = new SystemInfo();
+
+        systemInfo.setBrowser(systemInfoDAO.getBrowser());
+        systemInfo.setConnection(systemInfoDAO.getConnection());
+        systemInfo.setOperatingSystem(systemInfoDAO.getOperatingSystem());
+        systemInfo.setPublicIP(systemInfoDAO.getPublicIP());
+
+        return systemInfo;
+    }
+
     static ComparisonInfoDAO convertComparisonInfoModelToDAO(ComparisonInfo comparisonInfo) {
         ComparisonInfoDAO comparisonInfoDAO = new ComparisonInfoDAO();
         comparisonInfoDAO.setFileDownloadInfoDAO(convertFileDownloadInfoModelToDAO(comparisonInfo.getFileDownloadInfo()));
@@ -46,16 +67,38 @@ public interface DAOConverter {
         return comparisonInfoDAO;
     }
 
+    static ComparisonInfo convertComparisonInfoDAOToModel(ComparisonInfoDAO comparisonInfoDAO) {
+        ComparisonInfo comparisonInfo = new ComparisonInfo();
+        comparisonInfo.setFileDownloadInfo(convertFileDownloadInfoDAOToModel(comparisonInfoDAO.getFileDownloadInfoDAO()));
+        comparisonInfo.setSpeedTestWebSite(convertSpeedTestWebSiteDAOlToModel(comparisonInfoDAO.getSpeedTestWebSiteDownloadInfoDAO()));
+
+        return comparisonInfo;
+    }
+
     static FileDownloadInfoDAO convertFileDownloadInfoModelToDAO(FileDownloadInfo fileDownloadInfo) {
-        FileDownloadInfoDAO fileDownloadInfoDAO = new FileDownloadInfoDAO.FileDownloadInfoBuilder(fileDownloadInfo.getFileName())
-                                                                         .addFileDownloadRateKBPerSec(fileDownloadInfo.getFileDownloadRateKBPerSec())
-                                                                         .addFileDownloadedTimeInMs(fileDownloadInfo.getFileDownloadedDurationTimeInMs())
-                                                                         .addFileSizeInBytes(fileDownloadInfo.getFileSizeInBytes())
-                                                                         .addFileURL(fileDownloadInfo.getFileURL())
-                                                                         .addStartDownloadingTime(fileDownloadInfo.getStartDownloadingTimestamp())
-                                                                         .build();
+        FileDownloadInfoDAO fileDownloadInfoDAO =
+                new FileDownloadInfoDAO.FileDownloadInfoBuilder(fileDownloadInfo.getFileName())
+                                       .addFileDownloadRateKBPerSec(fileDownloadInfo.getFileDownloadRateKBPerSec())
+                                       .addFileDownloadedTimeInMs(fileDownloadInfo.getFileDownloadedDurationTimeInMs())
+                                       .addFileSizeInBytes(fileDownloadInfo.getFileSizeInBytes())
+                                       .addFileURL(fileDownloadInfo.getFileURL())
+                                       .addStartDownloadingTime(fileDownloadInfo.getStartDownloadingTimestamp())
+                                       .build();
 
         return fileDownloadInfoDAO;
+    }
+
+    static FileDownloadInfo convertFileDownloadInfoDAOToModel(FileDownloadInfoDAO fileDownloadInfoDAO) {
+        FileDownloadInfo fileDownloadInfo =
+                new FileDownloadInfo.FileDownloadInfoBuilder(fileDownloadInfoDAO.getFileName())
+                                    .addFileDownloadRateKBPerSec(fileDownloadInfoDAO.getFileDownloadRateKBPerSec())
+                                    .addFileDownloadedTimeInMs(fileDownloadInfoDAO.getFileDownloadedTimeInMs())
+                                    .addFileSizeInBytes(fileDownloadInfoDAO.getFileSizeInBytes())
+                                    .addFileURL(fileDownloadInfoDAO.getFileURL())
+                                    .addStartDownloadingTime(fileDownloadInfoDAO.getStartDownloadingTimestamp())
+                                    .build();
+
+        return fileDownloadInfo;
     }
 
     static SpeedTestWebSiteDAO convertSpeedTestWebSiteModelToDAO(SpeedTestWebSite speedTestWebSite) {
@@ -65,6 +108,15 @@ public interface DAOConverter {
         speedTestWebSiteDAO.setUrlAddress(speedTestWebSite.getUrlAddress());
 
         return speedTestWebSiteDAO;
+    }
+
+    static SpeedTestWebSite convertSpeedTestWebSiteDAOlToModel(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
+        SpeedTestWebSite speedTestWebSite = new SpeedTestWebSite(speedTestWebSiteDAO.getSpeedTestIdentifier());
+
+        speedTestWebSite.setStartMeasuringTimestamp(speedTestWebSiteDAO.getStartMeasuringTimestamp());
+        speedTestWebSite.setUrlAddress(speedTestWebSiteDAO.getUrlAddress());
+
+        return speedTestWebSite;
     }
 
     static <T extends Object, R extends Object> List<R> convertModelToDto(Function<T, R> convectorFunction,
@@ -78,8 +130,8 @@ public interface DAOConverter {
                               .collect(toList());
     }
 
-    static <T extends Object, R extends Object> List<R> convertDtoToModel(Function<T, R> convectorFunction,
-                                                                          Collection<T> dtoCollection) {
-        return convertModelToDto(convectorFunction, dtoCollection);
+    static <T extends Object, R extends Object> List<R> convertDAOToModel(Function<T, R> convectorFunction,
+                                                                          Collection<T> daoCollection) {
+        return convertModelToDto(convectorFunction, daoCollection);
     }
 }
