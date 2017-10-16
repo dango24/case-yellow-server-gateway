@@ -1,7 +1,8 @@
-package com.caseyellow.server.central.persistence.repository;
+package com.caseyellow.server.central.persistence.website.repository;
 
-import com.caseyellow.server.central.App;
-import com.caseyellow.server.central.persistence.model.FileDownloadInfoDAO;
+import com.caseyellow.server.central.CaseYellowCentral;
+import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
+import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import static org.junit.Assert.assertTrue;
  * Created by dango on 9/19/17.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = App.class)
+@SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
 public class FileDownloadInfoRepositoryTest {
 

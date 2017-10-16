@@ -1,4 +1,7 @@
-package com.caseyellow.server.central.persistence.model;
+package com.caseyellow.server.central.persistence.test.dao;
+
+import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
+import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 
 import javax.persistence.*;
 

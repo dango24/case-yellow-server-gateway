@@ -2,10 +2,10 @@ package com.caseyellow.server.central.bootstrap;
 
 import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.exceptions.AppBootException;
-import com.caseyellow.server.central.persistence.model.FileDownloadInfoDAO;
-import com.caseyellow.server.central.persistence.model.SpeedTestWebSiteDAO;
-import com.caseyellow.server.central.persistence.repository.FileDownloadInfoRepository;
-import com.caseyellow.server.central.persistence.repository.SpeedTestWebSiteRepository;
+import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
+import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
+import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
+import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;

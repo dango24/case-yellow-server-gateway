@@ -8,15 +8,15 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 
 @SpringBootApplication
-public class App extends SpringBootServletInitializer {
+public class CaseYellowCentral extends SpringBootServletInitializer {
 
-	private static Logger logger = Logger.getLogger(App.class);
+	private static Logger logger = Logger.getLogger(CaseYellowCentral.class);
 
 	/**
 	 *	Running as a jar
 	 */
 	public static void main(String[] args) {
-		SpringApplication.run(App.class, args);
+		SpringApplication.run(CaseYellowCentral.class, args);
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class App extends SpringBootServletInitializer {
 	 */
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(App.class);
+		return builder.sources(CaseYellowCentral.class);
 	}
 
 }

@@ -1,15 +1,15 @@
 package com.caseyellow.server.central.domain.test.services;
 
-import com.caseyellow.server.central.App;
+import com.caseyellow.server.central.CaseYellowCentral;
 import com.caseyellow.server.central.domain.file.model.FileDownloadInfo;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.SystemInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.TestWrapper;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
-import com.caseyellow.server.central.persistence.repository.FileDownloadInfoRepository;
-import com.caseyellow.server.central.persistence.repository.SpeedTestWebSiteRepository;
-import com.caseyellow.server.central.persistence.repository.TestRepository;
+import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
+import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
+import com.caseyellow.server.central.persistence.test.repository.TestRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = App.class)
+@SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
 public class TestServiceImplTest {
 

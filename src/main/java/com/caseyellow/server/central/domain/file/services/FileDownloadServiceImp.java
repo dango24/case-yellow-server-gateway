@@ -2,7 +2,7 @@ package com.caseyellow.server.central.domain.file.services;
 
 import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
-import com.caseyellow.server.central.persistence.repository.FileDownloadInfoRepository;
+import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

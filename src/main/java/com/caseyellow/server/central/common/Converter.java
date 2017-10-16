@@ -5,7 +5,11 @@ import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.SystemInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
-import com.caseyellow.server.central.persistence.model.*;
+import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
+import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
+import com.caseyellow.server.central.persistence.test.dao.SystemInfoDAO;
+import com.caseyellow.server.central.persistence.test.dao.TestDAO;
+import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 
 import java.util.Collection;
 import java.util.List;

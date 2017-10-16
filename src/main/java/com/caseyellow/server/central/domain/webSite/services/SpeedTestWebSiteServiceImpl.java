@@ -1,7 +1,7 @@
 package com.caseyellow.server.central.domain.webSite.services;
 
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
-import com.caseyellow.server.central.persistence.repository.SpeedTestWebSiteRepository;
+import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

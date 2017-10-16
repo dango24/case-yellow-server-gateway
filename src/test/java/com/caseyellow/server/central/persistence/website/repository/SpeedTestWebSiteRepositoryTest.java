@@ -1,10 +1,9 @@
-package com.caseyellow.server.central.persistence.repository;
+package com.caseyellow.server.central.persistence.website.repository;
 
-import com.caseyellow.server.central.App;
-import com.caseyellow.server.central.persistence.model.SpeedTestWebSiteDAO;
+import com.caseyellow.server.central.CaseYellowCentral;
+import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ import static org.junit.Assert.*;
  * Created by dango on 9/19/17.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = App.class)
+@SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
 public class SpeedTestWebSiteRepositoryTest {
 

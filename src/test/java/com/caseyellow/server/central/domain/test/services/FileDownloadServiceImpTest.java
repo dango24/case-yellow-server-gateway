@@ -1,16 +1,15 @@
 package com.caseyellow.server.central.domain.test.services;
 
-import com.caseyellow.server.central.App;
+import com.caseyellow.server.central.CaseYellowCentral;
 import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
 import com.caseyellow.server.central.domain.file.services.FileDownloadService;
-import com.caseyellow.server.central.persistence.model.FileDownloadInfoDAO;
-import com.caseyellow.server.central.persistence.repository.FileDownloadInfoRepository;
+import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
+import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -25,7 +24,7 @@ import static org.junit.Assert.assertThat;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = App.class)
+@SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
 public class FileDownloadServiceImpTest {
 

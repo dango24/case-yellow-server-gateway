@@ -4,8 +4,8 @@ import com.caseyellow.server.central.common.Converter;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.TestWrapper;
-import com.caseyellow.server.central.persistence.model.TestDAO;
-import com.caseyellow.server.central.persistence.repository.TestRepository;
+import com.caseyellow.server.central.persistence.test.dao.TestDAO;
+import com.caseyellow.server.central.persistence.test.repository.TestRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,21 +29,21 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public void saveTest(TestWrapper test) {
-        CompletableFuture.supplyAsync(() -> test)
-                         .thenApply(this::removeUnsuccessfulTests)
-                         .thenApply(this::uploadToS3)
-                         .thenApply(Converter::convertTestModelToDAO)
-                         .exceptionally(this::handleSaveTestException)
-                         .thenAccept(testRepository::save);
-    }
-
-    @Override
     public List<Test> getAllTests() {
         return testRepository.findAll()
                              .stream()
                              .map(Converter::convertTestDAOToModel)
                              .collect(toList());
+    }
+
+    @Override
+    public void saveTest(TestWrapper test) {
+        CompletableFuture.supplyAsync(() -> test)
+                         .thenApply(this::removeUnsuccessfulTests)
+                         .thenApply(this::uploadSnapshotToS3)
+                         .thenApply(Converter::convertTestModelToDAO)
+                         .exceptionally(this::handleSaveTestException)
+                         .thenAccept(testRepository::save);
     }
 
     private TestWrapper removeUnsuccessfulTests(TestWrapper testWrapper) {
@@ -65,9 +65,9 @@ public class TestServiceImpl implements TestService {
         return testWrapper;
     }
 
-    private Test uploadToS3(TestWrapper testWrapper) {
+    private Test uploadSnapshotToS3(TestWrapper testWrapper) {
 
-        System.out.println(
+        logger.info(
                 testWrapper.getSnapshotLocalLocation()
                            .values()
                            .stream()

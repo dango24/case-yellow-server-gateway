@@ -1,6 +1,6 @@
-package com.caseyellow.server.central.persistence.repository;
+package com.caseyellow.server.central.persistence.website.repository;
 
-import com.caseyellow.server.central.persistence.model.SpeedTestWebSiteDAO;
+import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
