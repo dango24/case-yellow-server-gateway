@@ -44,16 +44,25 @@ public class SpeedTestWebSiteRepositoryTest {
     @Autowired
     private SpeedTestWebSiteRepository speedTestWebSiteRepository;
 
+    @Autowired
+    private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
+
     @Before
     public void setUp() throws Exception {
-        IntStream.range(0, HOT_COUNT).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER, HOT_URL)));
-        IntStream.range(0, BEZEQ_COUNT).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER, BEZEQ_URL)));
-        IntStream.range(0, FAST_COUNT).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(FAST_IDENTIFIER, FAST_URL)));
+        IntStream.range(0, HOT_COUNT).forEach(i -> addSpeedTestWebSite(new SpeedTestWebSiteDAO(HOT_IDENTIFIER, HOT_URL)));
+        IntStream.range(0, BEZEQ_COUNT).forEach(i -> addSpeedTestWebSite(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER, BEZEQ_URL)));
+        IntStream.range(0, FAST_COUNT).forEach(i -> addSpeedTestWebSite(new SpeedTestWebSiteDAO(FAST_IDENTIFIER, FAST_URL)));
     }
 
     @After
     public void tearDown() throws Exception {
+        speedTestWebSiteCounterRepository.deleteAll();
         speedTestWebSiteRepository.deleteAll();
+    }
+
+    private void addSpeedTestWebSite(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
+        speedTestWebSiteRepository.save(speedTestWebSiteDAO);
+        speedTestWebSiteCounterRepository.addSpeedTestWebSite(speedTestWebSiteDAO.getSpeedTestIdentifier());
     }
 
     @Test
@@ -90,18 +99,18 @@ public class SpeedTestWebSiteRepositoryTest {
 
     @Test
     public void findMinSpeedTestWebSite() {
-        String minIdentifier = speedTestWebSiteRepository.findMinIdentifier();
+        String minIdentifier = speedTestWebSiteCounterRepository.findMinIdentifier();
         assertEquals(BEZEQ_IDENTIFIER, minIdentifier);
     }
 
     @Test
     public void findMinAfterAddSpeedTestWebSite() {
-        String minIdentifier = speedTestWebSiteRepository.findMinIdentifier();
+        String minIdentifier = speedTestWebSiteCounterRepository.findMinIdentifier();
         assertEquals(BEZEQ_IDENTIFIER, minIdentifier);
 
-        IntStream.range(0, 13).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
+        IntStream.range(0, 13).forEach(i -> addSpeedTestWebSite(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
 
-        minIdentifier = speedTestWebSiteRepository.findMinIdentifier();
+        minIdentifier = speedTestWebSiteCounterRepository.findMinIdentifier();
         assertEquals(FAST_IDENTIFIER, minIdentifier);
     }
 
@@ -122,8 +131,8 @@ public class SpeedTestWebSiteRepositoryTest {
         int analyzedTestsCount = 20;
         int unAnalyzedTestsCount = 5;
         
-        IntStream.range(0, analyzedTestsCount).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER, HOT_URL, true)));
-        IntStream.range(0, unAnalyzedTestsCount).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER, BEZEQ_URL)));
+        IntStream.range(0, analyzedTestsCount).forEach(i -> addSpeedTestWebSite(new SpeedTestWebSiteDAO(HOT_IDENTIFIER, HOT_URL, true)));
+        IntStream.range(0, unAnalyzedTestsCount).forEach(i -> addSpeedTestWebSite(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER, BEZEQ_URL)));
 
         assertTrue(speedTestWebSiteRepository.count() == TOTAL_COUNT + analyzedTestsCount + unAnalyzedTestsCount);
 
