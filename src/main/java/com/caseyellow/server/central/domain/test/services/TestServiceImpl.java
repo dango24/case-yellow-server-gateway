@@ -1,6 +1,6 @@
 package com.caseyellow.server.central.domain.test.services;
 
-import com.caseyellow.server.central.common.DAOConverter;
+import com.caseyellow.server.central.common.Converter;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.TestWrapper;
@@ -33,7 +33,7 @@ public class TestServiceImpl implements TestService {
         CompletableFuture.supplyAsync(() -> test)
                          .thenApply(this::removeUnsuccessfulTests)
                          .thenApply(this::uploadToS3)
-                         .thenApply(DAOConverter::convertTestModelToDAO)
+                         .thenApply(Converter::convertTestModelToDAO)
                          .exceptionally(this::handleSaveTestException)
                          .thenAccept(testRepository::save);
     }
@@ -42,7 +42,7 @@ public class TestServiceImpl implements TestService {
     public List<Test> getAllTests() {
         return testRepository.findAll()
                              .stream()
-                             .map(DAOConverter::convertTestDAOToModel)
+                             .map(Converter::convertTestDAOToModel)
                              .collect(toList());
     }
 

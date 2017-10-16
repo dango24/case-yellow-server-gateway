@@ -54,7 +54,7 @@ public class DAOConverterTest {
 
     @Test
     public void convertTestToTestDAO() throws Exception {
-        TestDAO testDAO = DAOConverter.convertTestModelToDAO(test);
+        TestDAO testDAO = Converter.convertTestModelToDAO(test);
 
         assertNotNull(testDAO);
         assertEquals(testDAO.getTestID(), test.getTestID());
@@ -64,7 +64,7 @@ public class DAOConverterTest {
 
     @Test
     public void convertSystemInfoToSystemInfoDAO() throws Exception {
-        SystemInfoDAO systemInfoDAO = DAOConverter.convertSystemInfoModelToDAO(systemInfo);
+        SystemInfoDAO systemInfoDAO = Converter.convertSystemInfoModelToDAO(systemInfo);
         assertNotNull(systemInfoDAO);
         assertEquals(systemInfoDAO.getBrowser(), systemInfo.getBrowser());
         assertEquals(systemInfoDAO.getConnection(), systemInfo.getConnection());
@@ -74,19 +74,19 @@ public class DAOConverterTest {
 
     @Test
     public void convertComparisonInfoToComparisonInfoDAO() throws Exception {
-        ComparisonInfoDAO comparisonInfoDAO = DAOConverter.convertComparisonInfoModelToDAO(comparisonInfo);
+        ComparisonInfoDAO comparisonInfoDAO = Converter.convertComparisonInfoModelToDAO(comparisonInfo);
         assertTrue(isComparisonInfoEqualsToComparisonInfoDAO(comparisonInfoDAO, comparisonInfo));
     }
 
     @Test
     public void convertFileDownloadInfoToFileDownloadInfoDAO() throws Exception {
-        FileDownloadInfoDAO fileDownloadInfoDAO = DAOConverter.convertFileDownloadInfoModelToDAO(fileDownloadInfo);
+        FileDownloadInfoDAO fileDownloadInfoDAO = Converter.convertFileDownloadInfoModelToDAO(fileDownloadInfo);
         assertTrue(isFileDownloadInfoEqualsToFileDownloadInfoDAO(fileDownloadInfoDAO, fileDownloadInfo));
     }
 
     @Test
     public void convertSpeedTestWebSiteToSpeedTestWebSiteDAO() throws Exception {
-        SpeedTestWebSiteDAO speedTestWebSiteDAO = DAOConverter.convertSpeedTestWebSiteModelToDAO(speedTestWebSite);
+        SpeedTestWebSiteDAO speedTestWebSiteDAO = Converter.convertSpeedTestWebSiteModelToDAO(speedTestWebSite);
         assertTrue(isSpeedTestWebSiteEqualsToSpeedTestWebSiteDAO(speedTestWebSiteDAO, speedTestWebSite));
     }
 

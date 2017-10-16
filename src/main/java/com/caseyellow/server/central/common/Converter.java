@@ -15,13 +15,13 @@ import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 
-public interface DAOConverter {
+public interface Converter {
 
     static TestDAO convertTestModelToDAO(Test test) {
         TestDAO testDAO = new TestDAO.TestBuilder(test.getTestID())
                                      .addSpeedTestWebsite(test.getSpeedTestWebsiteIdentifier())
                                      .addSystemInfo(convertSystemInfoModelToDAO(test.getSystemInfo()))
-                                     .addComparisonInfoTests(convertDAOToModel(DAOConverter::convertComparisonInfoModelToDAO, test.getComparisonInfoTests()))
+                                     .addComparisonInfoTests(convertDAOToModel(Converter::convertComparisonInfoModelToDAO, test.getComparisonInfoTests()))
                                      .build();
 
         return testDAO;
@@ -31,7 +31,7 @@ public interface DAOConverter {
         Test test = new Test.TestBuilder(testDAO.getTestID())
                             .addSpeedTestWebsiteIdentifier(testDAO.getSpeedTestWebsiteIdentifier())
                             .addSystemInfo(convertSystemInfoDAOlToModel(testDAO.getSystemInfo()))
-                            .addComparisonInfoTests(convertModelToDto(DAOConverter::convertComparisonInfoDAOToModel, testDAO.getComparisonInfoDAOTests()))
+                            .addComparisonInfoTests(convertModelToDto(Converter::convertComparisonInfoDAOToModel, testDAO.getComparisonInfoDAOTests()))
                             .build();
 
         return test;
