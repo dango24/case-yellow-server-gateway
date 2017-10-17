@@ -19,6 +19,12 @@ public class FileDownloadCounter {
     public FileDownloadCounter() {
     }
 
+    public FileDownloadCounter(String identifier) {
+        this.identifier = identifier;
+        this.count = 0;
+        this.active = true;
+    }
+
     public Long getId() {
         return id;
     }

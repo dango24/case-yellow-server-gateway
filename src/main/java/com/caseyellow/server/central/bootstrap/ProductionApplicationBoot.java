@@ -2,10 +2,8 @@ package com.caseyellow.server.central.bootstrap;
 
 import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.exceptions.AppBootException;
-import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
-import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
-import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
-import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
+import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
+import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteCounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -21,14 +19,14 @@ import java.util.stream.Collectors;
 public class ProductionApplicationBoot {
 
     private UrlMapper urlMapper;
-    private FileDownloadInfoRepository fileDownloadInfoRepository;
-    private SpeedTestWebSiteRepository speedTestWebSiteRepository;
+    private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
+    private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
 
     @Autowired
-    public ProductionApplicationBoot(UrlMapper urlMapper, FileDownloadInfoRepository fileDownloadInfoRepository, SpeedTestWebSiteRepository speedTestWebSiteRepository) {
+    public ProductionApplicationBoot(UrlMapper urlMapper, FileDownloadInfoCounterRepository fileDownloadInfoRepository, SpeedTestWebSiteCounterRepository speedTestWebSiteRepository) {
         this.urlMapper = urlMapper;
-        this.fileDownloadInfoRepository = fileDownloadInfoRepository;
-        this.speedTestWebSiteRepository = speedTestWebSiteRepository;
+        this.fileDownloadInfoCounterRepository = fileDownloadInfoRepository;
+        this.speedTestWebSiteCounterRepository = speedTestWebSiteRepository;
     }
 
     @PostConstruct
@@ -37,16 +35,16 @@ public class ProductionApplicationBoot {
         List<String> fileDownloadNotExistInDB = getFileDownloadNotExistInDB();
 
         if (!speedTestNotExistInDB.isEmpty()) {
-            speedTestNotExistInDB.forEach(speedTest -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(speedTest)));
+            speedTestNotExistInDB.forEach(speedTestWebSiteCounterRepository::addSpeedTestWebSite);
         }
 
         if (!fileDownloadNotExistInDB.isEmpty()) {
-            fileDownloadNotExistInDB.forEach(fileDownload -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(fileDownload, null)));
+            fileDownloadNotExistInDB.forEach(fileDownloadInfoCounterRepository::addFileDownloadInfo);
         }
     }
 
     private List<String> getFileDownloadNotExistInDB() {
-        Set<String> fileDownloadIdentifiersFromDB = new HashSet<>(fileDownloadInfoRepository.getAllFileIdentifiers());
+        Set<String> fileDownloadIdentifiersFromDB = new HashSet<>(fileDownloadInfoCounterRepository.getIdentifiers());
         Set<String> fileDownloadIdentifiersFromResources = urlMapper.getFileDownloadIdentifiers();
 
         return fileDownloadIdentifiersFromResources.stream()
@@ -55,7 +53,7 @@ public class ProductionApplicationBoot {
     }
 
     private List<String> getSpeedTestNotExistInDB() {
-        Set<String> speedTestIdentifiersFromDB = new HashSet<>(speedTestWebSiteRepository.getAllSpeedTestIdentifiers());
+        Set<String> speedTestIdentifiersFromDB = new HashSet<>(speedTestWebSiteCounterRepository.getIdentifiers());
         Set<String> speedTestIdentifiersFromResources = urlMapper.getSpeedTestIdentifiers();
 
         return speedTestIdentifiersFromResources.stream()

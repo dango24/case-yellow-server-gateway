@@ -7,16 +7,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toMap;
 
 public interface SpeedTestWebSiteCounterRepository extends JpaRepository<SpeedTestWebSiteCounter, Long> {
 
+    String DEFAULT_IDENTIFIER = "hot";
     String UPDATE_COUNTER_QUERY = "UPDATE SpeedTestWebSiteCounter s set s.count = s.count+1 where s.id = :id";
 
-    String DEFAULT_IDENTIFIER = "hot";
     SpeedTestWebSiteCounter findByIdentifier(String identifier);
 
     @Modifying
@@ -35,8 +37,13 @@ public interface SpeedTestWebSiteCounterRepository extends JpaRepository<SpeedTe
         }
     }
 
-    default String findMinIdentifier() {
+    default List<String> getIdentifiers() {
+        return findAll().stream()
+                        .map(SpeedTestWebSiteCounter::getIdentifier)
+                        .collect(Collectors.toList());
+    }
 
+    default String findMinIdentifier() {
         Map<String, Integer> identifiers =
                 findAll().stream()
                          .filter(SpeedTestWebSiteCounter::isActive)

@@ -3,10 +3,12 @@ package com.caseyellow.server.central.bootstrap;
 import com.caseyellow.server.central.CaseYellowCentral;
 import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.domain.file.services.FileDownloadService;
+import com.caseyellow.server.central.persistence.file.dao.FileDownloadCounter;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
+import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
+import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteCounter;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
-import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
-import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
+import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteCounterRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,10 +51,10 @@ public class ProductionAppBootTest {
     private static final String ITUNES_IDENTIFIER = "itunes";
 
     @Autowired
-    private FileDownloadInfoRepository fileDownloadInfoRepository;
+    private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
 
     @Autowired
-    private SpeedTestWebSiteRepository speedTestWebSiteRepository;
+    private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
 
     @Autowired
     private FileDownloadService fileDownloadService;
@@ -67,13 +69,13 @@ public class ProductionAppBootTest {
         when(urlMapper.getFileDownloadIdentifiers()).thenReturn(new HashSet<>(fileDownloadsList));
         when(urlMapper.getSpeedTestIdentifiers()).thenReturn(new HashSet<>(speedTestList));
 
-        commonAppBoot = new ProductionApplicationBoot(urlMapper, fileDownloadInfoRepository, speedTestWebSiteRepository);
+        commonAppBoot = new ProductionApplicationBoot(urlMapper, fileDownloadInfoCounterRepository, speedTestWebSiteCounterRepository);
     }
 
     @After
     public void tearDown() throws Exception {
-        fileDownloadInfoRepository.deleteAll();
-        speedTestWebSiteRepository.deleteAll();
+        fileDownloadInfoCounterRepository.deleteAll();
+        speedTestWebSiteCounterRepository.deleteAll();
     }
 
     @Test
@@ -90,9 +92,9 @@ public class ProductionAppBootTest {
 
     @Test
     public void fileDownloadSomeMatchesTest() throws Exception{
-        IntStream.range(0, 5).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(GO_IDENTIFIER, null)));
-        IntStream.range(0, 4).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(POSTGRESQL_IDENTIFIER, null)));
-        IntStream.range(0, 3).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(ITUNES_IDENTIFIER, null)));
+        IntStream.range(0, 5).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(GO_IDENTIFIER));
+        IntStream.range(0, 4).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(POSTGRESQL_IDENTIFIER));
+        IntStream.range(0, 3).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(ITUNES_IDENTIFIER));
 
         Method getFileDownloadNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
         getFileDownloadNotExistInDBMethod.setAccessible(true);
@@ -104,12 +106,12 @@ public class ProductionAppBootTest {
 
     @Test
     public void fileDownloadAllMatchesTest() throws Exception{
-        IntStream.range(0, 5).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(GO_IDENTIFIER, null)));
-        IntStream.range(0, 4).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(POSTGRESQL_IDENTIFIER, null)));
-        IntStream.range(0, 3).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(ITUNES_IDENTIFIER, null)));
-        IntStream.range(0, 2).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(JAVA_SDK_IDENTIFIER, null)));
-        IntStream.range(0, 11).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(FIREFOX_IDENTIFIER, null)));
-        IntStream.range(0, 9).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(KINECT_IDENTIFIER, null)));
+        IntStream.range(0, 5).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(GO_IDENTIFIER));
+        IntStream.range(0, 4).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(POSTGRESQL_IDENTIFIER));
+        IntStream.range(0, 3).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(ITUNES_IDENTIFIER));
+        IntStream.range(0, 2).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(JAVA_SDK_IDENTIFIER));
+        IntStream.range(0, 11).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(FIREFOX_IDENTIFIER));
+        IntStream.range(0, 9).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(KINECT_IDENTIFIER));
 
         Method getFileDownloadNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
         getFileDownloadNotExistInDBMethod.setAccessible(true);
@@ -133,9 +135,9 @@ public class ProductionAppBootTest {
 
     @Test
     public void speedTestSomeMatchesTest() throws Exception{
-        IntStream.range(0, 2).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER)));
-        IntStream.range(0, 7).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
-        IntStream.range(0, 5).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(OOKLA_IDENTIFIER)));
+        IntStream.range(0, 2).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(HOT_IDENTIFIER));
+        IntStream.range(0, 7).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(BEZEQ_IDENTIFIER));
+        IntStream.range(0, 5).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(OOKLA_IDENTIFIER));
 
         Method getSpeedTestNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
         getSpeedTestNotExistInDBMethod.setAccessible(true);
@@ -147,12 +149,12 @@ public class ProductionAppBootTest {
 
     @Test
     public void speedTestAllMatchesTest() throws Exception{
-        IntStream.range(0, 2).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER)));
-        IntStream.range(0, 7).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
-        IntStream.range(0, 5).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(OOKLA_IDENTIFIER)));
-        IntStream.range(0, 6).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(FAST_IDENTIFIER)));
-        IntStream.range(0, 8).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(SPEED_OF_IDENTIFIER)));
-        IntStream.range(0, 1).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(ATNT_IDENTIFIER)));
+        IntStream.range(0, 2).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(HOT_IDENTIFIER));
+        IntStream.range(0, 7).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(BEZEQ_IDENTIFIER));
+        IntStream.range(0, 5).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(OOKLA_IDENTIFIER));
+        IntStream.range(0, 6).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(FAST_IDENTIFIER));
+        IntStream.range(0, 8).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(SPEED_OF_IDENTIFIER));
+        IntStream.range(0, 1).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(ATNT_IDENTIFIER));
 
         Method getSpeedTestNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
         getSpeedTestNotExistInDBMethod.setAccessible(true);
@@ -164,23 +166,23 @@ public class ProductionAppBootTest {
 
     @Test
     public void initNoneTest() throws Exception {
-        assertTrue(speedTestWebSiteRepository.findAll().isEmpty());
-        assertTrue(fileDownloadInfoRepository.findAll().isEmpty());
+        assertTrue(speedTestWebSiteCounterRepository.findAll().isEmpty());
+        assertTrue(fileDownloadInfoCounterRepository.findAll().isEmpty());
 
         Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
         initMethod.setAccessible(true);
         initMethod.invoke(commonAppBoot);
 
         String[] actualSpeedTestIdentifiers =
-                speedTestWebSiteRepository.findAll()
+                speedTestWebSiteCounterRepository.findAll()
                                          .stream()
-                                         .map(SpeedTestWebSiteDAO::getSpeedTestIdentifier)
+                                         .map(SpeedTestWebSiteCounter::getIdentifier)
                                          .toArray(size -> new String[size]);
 
         String[] actualFileDownloadIdentifiers =
-                fileDownloadInfoRepository.findAll()
+                fileDownloadInfoCounterRepository.findAll()
                                           .stream()
-                                          .map(FileDownloadInfoDAO::getFileName)
+                                          .map(FileDownloadCounter::getIdentifier)
                                           .toArray(size -> new String[size]);
 
         assertThat(Arrays.asList(FAST_IDENTIFIER, SPEED_OF_IDENTIFIER, ATNT_IDENTIFIER, HOT_IDENTIFIER, BEZEQ_IDENTIFIER, OOKLA_IDENTIFIER), containsInAnyOrder(actualSpeedTestIdentifiers));
@@ -189,33 +191,33 @@ public class ProductionAppBootTest {
 
     @Test
     public void initSomeRecordsTest() throws Exception {
-        assertTrue(speedTestWebSiteRepository.findAll().isEmpty());
-        assertTrue(fileDownloadInfoRepository.findAll().isEmpty());
+        assertTrue(speedTestWebSiteCounterRepository.findAll().isEmpty());
+        assertTrue(fileDownloadInfoCounterRepository.findAll().isEmpty());
 
-        IntStream.range(0, 2).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER)));
-        IntStream.range(0, 7).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
-        IntStream.range(0, 5).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(OOKLA_IDENTIFIER)));
+        IntStream.range(0, 2).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(HOT_IDENTIFIER));
+        IntStream.range(0, 7).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(BEZEQ_IDENTIFIER));
+        IntStream.range(0, 5).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(OOKLA_IDENTIFIER));
 
-        IntStream.range(0, 4).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(POSTGRESQL_IDENTIFIER, null)));
-        IntStream.range(0, 3).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(ITUNES_IDENTIFIER, null)));
-        IntStream.range(0, 2).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(JAVA_SDK_IDENTIFIER, null)));
-        IntStream.range(0, 11).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(FIREFOX_IDENTIFIER, null)));
+        IntStream.range(0, 4).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(POSTGRESQL_IDENTIFIER));
+        IntStream.range(0, 3).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(ITUNES_IDENTIFIER));
+        IntStream.range(0, 2).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(JAVA_SDK_IDENTIFIER));
+        IntStream.range(0, 11).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(FIREFOX_IDENTIFIER));
 
         Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
         initMethod.setAccessible(true);
         initMethod.invoke(commonAppBoot);
 
         String[] actualSpeedTestIdentifiers =
-                speedTestWebSiteRepository.findAll()
+                speedTestWebSiteCounterRepository.findAll()
                                           .stream()
-                                          .map(SpeedTestWebSiteDAO::getSpeedTestIdentifier)
+                                          .map(SpeedTestWebSiteCounter::getIdentifier)
                                           .distinct()
                                           .toArray(size -> new String[size]);
 
         String[] actualFileDownloadIdentifiers =
-                fileDownloadInfoRepository.findAll()
+                fileDownloadInfoCounterRepository.findAll()
                                           .stream()
-                                          .map(FileDownloadInfoDAO::getFileName)
+                                          .map(FileDownloadCounter::getIdentifier)
                                           .distinct()
                                           .toArray(size -> new String[size]);
 
@@ -225,22 +227,22 @@ public class ProductionAppBootTest {
 
     @Test
     public void initAllRecordsTest() throws Exception {
-        assertTrue(speedTestWebSiteRepository.findAll().isEmpty());
-        assertTrue(fileDownloadInfoRepository.findAll().isEmpty());
+        assertTrue(speedTestWebSiteCounterRepository.findAll().isEmpty());
+        assertTrue(fileDownloadInfoCounterRepository.findAll().isEmpty());
 
-        IntStream.range(0, 2).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(HOT_IDENTIFIER)));
-        IntStream.range(0, 7).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER)));
-        IntStream.range(0, 5).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(OOKLA_IDENTIFIER)));
-        IntStream.range(0, 6).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(FAST_IDENTIFIER)));
-        IntStream.range(0, 8).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(SPEED_OF_IDENTIFIER)));
-        IntStream.range(0, 1).forEach(i -> speedTestWebSiteRepository.save(new SpeedTestWebSiteDAO(ATNT_IDENTIFIER)));
+        IntStream.range(0, 2).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(HOT_IDENTIFIER));
+        IntStream.range(0, 7).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(BEZEQ_IDENTIFIER));
+        IntStream.range(0, 5).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(OOKLA_IDENTIFIER));
+        IntStream.range(0, 6).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(FAST_IDENTIFIER));
+        IntStream.range(0, 8).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(SPEED_OF_IDENTIFIER));
+        IntStream.range(0, 1).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(ATNT_IDENTIFIER));
 
-        IntStream.range(0, 5).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(GO_IDENTIFIER, null)));
-        IntStream.range(0, 4).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(POSTGRESQL_IDENTIFIER, null)));
-        IntStream.range(0, 3).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(ITUNES_IDENTIFIER, null)));
-        IntStream.range(0, 2).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(JAVA_SDK_IDENTIFIER, null)));
-        IntStream.range(0, 11).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(FIREFOX_IDENTIFIER, null)));
-        IntStream.range(0, 9).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(KINECT_IDENTIFIER, null)));
+        IntStream.range(0, 5).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(GO_IDENTIFIER));
+        IntStream.range(0, 4).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(POSTGRESQL_IDENTIFIER));
+        IntStream.range(0, 3).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(ITUNES_IDENTIFIER));
+        IntStream.range(0, 2).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(JAVA_SDK_IDENTIFIER));
+        IntStream.range(0, 11).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(FIREFOX_IDENTIFIER));
+        IntStream.range(0, 9).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(KINECT_IDENTIFIER));
 
 
         Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
@@ -248,16 +250,16 @@ public class ProductionAppBootTest {
         initMethod.invoke(commonAppBoot);
 
         String[] actualSpeedTestIdentifiers =
-                speedTestWebSiteRepository.findAll()
+                speedTestWebSiteCounterRepository.findAll()
                                           .stream()
-                                          .map(SpeedTestWebSiteDAO::getSpeedTestIdentifier)
+                                          .map(SpeedTestWebSiteCounter::getIdentifier)
                                           .distinct()
                                           .toArray(size -> new String[size]);
 
         String[] actualFileDownloadIdentifiers =
-                fileDownloadInfoRepository.findAll()
+                fileDownloadInfoCounterRepository.findAll()
                                           .stream()
-                                          .map(FileDownloadInfoDAO::getFileName)
+                                          .map(FileDownloadCounter::getIdentifier)
                                           .distinct()
                                           .toArray(size -> new String[size]);
 
