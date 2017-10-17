@@ -7,7 +7,9 @@ import com.caseyellow.server.central.domain.test.model.SystemInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.TestWrapper;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
+import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
+import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteCounterRepository;
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
 import com.caseyellow.server.central.persistence.test.repository.TestRepository;
 import org.junit.After;
@@ -40,6 +42,8 @@ public class TestServiceImplTest {
     private TestRepository testRepository;
     private SpeedTestWebSiteRepository speedTestWebSiteRepository;
     private FileDownloadInfoRepository fileDownloadInfoRepository;
+    private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
+    private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
     private List<ComparisonInfo> comparisonInfoList;
 
 
@@ -63,6 +67,15 @@ public class TestServiceImplTest {
         this.fileDownloadInfoRepository = fileDownloadInfoRepository;
     }
 
+    @Autowired
+    public void setSpeedTestWebSiteCounterRepository(SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository) {
+        this.speedTestWebSiteCounterRepository = speedTestWebSiteCounterRepository;
+    }
+
+    @Autowired
+    public void setFileDownloadInfoCounterRepository(FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository) {
+        this.fileDownloadInfoCounterRepository = fileDownloadInfoCounterRepository;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -74,6 +87,10 @@ public class TestServiceImplTest {
     @After
     public void tearDown() throws Exception {
         testRepository.deleteAll();
+        speedTestWebSiteRepository.deleteAll();
+        fileDownloadInfoRepository.deleteAll();
+        speedTestWebSiteCounterRepository.deleteAll();
+        fileDownloadInfoCounterRepository.deleteAll();
     }
 
     @org.junit.Test

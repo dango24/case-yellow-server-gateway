@@ -2,7 +2,6 @@ package com.caseyellow.server.central.bootstrap;
 
 import com.caseyellow.server.central.CaseYellowCentral;
 import com.caseyellow.server.central.common.UrlMapper;
-import com.caseyellow.server.central.domain.file.services.FileDownloadService;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadCounter;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteCounter;

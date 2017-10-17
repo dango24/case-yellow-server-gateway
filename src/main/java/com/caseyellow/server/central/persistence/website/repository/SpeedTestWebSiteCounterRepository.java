@@ -26,7 +26,6 @@ public interface SpeedTestWebSiteCounterRepository extends JpaRepository<SpeedTe
     @Query(UPDATE_COUNTER_QUERY)
     void updateCounter(@Param("id") long id);
 
-
     default void addSpeedTestWebSite(String identifier) {
         SpeedTestWebSiteCounter speedTestWebSiteCounter = findByIdentifier(identifier);
 
