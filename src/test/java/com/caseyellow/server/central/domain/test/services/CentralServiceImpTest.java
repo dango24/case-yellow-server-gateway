@@ -34,8 +34,7 @@ public class CentralServiceImpTest {
 
         private List<Test> tests;
 
-        public TestWrapper() {
-        }
+        public TestWrapper() {}
 
         public List<Test> getTests() {
             return tests;

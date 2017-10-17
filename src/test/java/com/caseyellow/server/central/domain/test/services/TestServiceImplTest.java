@@ -35,19 +35,34 @@ public class TestServiceImplTest {
     private final static int NUM_OF_SUCCEED_TEST = 8;
     private final static int NUM_OF_FAILED_TEST = 5;
 
-    @Autowired
+
     private TestService testService;
-
-    @Autowired
     private TestRepository testRepository;
-
-    @Autowired
     private SpeedTestWebSiteRepository speedTestWebSiteRepository;
+    private FileDownloadInfoRepository fileDownloadInfoRepository;
+    private List<ComparisonInfo> comparisonInfoList;
+
 
     @Autowired
-    private FileDownloadInfoRepository fileDownloadInfoRepository;
+    public void setTestService(TestService testService) {
+        this.testService = testService;
+    }
 
-    private List<ComparisonInfo> comparisonInfoList;
+    @Autowired
+    public void setTestRepository(TestRepository testRepository) {
+        this.testRepository = testRepository;
+    }
+
+    @Autowired
+    public void setSpeedTestWebSiteRepository(SpeedTestWebSiteRepository speedTestWebSiteRepository) {
+        this.speedTestWebSiteRepository = speedTestWebSiteRepository;
+    }
+
+    @Autowired
+    public void setFileDownloadInfoRepository(FileDownloadInfoRepository fileDownloadInfoRepository) {
+        this.fileDownloadInfoRepository = fileDownloadInfoRepository;
+    }
+
 
     @Before
     public void setUp() throws Exception {

@@ -34,8 +34,15 @@ public class FileDownloadInfoRepositoryTest {
     private static final String GO_URL = "storage.googleapis.com/golang/go1.7.1.windows-amd64.msi";
     private static final String JAVA_SDK_URL = "sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip";
 
-    @Autowired
+
     private FileDownloadInfoRepository fileDownloadInfoRepository;
+
+
+    @Autowired
+    public void setFileDownloadInfoRepository(FileDownloadInfoRepository fileDownloadInfoRepository) {
+        this.fileDownloadInfoRepository = fileDownloadInfoRepository;
+    }
+
 
     @Before
     public void setUp() throws Exception {

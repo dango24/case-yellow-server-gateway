@@ -31,11 +31,13 @@ public class ModelConverterTest {
     private static final String TEST_ID = "oren_ha_efes";
     private static final String SPEED_TEST_WEBSITE_IDENTIFIER = "hot";
 
+
+    private TestDAO testDAO;
     private SystemInfoDAO systemInfoDAO;
     private FileDownloadInfoDAO fileDownloadInfoDAO;
     private SpeedTestWebSiteDAO speedTestWebSiteDAO;
     private ComparisonInfoDAO comparisonInfoDAO;
-    private TestDAO testDAO;
+
 
     @Before
     public void setUp() throws Exception {
@@ -56,6 +58,7 @@ public class ModelConverterTest {
                              .addComparisonInfoTests(Arrays.asList(comparisonInfoDAO))
                              .build();
     }
+
 
     @org.junit.Test
     public void convertTestDAOtoModel() throws Exception {

@@ -4,10 +4,8 @@ import com.caseyellow.server.central.CaseYellowCentral;
 import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.domain.file.services.FileDownloadService;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadCounter;
-import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteCounter;
-import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteCounterRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -50,16 +48,22 @@ public class ProductionAppBootTest {
     private static final String KINECT_IDENTIFIER = "kinect";
     private static final String ITUNES_IDENTIFIER = "itunes";
 
-    @Autowired
-    private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
-
-    @Autowired
-    private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
-
-    @Autowired
-    private FileDownloadService fileDownloadService;
 
     private ProductionApplicationBoot commonAppBoot;
+    private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
+    private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
+
+
+    @Autowired
+    public void setFileDownloadInfoCounterRepository(FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository) {
+        this.fileDownloadInfoCounterRepository = fileDownloadInfoCounterRepository;
+    }
+
+    @Autowired
+    public void setSpeedTestWebSiteCounterRepository(SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository) {
+        this.speedTestWebSiteCounterRepository = speedTestWebSiteCounterRepository;
+    }
+
 
     @Before
     public void setUp() throws Exception {
@@ -77,6 +81,7 @@ public class ProductionAppBootTest {
         fileDownloadInfoCounterRepository.deleteAll();
         speedTestWebSiteCounterRepository.deleteAll();
     }
+
 
     @Test
     public void fileDownloadNoneMatchesTest() throws Exception{
@@ -175,15 +180,15 @@ public class ProductionAppBootTest {
 
         String[] actualSpeedTestIdentifiers =
                 speedTestWebSiteCounterRepository.findAll()
-                                         .stream()
-                                         .map(SpeedTestWebSiteCounter::getIdentifier)
-                                         .toArray(size -> new String[size]);
+                                                 .stream()
+                                                 .map(SpeedTestWebSiteCounter::getIdentifier)
+                                                 .toArray(size -> new String[size]);
 
         String[] actualFileDownloadIdentifiers =
                 fileDownloadInfoCounterRepository.findAll()
-                                          .stream()
-                                          .map(FileDownloadCounter::getIdentifier)
-                                          .toArray(size -> new String[size]);
+                                                 .stream()
+                                                 .map(FileDownloadCounter::getIdentifier)
+                                                 .toArray(size -> new String[size]);
 
         assertThat(Arrays.asList(FAST_IDENTIFIER, SPEED_OF_IDENTIFIER, ATNT_IDENTIFIER, HOT_IDENTIFIER, BEZEQ_IDENTIFIER, OOKLA_IDENTIFIER), containsInAnyOrder(actualSpeedTestIdentifiers));
         assertThat(Arrays.asList(FIREFOX_IDENTIFIER, GO_IDENTIFIER, JAVA_SDK_IDENTIFIER, POSTGRESQL_IDENTIFIER, KINECT_IDENTIFIER, ITUNES_IDENTIFIER), containsInAnyOrder(actualFileDownloadIdentifiers));
@@ -209,17 +214,15 @@ public class ProductionAppBootTest {
 
         String[] actualSpeedTestIdentifiers =
                 speedTestWebSiteCounterRepository.findAll()
-                                          .stream()
-                                          .map(SpeedTestWebSiteCounter::getIdentifier)
-                                          .distinct()
-                                          .toArray(size -> new String[size]);
+                                                 .stream()
+                                                 .map(SpeedTestWebSiteCounter::getIdentifier)
+                                                 .toArray(size -> new String[size]);
 
         String[] actualFileDownloadIdentifiers =
                 fileDownloadInfoCounterRepository.findAll()
-                                          .stream()
-                                          .map(FileDownloadCounter::getIdentifier)
-                                          .distinct()
-                                          .toArray(size -> new String[size]);
+                                                 .stream()
+                                                 .map(FileDownloadCounter::getIdentifier)
+                                                 .toArray(size -> new String[size]);
 
         assertThat(Arrays.asList(FAST_IDENTIFIER, SPEED_OF_IDENTIFIER, ATNT_IDENTIFIER, HOT_IDENTIFIER, BEZEQ_IDENTIFIER, OOKLA_IDENTIFIER), containsInAnyOrder(actualSpeedTestIdentifiers));
         assertThat(Arrays.asList(FIREFOX_IDENTIFIER, GO_IDENTIFIER, JAVA_SDK_IDENTIFIER, POSTGRESQL_IDENTIFIER, KINECT_IDENTIFIER, ITUNES_IDENTIFIER), containsInAnyOrder(actualFileDownloadIdentifiers));
@@ -251,17 +254,15 @@ public class ProductionAppBootTest {
 
         String[] actualSpeedTestIdentifiers =
                 speedTestWebSiteCounterRepository.findAll()
-                                          .stream()
-                                          .map(SpeedTestWebSiteCounter::getIdentifier)
-                                          .distinct()
-                                          .toArray(size -> new String[size]);
+                                                 .stream()
+                                                 .map(SpeedTestWebSiteCounter::getIdentifier)
+                                                 .toArray(size -> new String[size]);
 
         String[] actualFileDownloadIdentifiers =
                 fileDownloadInfoCounterRepository.findAll()
-                                          .stream()
-                                          .map(FileDownloadCounter::getIdentifier)
-                                          .distinct()
-                                          .toArray(size -> new String[size]);
+                                                 .stream()
+                                                 .map(FileDownloadCounter::getIdentifier)
+                                                 .toArray(size -> new String[size]);
 
         assertThat(Arrays.asList(FAST_IDENTIFIER, SPEED_OF_IDENTIFIER, ATNT_IDENTIFIER, HOT_IDENTIFIER, BEZEQ_IDENTIFIER, OOKLA_IDENTIFIER), containsInAnyOrder(actualSpeedTestIdentifiers));
         assertThat(Arrays.asList(FIREFOX_IDENTIFIER, GO_IDENTIFIER, JAVA_SDK_IDENTIFIER, POSTGRESQL_IDENTIFIER, KINECT_IDENTIFIER, ITUNES_IDENTIFIER), containsInAnyOrder(actualFileDownloadIdentifiers));

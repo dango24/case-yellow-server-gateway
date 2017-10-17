@@ -3,6 +3,7 @@ package com.caseyellow.server.central.common;
 import com.caseyellow.server.central.domain.file.model.FileDownloadInfo;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.SystemInfo;
+import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
@@ -10,12 +11,10 @@ import com.caseyellow.server.central.persistence.test.dao.SystemInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import org.junit.Before;
-import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
 
 @ActiveProfiles("dev")
@@ -32,11 +31,13 @@ public class DAOConverterTest {
     private static final String TEST_ID = "oren_ha_efes";
     private static final String SPEED_TEST_WEBSITE_IDENTIFIER = "hot";
 
+
+    private Test test;
     private SystemInfo systemInfo;
     private FileDownloadInfo fileDownloadInfo;
     private SpeedTestWebSite speedTestWebSite;
     private ComparisonInfo comparisonInfo;
-    private com.caseyellow.server.central.domain.test.model.Test test;
+
 
     @Before
     public void setUp() throws Exception {
@@ -56,7 +57,8 @@ public class DAOConverterTest {
                                                                        .build();
     }
 
-    @Test
+
+    @org.junit.Test
     public void convertTestToTestDAO() throws Exception {
         TestDAO testDAO = Converter.convertTestModelToDAO(test);
 
@@ -66,7 +68,7 @@ public class DAOConverterTest {
         assertTrue(isComparisonInfoEqualsToComparisonInfoDAO(testDAO.getComparisonInfoDAOTests().get(0), test.getComparisonInfoTests().get(0)));
     }
 
-    @Test
+    @org.junit.Test
     public void convertSystemInfoToSystemInfoDAO() throws Exception {
         SystemInfoDAO systemInfoDAO = Converter.convertSystemInfoModelToDAO(systemInfo);
         assertNotNull(systemInfoDAO);
@@ -76,19 +78,19 @@ public class DAOConverterTest {
         assertEquals(systemInfoDAO.getPublicIP(), systemInfo.getPublicIP());
     }
 
-    @Test
+    @org.junit.Test
     public void convertComparisonInfoToComparisonInfoDAO() throws Exception {
         ComparisonInfoDAO comparisonInfoDAO = Converter.convertComparisonInfoModelToDAO(comparisonInfo);
         assertTrue(isComparisonInfoEqualsToComparisonInfoDAO(comparisonInfoDAO, comparisonInfo));
     }
 
-    @Test
+    @org.junit.Test
     public void convertFileDownloadInfoToFileDownloadInfoDAO() throws Exception {
         FileDownloadInfoDAO fileDownloadInfoDAO = Converter.convertFileDownloadInfoModelToDAO(fileDownloadInfo);
         assertTrue(isFileDownloadInfoEqualsToFileDownloadInfoDAO(fileDownloadInfoDAO, fileDownloadInfo));
     }
 
-    @Test
+    @org.junit.Test
     public void convertSpeedTestWebSiteToSpeedTestWebSiteDAO() throws Exception {
         SpeedTestWebSiteDAO speedTestWebSiteDAO = Converter.convertSpeedTestWebSiteModelToDAO(speedTestWebSite);
         assertTrue(isSpeedTestWebSiteEqualsToSpeedTestWebSiteDAO(speedTestWebSiteDAO, speedTestWebSite));

@@ -42,11 +42,21 @@ public class FileDownloadServiceImpTest {
     private final String KINECT_URL = "https://download.microsoft.com/download/F/2/D/F2D1012E-3BC6-49C5-B8B3-5ACFF58AF7B8/KinectSDK-v2.0_1409-Setup.exe";
     private final String ITUNES_URL = "https://secure-appldnld.apple.com/itunes12/031-69284-20160802-7E7B2D20-552B-11E6-B2B9-696CECD541CE/iTunes64Setup.exe";
 
-    @Autowired
+
+    private FileDownloadService fileDownloadService;
     private FileDownloadInfoRepository fileDownloadInfoRepository;
 
+
     @Autowired
-    private FileDownloadService fileDownloadService;
+    public void setFileDownloadInfoRepository(FileDownloadInfoRepository fileDownloadInfoRepository) {
+        this.fileDownloadInfoRepository = fileDownloadInfoRepository;
+    }
+
+    @Autowired
+    public void setFileDownloadService(FileDownloadService fileDownloadService) {
+        this.fileDownloadService = fileDownloadService;
+    }
+
 
     @Before
     public void setUp() throws Exception {
@@ -62,6 +72,7 @@ public class FileDownloadServiceImpTest {
     public void tearDown() throws Exception {
         fileDownloadInfoRepository.deleteAll();
     }
+
 
     @Test (expected = IllegalArgumentException.class)
     public void getNextUrlsWithNegativeArgument() throws Exception {

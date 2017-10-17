@@ -2,7 +2,6 @@ package com.caseyellow.server.central.persistence.website.repository;
 
 import com.caseyellow.server.central.CaseYellowCentral;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +20,20 @@ public class SpeedTestWebSiteCounterRepositoryTest {
     private static final String BEZEQ_IDENTIFIER = "bezeq";
     private static final String FAST_IDENTIFIER = "fast";
 
-    @Autowired
+
     private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
 
-    @Before
-    public void setUp() throws Exception {
+    @Autowired
+    public void setSpeedTestWebSiteCounterRepository(SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository) {
+        this.speedTestWebSiteCounterRepository = speedTestWebSiteCounterRepository;
     }
+
 
     @After
     public void tearDown() throws Exception {
         speedTestWebSiteCounterRepository.deleteAll();
     }
+
 
     @Test
     public void addOneIdentifier() throws Exception {

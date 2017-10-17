@@ -41,11 +41,21 @@ public class SpeedTestWebSiteRepositoryTest {
     private static final String BEZEQ_URL = "http://www.bezeq.co.il/internetandphone/internet/speedtest/";
     private static final String FAST_URL = "https://www.fast.com";
 
-    @Autowired
+
     private SpeedTestWebSiteRepository speedTestWebSiteRepository;
+    private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
+
 
     @Autowired
-    private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
+    public void setSpeedTestWebSiteRepository(SpeedTestWebSiteRepository speedTestWebSiteRepository) {
+        this.speedTestWebSiteRepository = speedTestWebSiteRepository;
+    }
+
+    @Autowired
+    public void setSpeedTestWebSiteCounterRepository(SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository) {
+        this.speedTestWebSiteCounterRepository = speedTestWebSiteCounterRepository;
+    }
+
 
     @Before
     public void setUp() throws Exception {
@@ -58,11 +68,6 @@ public class SpeedTestWebSiteRepositoryTest {
     public void tearDown() throws Exception {
         speedTestWebSiteCounterRepository.deleteAll();
         speedTestWebSiteRepository.deleteAll();
-    }
-
-    private void addSpeedTestWebSite(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
-        speedTestWebSiteRepository.save(speedTestWebSiteDAO);
-        speedTestWebSiteCounterRepository.addSpeedTestWebSite(speedTestWebSiteDAO.getSpeedTestIdentifier());
     }
 
     @Test
@@ -139,4 +144,8 @@ public class SpeedTestWebSiteRepositoryTest {
         assertTrue(speedTestWebSiteRepository.findByAnalyzedFalse().size() == TOTAL_COUNT + unAnalyzedTestsCount);
     }
 
+    private void addSpeedTestWebSite(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
+        speedTestWebSiteRepository.save(speedTestWebSiteDAO);
+        speedTestWebSiteCounterRepository.addSpeedTestWebSite(speedTestWebSiteDAO.getSpeedTestIdentifier());
+    }
 }
