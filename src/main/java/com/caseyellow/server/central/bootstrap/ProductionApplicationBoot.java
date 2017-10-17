@@ -31,6 +31,11 @@ public class ProductionApplicationBoot {
 
     @PostConstruct
     private void init() throws AppBootException {
+        addNewIdentifiers();
+        disableNonActiveIdentifiers();
+    }
+
+    private void addNewIdentifiers() {
         List<String> speedTestNotExistInDB = getSpeedTestNotExistInDB();
         List<String> fileDownloadNotExistInDB = getFileDownloadNotExistInDB();
 
@@ -59,5 +64,9 @@ public class ProductionApplicationBoot {
         return speedTestIdentifiersFromResources.stream()
                                                 .filter(fileIdentifier -> !speedTestIdentifiersFromDB.contains(fileIdentifier))
                                                 .collect(Collectors.toList());
+    }
+
+    private void disableNonActiveIdentifiers() {
+
     }
 }

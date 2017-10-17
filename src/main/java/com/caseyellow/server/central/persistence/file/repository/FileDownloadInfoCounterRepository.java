@@ -12,18 +12,25 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 
 public interface FileDownloadInfoCounterRepository extends JpaRepository<FileDownloadCounter, Long> {
 
     String UPDATE_COUNTER_QUERY = "UPDATE FileDownloadCounter s set s.count = s.count+1 where s.id = :id";
+    String ACTIVATION_QUERY = "UPDATE FileDownloadCounter s set s.active = :active where s.id = :id";
 
     FileDownloadCounter findByIdentifier(String identifier);
 
     @Modifying
     @Transactional
     @Query(UPDATE_COUNTER_QUERY)
-    void updateCounter(@Param("id") long id);
+    void updateCounter(@Param("id")long id);
+
+    @Modifying
+    @Transactional
+    @Query(ACTIVATION_QUERY)
+    void updateActivation(@Param("id")long id, @Param("active")boolean active);
 
     default void addFileDownloadInfo(String identifier) {
         FileDownloadCounter speedTestWebSiteCounter = findByIdentifier(identifier);
@@ -35,14 +42,29 @@ public interface FileDownloadInfoCounterRepository extends JpaRepository<FileDow
         }
     }
 
+    default void activeFileDownloadInfo(String identifier) {
+        FileDownloadCounter speedTestWebSiteCounter = findByIdentifier(identifier);
+
+        if (nonNull(speedTestWebSiteCounter)) {
+            updateActivation(speedTestWebSiteCounter.getId(), true);
+        }
+    }
+
+    default void deActiveFileDownloadInfo(String identifier) {
+        FileDownloadCounter speedTestWebSiteCounter = findByIdentifier(identifier);
+
+        if (nonNull(speedTestWebSiteCounter)) {
+            updateActivation(speedTestWebSiteCounter.getId(), false);
+        }
+    }
+
     default List<String> getIdentifiers() {
         return findAll().stream()
                         .map(FileDownloadCounter::getIdentifier)
                         .collect(Collectors.toList());
     }
 
-
-    default Map<String, Integer> groupingFileDownloadInfoByName() {
+    default Map<String, Integer> groupingFileDownloadInfoByIdentifier() {
         return findAll().stream()
                         .filter(FileDownloadCounter::isActive)
                         .collect(toMap(FileDownloadCounter::getIdentifier, FileDownloadCounter::getCount));

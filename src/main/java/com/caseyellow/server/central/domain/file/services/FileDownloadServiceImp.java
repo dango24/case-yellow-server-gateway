@@ -2,7 +2,7 @@ package com.caseyellow.server.central.domain.file.services;
 
 import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
-import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
+import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +17,11 @@ import static java.util.stream.Collectors.toList;
 public class FileDownloadServiceImp implements FileDownloadService {
 
     private UrlMapper urlMapper;
-    private FileDownloadInfoRepository fileDownloadInfoRepository;
+    private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
 
     @Autowired
-    public FileDownloadServiceImp(FileDownloadInfoRepository fileDownloadInfoRepository, UrlMapper urlMapper) {
-        this.fileDownloadInfoRepository = fileDownloadInfoRepository;
+    public FileDownloadServiceImp(FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository, UrlMapper urlMapper) {
+        this.fileDownloadInfoCounterRepository = fileDownloadInfoCounterRepository;
         this.urlMapper = urlMapper;
     }
 
@@ -36,12 +36,12 @@ public class FileDownloadServiceImp implements FileDownloadService {
         }
 
         nextFileDownloadIdentifiers =
-                fileDownloadInfoRepository.groupingFileDownloadInfoByName()
-                                          .entrySet()
-                                          .stream()
-                                          .sorted(Map.Entry.comparingByValue())
-                                          .map(Map.Entry::getKey)
-                                          .collect(toList());
+                fileDownloadInfoCounterRepository.groupingFileDownloadInfoByIdentifier()
+                                                 .entrySet()
+                                                 .stream()
+                                                 .sorted(Map.Entry.comparingByValue())
+                                                 .map(Map.Entry::getKey)
+                                                 .collect(toList());
 
         return nextFileDownloadIdentifiers.subList(0, min(nextFileDownloadIdentifiers.size(), numOfComparisonPerTest))
                                           .stream()

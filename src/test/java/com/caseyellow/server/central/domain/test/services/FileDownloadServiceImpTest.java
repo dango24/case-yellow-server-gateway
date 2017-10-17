@@ -3,7 +3,9 @@ package com.caseyellow.server.central.domain.test.services;
 import com.caseyellow.server.central.CaseYellowCentral;
 import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
 import com.caseyellow.server.central.domain.file.services.FileDownloadService;
+import com.caseyellow.server.central.persistence.file.dao.FileDownloadCounter;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
+import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -45,7 +47,7 @@ public class FileDownloadServiceImpTest {
 
     private FileDownloadService fileDownloadService;
     private FileDownloadInfoRepository fileDownloadInfoRepository;
-
+    private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
 
     @Autowired
     public void setFileDownloadInfoRepository(FileDownloadInfoRepository fileDownloadInfoRepository) {
@@ -57,15 +59,19 @@ public class FileDownloadServiceImpTest {
         this.fileDownloadService = fileDownloadService;
     }
 
+    @Autowired
+    public void setFileDownloadInfoCounterRepository(FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository) {
+        this.fileDownloadInfoCounterRepository = fileDownloadInfoCounterRepository;
+    }
 
     @Before
     public void setUp() throws Exception {
-        IntStream.range(0, 100).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(FIREFOX, FIREFOX_URL)));
-        IntStream.range(0, 53).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(GO, GO_URL)));
-        IntStream.range(0, 61).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(JAVA_SDK, JAVA_SDK_URL)));
-        IntStream.range(0, 15).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(POSTGRESQL, POSTGRESQL_URL)));
-        IntStream.range(0, 37).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(KINECT, KINECT_URL)));
-        IntStream.range(0, 28).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(ITUNES, ITUNES_URL)));
+        IntStream.range(0, 100).forEach(i -> addFileDownloadInfo(FIREFOX, FIREFOX_URL));
+        IntStream.range(0, 53).forEach(i -> addFileDownloadInfo(GO, GO_URL));
+        IntStream.range(0, 61).forEach(i -> addFileDownloadInfo(JAVA_SDK, JAVA_SDK_URL));
+        IntStream.range(0, 15).forEach(i -> addFileDownloadInfo(POSTGRESQL, POSTGRESQL_URL));
+        IntStream.range(0, 37).forEach(i -> addFileDownloadInfo(KINECT, KINECT_URL));
+        IntStream.range(0, 28).forEach(i -> addFileDownloadInfo(ITUNES, ITUNES_URL));
     }
 
     @After
@@ -105,7 +111,7 @@ public class FileDownloadServiceImpTest {
 
     @Test
     public void getNextUrlsWithAddMoreRecords() throws Exception {
-        IntStream.range(0, 100).forEach(i -> fileDownloadInfoRepository.save(new FileDownloadInfoDAO(POSTGRESQL, POSTGRESQL_URL)));
+        IntStream.range(0, 100).forEach(i -> addFileDownloadInfo(POSTGRESQL, POSTGRESQL_URL));
         List<String> nextUrls =  getNextUrls(1);
         assertThat(nextUrls, containsInAnyOrder(ITUNES_URL));
     }
@@ -121,6 +127,11 @@ public class FileDownloadServiceImpTest {
                                   .stream()
                                   .map(FileDownloadMetaData::getFileURL)
                                   .collect(Collectors.toList());
+    }
+
+    private void addFileDownloadInfo(String identifier, String url) {
+        fileDownloadInfoRepository.save(new FileDownloadInfoDAO(identifier, url));
+        fileDownloadInfoCounterRepository.addFileDownloadInfo(identifier);
     }
 
 }

@@ -1,7 +1,9 @@
 package com.caseyellow.server.central.domain.test.services;
 
 import com.caseyellow.server.central.common.Converter;
+import com.caseyellow.server.central.common.CounterService;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
+import com.caseyellow.server.central.domain.test.model.ComparisonInfoIdentifiers;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.TestWrapper;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
@@ -10,9 +12,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
@@ -22,10 +26,12 @@ public class TestServiceImpl implements TestService {
     private Logger logger = Logger.getLogger(TestServiceImpl.class);
 
     private TestRepository testRepository;
+    private CounterService counterService;
 
     @Autowired
-    public TestServiceImpl(TestRepository testRepository) {
+    public TestServiceImpl(TestRepository testRepository, CounterService counterService) {
         this.testRepository = testRepository;
+        this.counterService = counterService;
     }
 
     @Override
@@ -43,7 +49,7 @@ public class TestServiceImpl implements TestService {
                          .thenApply(this::uploadSnapshotToS3)
                          .thenApply(Converter::convertTestModelToDAO)
                          .exceptionally(this::handleSaveTestException)
-                         .thenAccept(testRepository::save);
+                         .thenAccept(this::save);
     }
 
     private TestWrapper removeUnsuccessfulTests(TestWrapper testWrapper) {
@@ -92,4 +98,19 @@ public class TestServiceImpl implements TestService {
     private void notifyFailedTests(List<ComparisonInfo> comparisonInfoFailures) {
         // TODO dango handle failed tests
     }
+
+    private void save(TestDAO test) {
+        if (isNull(test)) {
+
+        }
+
+        test.getComparisonInfoDAOTests()
+            .stream()
+            .map(ComparisonInfoIdentifiers::new)
+            .forEach(identifiers -> counterService.addComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
+
+        testRepository.save(test);
+    }
 }
+
+

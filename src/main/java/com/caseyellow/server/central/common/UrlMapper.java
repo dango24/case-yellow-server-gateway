@@ -52,4 +52,12 @@ public class UrlMapper {
     public String getFileDownload(String fileIdentifier) {
         return fileDownloadUrls.getOrDefault(fileIdentifier, DEFAULT_FILE_DOWNLOAD_URL);
     }
+
+    public boolean isValidSpeedTestIdentifier(String speedTestIdentifier) {
+        return speedTestUrls.keySet().contains(speedTestIdentifier);
+    }
+
+    public boolean isValidFileDownloadIdentifier(String fileDownloadIdentifier) {
+        return fileDownloadUrls.keySet().contains(fileDownloadIdentifier);
+    }
 }
