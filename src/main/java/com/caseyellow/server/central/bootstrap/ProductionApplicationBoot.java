@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 @Component
 @Profile("prod")
 public class ProductionApplicationBoot {
@@ -54,7 +56,7 @@ public class ProductionApplicationBoot {
 
         return fileDownloadIdentifiersFromResources.stream()
                                                    .filter(fileIdentifier -> !fileDownloadIdentifiersFromDB.contains(fileIdentifier))
-                                                   .collect(Collectors.toList());
+                                                   .collect(toList());
     }
 
     private List<String> getSpeedTestNotExistInDB() {
@@ -63,10 +65,23 @@ public class ProductionApplicationBoot {
 
         return speedTestIdentifiersFromResources.stream()
                                                 .filter(fileIdentifier -> !speedTestIdentifiersFromDB.contains(fileIdentifier))
-                                                .collect(Collectors.toList());
+                                                .collect(toList());
     }
 
     private void disableNonActiveIdentifiers() {
+        List<String> fileDownloadIdentifiersToDeactivate =
+                fileDownloadInfoCounterRepository.getIdentifiers()
+                                                 .stream()
+                                                 .filter(identifier -> !urlMapper.getFileDownloadIdentifiers().contains(identifier))
+                                                 .collect(toList());
 
+        List<String> speedTestIdentifiersToDeactivate =
+                speedTestWebSiteCounterRepository.getIdentifiers()
+                                                 .stream()
+                                                 .filter(identifier -> !urlMapper.getSpeedTestIdentifiers().contains(identifier))
+                                                 .collect(toList());
+
+        fileDownloadIdentifiersToDeactivate.forEach(fileDownloadInfoCounterRepository::deActiveFileDownloadInfo);
+        speedTestIdentifiersToDeactivate.forEach(speedTestWebSiteCounterRepository::deActiveSpeedTestWebSite);
     }
 }

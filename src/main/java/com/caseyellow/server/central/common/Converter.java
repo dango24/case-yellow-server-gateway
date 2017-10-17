@@ -110,7 +110,6 @@ public interface Converter {
 
         speedTestWebSiteDAO.setStartMeasuringTimestamp(speedTestWebSite.getStartMeasuringTimestamp());
         speedTestWebSiteDAO.setUrlAddress(speedTestWebSite.getUrlAddress());
-
         return speedTestWebSiteDAO;
     }
 

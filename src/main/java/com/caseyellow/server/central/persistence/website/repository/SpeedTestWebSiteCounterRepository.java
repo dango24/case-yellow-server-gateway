@@ -12,12 +12,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 
 public interface SpeedTestWebSiteCounterRepository extends JpaRepository<SpeedTestWebSiteCounter, Long> {
 
     String DEFAULT_IDENTIFIER = "hot";
     String UPDATE_COUNTER_QUERY = "UPDATE SpeedTestWebSiteCounter s set s.count = s.count+1 where s.id = :id";
+    String ACTIVATION_QUERY = "UPDATE SpeedTestWebSiteCounter s set s.active = :active where s.id = :id";
 
     SpeedTestWebSiteCounter findByIdentifier(String identifier);
 
@@ -25,6 +27,11 @@ public interface SpeedTestWebSiteCounterRepository extends JpaRepository<SpeedTe
     @Transactional
     @Query(UPDATE_COUNTER_QUERY)
     void updateCounter(@Param("id") long id);
+
+    @Modifying
+    @Transactional
+    @Query(ACTIVATION_QUERY)
+    void updateActivation(@Param("id")long id, @Param("active")boolean active);
 
     default void addSpeedTestWebSite(String identifier) {
         SpeedTestWebSiteCounter speedTestWebSiteCounter = findByIdentifier(identifier);
@@ -57,5 +64,21 @@ public interface SpeedTestWebSiteCounterRepository extends JpaRepository<SpeedTe
                           .min(Map.Entry.comparingByValue())
                           .map(Map.Entry::getKey)
                           .get();
+    }
+
+    default void activeSpeedTestWebSite(String identifier) {
+        SpeedTestWebSiteCounter speedTestWebSiteCounter = findByIdentifier(identifier);
+
+        if (nonNull(speedTestWebSiteCounter)) {
+            updateActivation(speedTestWebSiteCounter.getId(), true);
+        }
+    }
+
+    default void deActiveSpeedTestWebSite(String identifier) {
+        SpeedTestWebSiteCounter speedTestWebSiteCounter = findByIdentifier(identifier);
+
+        if (nonNull(speedTestWebSiteCounter)) {
+            updateActivation(speedTestWebSiteCounter.getId(), false);
+        }
     }
 }

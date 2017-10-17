@@ -19,6 +19,7 @@ public class SpeedTestWebSite {
 
     public SpeedTestWebSite(String speedTestIdentifier) {
         this.speedTestIdentifier = speedTestIdentifier;
+        this.succeed = true;
     }
 
     public SpeedTestWebSite(boolean succeed) {

@@ -17,8 +17,8 @@ import static java.util.stream.Collectors.toMap;
 
 public interface FileDownloadInfoCounterRepository extends JpaRepository<FileDownloadCounter, Long> {
 
-    String UPDATE_COUNTER_QUERY = "UPDATE FileDownloadCounter s set s.count = s.count+1 where s.id = :id";
-    String ACTIVATION_QUERY = "UPDATE FileDownloadCounter s set s.active = :active where s.id = :id";
+    String UPDATE_COUNTER_QUERY = "UPDATE FileDownloadCounter f set f.count = f.count+1 where f.id = :id";
+    String ACTIVATION_QUERY = "UPDATE FileDownloadCounter f set f.active = :active where f.id = :id";
 
     FileDownloadCounter findByIdentifier(String identifier);
 
