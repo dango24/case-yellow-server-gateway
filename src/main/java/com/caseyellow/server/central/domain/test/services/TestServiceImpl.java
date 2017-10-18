@@ -6,18 +6,24 @@ import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfoIdentifiers;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.TestWrapper;
+import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.test.repository.TestRepository;
+import com.caseyellow.server.central.services.FileUploadService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @Service
 public class TestServiceImpl implements TestService {
@@ -26,11 +32,13 @@ public class TestServiceImpl implements TestService {
 
     private TestRepository testRepository;
     private CounterService counterService;
+    private FileUploadService fileUploadService;
 
     @Autowired
-    public TestServiceImpl(TestRepository testRepository, CounterService counterService) {
+    public TestServiceImpl(TestRepository testRepository, CounterService counterService, FileUploadService fileUploadService) {
         this.testRepository = testRepository;
         this.counterService = counterService;
+        this.fileUploadService = fileUploadService;
     }
 
     @Override
@@ -45,8 +53,7 @@ public class TestServiceImpl implements TestService {
     public void saveTest(TestWrapper test) {
         CompletableFuture.supplyAsync(() -> test)
                          .thenApply(this::removeUnsuccessfulTests)
-                         .thenApply(this::uploadSnapshot)
-                         .thenApply(Converter::convertTestModelToDAO)
+                         .thenApply(this::uploadSnapshots)
                          .exceptionally(this::handleSaveTestException)
                          .thenAccept(this::save);
     }
@@ -70,18 +77,30 @@ public class TestServiceImpl implements TestService {
         return testWrapper;
     }
 
-    private Test uploadSnapshot(TestWrapper testWrapper) {
+    private TestDAO uploadSnapshots(TestWrapper testWrapper) {
+        String userIP = testWrapper.getTest().getSystemInfo().getPublicIP();
+        TestDAO testDAO = Converter.convertTestModelToDAO(testWrapper.getTest());
 
-        logger.info(
-                testWrapper.getSnapshotLocalLocation()
-                           .values()
-                           .stream()
-                           .map(file -> new StringBuilder(String.valueOf(System.currentTimeMillis())).reverse().toString() + file.getName())
-                           .collect(joining(", "))
-        );
+        Map<Integer, String> fileLocation =
+            testWrapper.getSnapshotLocalLocation()
+                       .entrySet()
+                       .stream()
+                       .map(snapshot -> uploadFile(userIP, snapshot))
+                       .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+        testDAO.getComparisonInfoDAOTests()
+               .stream()
+               .map(ComparisonInfoDAO::getSpeedTestWebSiteDownloadInfoDAO)
+               .forEach(speedTestWebSite -> speedTestWebSite.setS3FileAddress(fileLocation.get(speedTestWebSite.getKey())));
 
-        return testWrapper.getTest();
+        return testDAO;
+    }
+
+    private Map.Entry<Integer, String> uploadFile(String userIP, Map.Entry<String, File> snapshot) {
+        int fileKey = Integer.valueOf(snapshot.getKey());
+        String snapshotLocation = fileUploadService.uploadFile(userIP, snapshot.getValue());
+
+        return new AbstractMap.SimpleEntry<>(fileKey, snapshotLocation);
     }
 
     private void notifyComparisonInfoFailures(List<ComparisonInfo> comparisonInfoFailures) {
