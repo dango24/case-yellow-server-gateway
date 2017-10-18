@@ -24,22 +24,30 @@ public class S3FileUploadService implements FileUploadService {
     @Value("${aws_secret_access_key}")
     private String secretAccessKey;
 
+    @Value("${S3_bucket_name}")
+    private String S3BucketName;
+
     private AmazonS3 s3client;
 
     @PostConstruct
     public void init() {
         AWSCredentials credentials = new BasicAWSCredentials(accessKeyID, secretAccessKey);
         s3client = new AmazonS3Client(credentials);
-        uploadFile(null);
     }
 
-    @Override
-    public String uploadFile(File file) {
+    @Override // result.getContentMd5()
+    public String uploadFile(String userIP, File fileToUpload) {
 
-        File f = new File("/home/dango/Downloads/dango_p.jpg");
+        String path = createFileUniquePath(userIP, fileToUpload.getName());
+        s3client.putObject(new PutObjectRequest(S3BucketName, path, fileToUpload));
 
-        s3client.putObject(new PutObjectRequest("case-yellow-snapshot", "dango.png", f));
+        return path;
+    }
 
-        return null;
+    private String createFileUniquePath(String userIP, String fileName) {
+        String uniquePath = new StringBuilder(String.valueOf(System.currentTimeMillis())).reverse().toString();
+        String userIdentifier = userIP.replaceAll("\\.", "");
+
+        return userIdentifier + File.separator + uniquePath + "_" + fileName;
     }
 }

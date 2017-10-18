@@ -1,3 +1,6 @@
-
+# Access Keys
 aws_access_key_id: dango
 aws_secret_access_key: esfir
+
+#S3
+S3_bucket_name: case-yellow-snapshot
