@@ -15,12 +15,12 @@ import static org.junit.Assert.*;
 public class S3FileUploadServiceTest {
 
     private static Method createFileUniquePathMethod;
-    private static S3FileUploadService s3FileUploadService;
+    private static S3FileStorageService s3FileStorageService;
 
     @BeforeClass
     public static void setUp() throws Exception {
-        s3FileUploadService = new S3FileUploadService();
-        createFileUniquePathMethod = S3FileUploadService.class.getDeclaredMethod("createFileUniquePath", String.class, String.class);
+        s3FileStorageService = new S3FileStorageService();
+        createFileUniquePathMethod = S3FileStorageService.class.getDeclaredMethod("createFileUniquePath", String.class, String.class);
         createFileUniquePathMethod.setAccessible(true);
     }
 
@@ -28,7 +28,7 @@ public class S3FileUploadServiceTest {
     public void createFileUniquePathTest() throws Exception {
         String ip = "192.14.1.1";
         String fileName = "dango.png";
-        String path = (String)createFileUniquePathMethod.invoke(s3FileUploadService, ip, fileName);
+        String path = (String)createFileUniquePathMethod.invoke(s3FileStorageService, ip, fileName);
 
         assertNotNull(path);
         assertTrue(path.endsWith(fileName));
