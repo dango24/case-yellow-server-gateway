@@ -54,8 +54,9 @@ public class TestServiceImpl implements TestService {
         CompletableFuture.supplyAsync(() -> test)
                          .thenApply(this::removeUnsuccessfulTests)
                          .thenApply(this::uploadSnapshots)
+                         .thenApply(this::increaseComparisonInfoCounters)
                          .exceptionally(this::handleSaveTestException)
-                         .thenAccept(this::save);
+                         .thenAccept(testRepository::save);
     }
 
     private TestWrapper removeUnsuccessfulTests(TestWrapper testWrapper) {
@@ -103,9 +104,19 @@ public class TestServiceImpl implements TestService {
         return new AbstractMap.SimpleEntry<>(fileKey, snapshotLocation);
     }
 
+    private TestDAO increaseComparisonInfoCounters(TestDAO test) {
+
+        test.getComparisonInfoDAOTests()
+            .stream()
+            .map(ComparisonInfoIdentifiers::new)
+            .forEach(identifiers -> counterService.addComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
+
+        return test;
+    }
+
     private void notifyComparisonInfoFailures(List<ComparisonInfo> comparisonInfoFailures) {
         CompletableFuture.supplyAsync(() -> comparisonInfoFailures)
-                         .thenAccept(this::notifyFailedTests);
+                .thenAccept(this::notifyFailedTests);
     }
 
     private TestDAO handleSaveTestException(Throwable throwable) {
@@ -115,19 +126,6 @@ public class TestServiceImpl implements TestService {
 
     private void notifyFailedTests(List<ComparisonInfo> comparisonInfoFailures) {
         // TODO dango handle failed tests
-    }
-
-    private void save(TestDAO test) {
-        if (isNull(test)) {
-
-        }
-
-        test.getComparisonInfoDAOTests()
-            .stream()
-            .map(ComparisonInfoIdentifiers::new)
-            .forEach(identifiers -> counterService.addComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
-
-        testRepository.save(test);
     }
 }
 
