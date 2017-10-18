@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.services;
 
+import com.caseyellow.server.central.services.storage.FileStorageService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 

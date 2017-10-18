@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.services;
 
+import com.caseyellow.server.central.services.storage.S3FileStorageService;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -9,7 +9,7 @@ import com.caseyellow.server.central.domain.test.model.TestWrapper;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.test.repository.TestRepository;
-import com.caseyellow.server.central.services.FileStorageService;
+import com.caseyellow.server.central.services.storage.FileStorageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -115,7 +114,7 @@ public class TestServiceImpl implements TestService {
 
     private void notifyComparisonInfoFailures(List<ComparisonInfo> comparisonInfoFailures) {
         CompletableFuture.supplyAsync(() -> comparisonInfoFailures)
-                .thenAccept(this::notifyFailedTests);
+                         .thenAccept(this::notifyFailedTests);
     }
 
     private TestDAO handleSaveTestException(Throwable throwable) {

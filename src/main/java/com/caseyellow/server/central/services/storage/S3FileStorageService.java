@@ -1,4 +1,4 @@
-package com.caseyellow.server.central.services;
+package com.caseyellow.server.central.services.storage;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -9,7 +9,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.caseyellow.server.central.exceptions.IORuntimeException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
@@ -32,7 +31,7 @@ public class S3FileStorageService implements FileStorageService {
     private String secretAccessKey;
 
     @Value("${S3_bucket_name}")
-    private String S3BucketName;
+    private String bucketName;
 
     private AmazonS3 s3Client;
 
@@ -44,9 +43,8 @@ public class S3FileStorageService implements FileStorageService {
 
     @Override // result.getContentMd5()
     public String uploadFile(String userIP, File fileToUpload) {
-
         String path = createFileUniquePath(userIP, fileToUpload.getName());
-        s3Client.putObject(new PutObjectRequest(S3BucketName, path, fileToUpload));
+        s3Client.putObject(new PutObjectRequest(bucketName, path, fileToUpload));
 
         return path;
     }
@@ -54,7 +52,7 @@ public class S3FileStorageService implements FileStorageService {
     @Override
     public File getFile(String identifier) {
         File newFile = new File(System.getProperty("java.io.tmpdir"), identifier.split(File.separator)[1]);
-        S3Object object = s3Client.getObject(new GetObjectRequest(S3BucketName, identifier));
+        S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, identifier));
 
         try (InputStream objectData = object.getObjectContent()) {
             FileUtils.copyInputStreamToFile(objectData, newFile);
