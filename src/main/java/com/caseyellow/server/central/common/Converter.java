@@ -5,6 +5,7 @@ import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.SystemInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
+import com.caseyellow.server.central.exceptions.ConverterException;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.SystemInfoDAO;
@@ -80,6 +81,9 @@ public interface Converter {
     }
 
     static FileDownloadInfoDAO convertFileDownloadInfoModelToDAO(FileDownloadInfo fileDownloadInfo) {
+        if (isNull(fileDownloadInfo)) {
+            throw new ConverterException("Failed to convert, fileDownloadInfo is null");
+        }
         FileDownloadInfoDAO fileDownloadInfoDAO =
                 new FileDownloadInfoDAO.FileDownloadInfoBuilder(fileDownloadInfo.getFileName())
                                        .addFileDownloadRateKBPerSec(fileDownloadInfo.getFileDownloadRateKBPerSec())
