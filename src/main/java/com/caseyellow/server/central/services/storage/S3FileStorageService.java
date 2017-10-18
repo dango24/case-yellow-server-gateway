@@ -65,9 +65,10 @@ public class S3FileStorageService implements FileStorageService {
     }
 
     private String createFileUniquePath(String userIP, String fileName) {
+        int separationIndex = fileName.indexOf("_");
         String uniquePath = new StringBuilder(String.valueOf(System.currentTimeMillis())).reverse().toString();
         String userIdentifier = userIP.replaceAll("\\.", "");
 
-        return userIdentifier + File.separator + uniquePath + "_" + fileName;
+        return userIdentifier + File.separator + uniquePath + fileName.substring(separationIndex);
     }
 }
