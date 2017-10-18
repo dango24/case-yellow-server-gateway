@@ -23,6 +23,10 @@ import static java.util.stream.Collectors.toList;
 public interface Converter {
 
     static TestDAO convertTestModelToDAO(Test test) {
+        if (isNull(test)) {
+            throw new ConverterException("Failed to convert, test is null");
+        }
+
         TestDAO testDAO = new TestDAO.TestBuilder(test.getTestID())
                                      .addSpeedTestWebsite(test.getSpeedTestWebsiteIdentifier())
                                      .addSystemInfo(convertSystemInfoModelToDAO(test.getSystemInfo()))
@@ -33,6 +37,10 @@ public interface Converter {
     }
 
     static Test convertTestDAOToModel(TestDAO testDAO) {
+        if (isNull(testDAO)) {
+            throw new ConverterException("Failed to convert, testDAO is null");
+        }
+
         Test test = new Test.TestBuilder(testDAO.getTestID())
                             .addSpeedTestWebsiteIdentifier(testDAO.getSpeedTestWebsiteIdentifier())
                             .addSystemInfo(convertSystemInfoDAOlToModel(testDAO.getSystemInfo()))
@@ -43,6 +51,10 @@ public interface Converter {
     }
 
     static SystemInfoDAO convertSystemInfoModelToDAO(SystemInfo systemInfo) {
+        if (isNull(systemInfo)) {
+            throw new ConverterException("Failed to convert, systemInfo is null");
+        }
+
         SystemInfoDAO systemInfoDAO = new SystemInfoDAO();
 
         systemInfoDAO.setBrowser(systemInfo.getBrowser());
@@ -54,6 +66,10 @@ public interface Converter {
     }
 
     static SystemInfo convertSystemInfoDAOlToModel(SystemInfoDAO systemInfoDAO) {
+        if (isNull(systemInfoDAO)) {
+            throw new ConverterException("Failed to convert, systemInfoDAO is null");
+        }
+
         SystemInfo systemInfo = new SystemInfo();
 
         systemInfo.setBrowser(systemInfoDAO.getBrowser());
@@ -65,6 +81,10 @@ public interface Converter {
     }
 
     static ComparisonInfoDAO convertComparisonInfoModelToDAO(ComparisonInfo comparisonInfo) {
+        if (isNull(comparisonInfo)) {
+            throw new ConverterException("Failed to convert, comparisonInfo is null");
+        }
+
         ComparisonInfoDAO comparisonInfoDAO = new ComparisonInfoDAO();
         comparisonInfoDAO.setFileDownloadInfoDAO(convertFileDownloadInfoModelToDAO(comparisonInfo.getFileDownloadInfo()));
         comparisonInfoDAO.setSpeedTestWebSiteDownloadInfoDAO(convertSpeedTestWebSiteModelToDAO(comparisonInfo.getSpeedTestWebSite()));
@@ -73,6 +93,10 @@ public interface Converter {
     }
 
     static ComparisonInfo convertComparisonInfoDAOToModel(ComparisonInfoDAO comparisonInfoDAO) {
+        if (isNull(comparisonInfoDAO)) {
+            throw new ConverterException("Failed to convert, comparisonInfoDAO is null");
+        }
+
         ComparisonInfo comparisonInfo = new ComparisonInfo();
         comparisonInfo.setFileDownloadInfo(convertFileDownloadInfoDAOToModel(comparisonInfoDAO.getFileDownloadInfoDAO()));
         comparisonInfo.setSpeedTestWebSite(convertSpeedTestWebSiteDAOlToModel(comparisonInfoDAO.getSpeedTestWebSiteDownloadInfoDAO()));
@@ -84,6 +108,7 @@ public interface Converter {
         if (isNull(fileDownloadInfo)) {
             throw new ConverterException("Failed to convert, fileDownloadInfo is null");
         }
+
         FileDownloadInfoDAO fileDownloadInfoDAO =
                 new FileDownloadInfoDAO.FileDownloadInfoBuilder(fileDownloadInfo.getFileName())
                                        .addFileDownloadRateKBPerSec(fileDownloadInfo.getFileDownloadRateKBPerSec())
@@ -97,6 +122,10 @@ public interface Converter {
     }
 
     static FileDownloadInfo convertFileDownloadInfoDAOToModel(FileDownloadInfoDAO fileDownloadInfoDAO) {
+        if (isNull(fileDownloadInfoDAO)) {
+            throw new ConverterException("Failed to convert, fileDownloadInfoDAO is null");
+        }
+
         FileDownloadInfo fileDownloadInfo =
                 new FileDownloadInfo.FileDownloadInfoBuilder(fileDownloadInfoDAO.getFileName())
                                     .addFileDownloadRateKBPerSec(fileDownloadInfoDAO.getFileDownloadRateKBPerSec())
@@ -110,6 +139,10 @@ public interface Converter {
     }
 
     static SpeedTestWebSiteDAO convertSpeedTestWebSiteModelToDAO(SpeedTestWebSite speedTestWebSite) {
+        if (isNull(speedTestWebSite)) {
+            throw new ConverterException("Failed to convert, speedTestWebSite is null");
+        }
+
         SpeedTestWebSiteDAO speedTestWebSiteDAO = new SpeedTestWebSiteDAO(speedTestWebSite.getSpeedTestIdentifier());
 
         speedTestWebSiteDAO.setStartMeasuringTimestamp(speedTestWebSite.getStartMeasuringTimestamp());
@@ -120,6 +153,10 @@ public interface Converter {
     }
 
     static SpeedTestWebSite convertSpeedTestWebSiteDAOlToModel(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
+        if (isNull(speedTestWebSiteDAO)) {
+            throw new ConverterException("Failed to convert, speedTestWebSiteDAO is null");
+        }
+
         SpeedTestWebSite speedTestWebSite = new SpeedTestWebSite(speedTestWebSiteDAO.getSpeedTestIdentifier());
 
         speedTestWebSite.setStartMeasuringTimestamp(speedTestWebSiteDAO.getStartMeasuringTimestamp());
@@ -133,6 +170,8 @@ public interface Converter {
                                                                           Collection<T> modelCollection) {
         if (isNull(modelCollection) || modelCollection.isEmpty()) {
             return emptyList();
+        } else if (isNull(convectorFunction)) {
+            throw new ConverterException("Failed to convert, convectorFunction is null");
         }
 
         return modelCollection.stream()
