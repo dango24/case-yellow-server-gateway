@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>case-yellow-server-gateway</name>
+	<name>case-yellow-central</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -54,7 +54,14 @@
 			<version>3.6</version>
 		</dependency>
 
+		<!--Aws Java Sdk-->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>1.11.213</version>
+		</dependency>
 
+		<!--H2 Database-->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>

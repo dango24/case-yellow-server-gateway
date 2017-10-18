@@ -13,6 +13,7 @@ spring.datasource.username: sa
 spring.datasource.password:
 spring.datasource.driver-class-name: org.h2.Driver
 
+# Logger
 logging:
   level:
     org.springframework.web: ERROR
@@ -22,10 +23,3 @@ logging:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
   file: /logs/gatway_log.log
-
-config:
-  app-name: Gateway
-  app-description: ${app-name} is the the handler from user requests
-  admin-first-name: Dan
-  admin-last-name: Golan
-  admin-mail: caseyellow22@gmail.com

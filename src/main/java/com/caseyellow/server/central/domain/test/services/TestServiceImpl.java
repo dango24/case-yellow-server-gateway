@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -46,7 +45,7 @@ public class TestServiceImpl implements TestService {
     public void saveTest(TestWrapper test) {
         CompletableFuture.supplyAsync(() -> test)
                          .thenApply(this::removeUnsuccessfulTests)
-                         .thenApply(this::uploadSnapshotToS3)
+                         .thenApply(this::uploadSnapshot)
                          .thenApply(Converter::convertTestModelToDAO)
                          .exceptionally(this::handleSaveTestException)
                          .thenAccept(this::save);
@@ -71,7 +70,7 @@ public class TestServiceImpl implements TestService {
         return testWrapper;
     }
 
-    private Test uploadSnapshotToS3(TestWrapper testWrapper) {
+    private Test uploadSnapshot(TestWrapper testWrapper) {
 
         logger.info(
                 testWrapper.getSnapshotLocalLocation()
