@@ -7,10 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -18,8 +15,8 @@ import static java.util.stream.Collectors.toMap;
  */
 public interface SpeedTestWebSiteRepository extends JpaRepository<SpeedTestWebSiteDAO, Long> {
 
-    String SELECT_IDENTIFIERS_QUERY = "select DISTINCT SPEED_TEST_IDENTIFIER from SPEED_TEST_WEB_SITE_DOWNLOAD_INFO";
-    String SELECT_IDENTIFIER_AND_URL_QUERY = "select DISTINCT SPEED_TEST_IDENTIFIER , URL_ADDRESS  from SPEED_TEST_WEB_SITE_DOWNLOAD_INFO";
+    String SELECT_IDENTIFIERS_QUERY = "select DISTINCT SPEED_TEST_IDENTIFIER from SPEED_TEST_WEB_SITE";
+    String SELECT_IDENTIFIER_AND_URL_QUERY = "select DISTINCT SPEED_TEST_IDENTIFIER , URL_ADDRESS  from SPEED_TEST_WEB_SITE";
 
     Long countBySpeedTestIdentifier(String speedTestIdentifier);
     List<SpeedTestWebSiteDAO> findBySpeedTestIdentifier(String speedTestIdentifier);

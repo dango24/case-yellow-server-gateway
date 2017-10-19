@@ -51,7 +51,8 @@ public class S3FileStorageService implements FileStorageService {
 
     @Override
     public File getFile(String identifier) {
-        File newFile = new File(System.getProperty("java.io.tmpdir"), identifier.split(File.separator)[1]);
+        String fileName = identifier.split(File.separator)[1];
+        File newFile = new File(System.getProperty("java.io.tmpdir"), fileName);
         S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, identifier));
 
         try (InputStream objectData = object.getObjectContent()) {

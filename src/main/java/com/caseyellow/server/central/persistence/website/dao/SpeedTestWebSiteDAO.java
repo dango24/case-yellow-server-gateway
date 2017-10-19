@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by Dan on 12/10/2016.
  */
 @Entity
-@Table(name = "speed_test_webSite_download_info")
+@Table(name = "speed_test_web_site")
 public class SpeedTestWebSiteDAO {
 
     @Id
