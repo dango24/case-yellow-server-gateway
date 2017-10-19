@@ -28,11 +28,11 @@ public class S3FileUploadServiceTest {
     @Test
     public void createFileUniquePathTest() throws Exception {
         String ip = "192.14.1.1";
-        String fileName = "dango.png";
+        String fileName = "123456_dango.png";
         String path = (String)createFileUniquePathMethod.invoke(s3FileStorageService, ip, fileName);
 
         assertNotNull(path);
-        assertTrue(path.endsWith(fileName));
+        assertTrue(path.endsWith(fileName.substring(fileName.indexOf("_"))));
         assertTrue(path.startsWith("1921411"));
     }
 
