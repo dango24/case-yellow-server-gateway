@@ -70,6 +70,6 @@ public class S3FileStorageService implements FileStorageService {
         String uniquePath = new StringBuilder(String.valueOf(System.currentTimeMillis())).reverse().toString();
         String userIdentifier = userIP.replaceAll("\\.", "");
 
-        return userIdentifier + File.separator + uniquePath + fileName.substring(separationIndex);
+        return userIdentifier + "/" + uniquePath + fileName.substring(separationIndex);
     }
 }
