@@ -98,7 +98,7 @@ public class DAOConverterTest {
 
     private boolean isComparisonInfoEqualsToComparisonInfoDAO(ComparisonInfoDAO comparisonInfoDAO, ComparisonInfo comparisonInfo) {
         return isFileDownloadInfoEqualsToFileDownloadInfoDAO(comparisonInfoDAO.getFileDownloadInfoDAO(), comparisonInfo.getFileDownloadInfo()) &&
-               isSpeedTestWebSiteEqualsToSpeedTestWebSiteDAO(comparisonInfoDAO.getSpeedTestWebSiteDownloadInfoDAO(), comparisonInfo.getSpeedTestWebSite());
+               isSpeedTestWebSiteEqualsToSpeedTestWebSiteDAO(comparisonInfoDAO.getSpeedTestWebSiteDAO(), comparisonInfo.getSpeedTestWebSite());
     }
 
     private boolean isFileDownloadInfoEqualsToFileDownloadInfoDAO(FileDownloadInfoDAO fileDownloadInfoDAO, FileDownloadInfo fileDownloadInfo) {

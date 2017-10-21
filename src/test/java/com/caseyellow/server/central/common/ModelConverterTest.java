@@ -100,7 +100,7 @@ public class ModelConverterTest {
 
     private boolean isComparisonInfoModelEqualsToDAO(ComparisonInfo comparisonInfo, ComparisonInfoDAO comparisonInfoDAO) {
         return isFileDownloadInfoModelEqualsToDAO(comparisonInfo.getFileDownloadInfo(), comparisonInfoDAO.getFileDownloadInfoDAO()) &&
-               isSpeedTestWebSiteModelEqualsToDAO(comparisonInfo.getSpeedTestWebSite(), comparisonInfoDAO.getSpeedTestWebSiteDownloadInfoDAO());
+               isSpeedTestWebSiteModelEqualsToDAO(comparisonInfo.getSpeedTestWebSite(), comparisonInfoDAO.getSpeedTestWebSiteDAO());
     }
 
     private boolean isFileDownloadInfoModelEqualsToDAO(FileDownloadInfo fileDownloadInfo, FileDownloadInfoDAO fileDownloadInfoDAO) {

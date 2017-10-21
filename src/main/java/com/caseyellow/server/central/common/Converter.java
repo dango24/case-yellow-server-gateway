@@ -87,7 +87,7 @@ public interface Converter {
 
         ComparisonInfoDAO comparisonInfoDAO = new ComparisonInfoDAO();
         comparisonInfoDAO.setFileDownloadInfoDAO(convertFileDownloadInfoModelToDAO(comparisonInfo.getFileDownloadInfo()));
-        comparisonInfoDAO.setSpeedTestWebSiteDownloadInfoDAO(convertSpeedTestWebSiteModelToDAO(comparisonInfo.getSpeedTestWebSite()));
+        comparisonInfoDAO.setSpeedTestWebSiteDAO(convertSpeedTestWebSiteModelToDAO(comparisonInfo.getSpeedTestWebSite()));
 
         return comparisonInfoDAO;
     }
@@ -99,7 +99,7 @@ public interface Converter {
 
         ComparisonInfo comparisonInfo = new ComparisonInfo();
         comparisonInfo.setFileDownloadInfo(convertFileDownloadInfoDAOToModel(comparisonInfoDAO.getFileDownloadInfoDAO()));
-        comparisonInfo.setSpeedTestWebSite(convertSpeedTestWebSiteDAOlToModel(comparisonInfoDAO.getSpeedTestWebSiteDownloadInfoDAO()));
+        comparisonInfo.setSpeedTestWebSite(convertSpeedTestWebSiteDAOlToModel(comparisonInfoDAO.getSpeedTestWebSiteDAO()));
 
         return comparisonInfo;
     }

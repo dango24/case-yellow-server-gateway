@@ -89,7 +89,7 @@ public class TestServiceImpl implements TestService {
 
         testDAO.getComparisonInfoDAOTests()
                .stream()
-               .map(ComparisonInfoDAO::getSpeedTestWebSiteDownloadInfoDAO)
+               .map(ComparisonInfoDAO::getSpeedTestWebSiteDAO)
                .forEach(speedTestWebSite -> speedTestWebSite.setS3FileAddress(fileLocation.get(speedTestWebSite.getKey())));
 
         return testDAO;

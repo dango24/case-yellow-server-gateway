@@ -11,7 +11,7 @@ public class ComparisonInfoIdentifiers {
     }
 
     public ComparisonInfoIdentifiers(ComparisonInfoDAO comparisonInfo) {
-       this(comparisonInfo.getSpeedTestWebSiteDownloadInfoDAO().getSpeedTestIdentifier(), comparisonInfo.getFileDownloadInfoDAO().getFileName());
+       this(comparisonInfo.getSpeedTestWebSiteDAO().getSpeedTestIdentifier(), comparisonInfo.getFileDownloadInfoDAO().getFileName());
     }
 
     public ComparisonInfoIdentifiers(String speedTestIdentifier, String fileDownloadIdentifier) {

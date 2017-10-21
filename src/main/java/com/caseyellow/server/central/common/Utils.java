@@ -35,7 +35,6 @@ public interface Utils {
         }
     }
 
-
     static Map.Entry<String, File> writeToFile(Map.Entry<String, MultipartFile> snapshot) {
         String identifier = snapshot.getKey();
         MultipartFile file = snapshot.getValue();

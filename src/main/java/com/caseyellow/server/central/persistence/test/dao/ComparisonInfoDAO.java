@@ -22,17 +22,17 @@ public class ComparisonInfoDAO {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "speed_test_webSite_download_info_id", unique = true)
-    private SpeedTestWebSiteDAO speedTestWebSiteDownloadInfoDAO;
+    private SpeedTestWebSiteDAO speedTestWebSiteDAO;
 
     public ComparisonInfoDAO() {}
 
     public ComparisonInfoDAO(SpeedTestWebSiteDAO speedTestWebSiteDownloadInfoDAO, FileDownloadInfoDAO fileDownloadInfoDAO) {
-        this.speedTestWebSiteDownloadInfoDAO = speedTestWebSiteDownloadInfoDAO;
+        this.speedTestWebSiteDAO = speedTestWebSiteDownloadInfoDAO;
         this.fileDownloadInfoDAO = fileDownloadInfoDAO;
     }
 
-    public SpeedTestWebSiteDAO getSpeedTestWebSiteDownloadInfoDAO() {
-        return speedTestWebSiteDownloadInfoDAO;
+    public SpeedTestWebSiteDAO getSpeedTestWebSiteDAO() {
+        return speedTestWebSiteDAO;
     }
 
     public FileDownloadInfoDAO getFileDownloadInfoDAO() {
@@ -43,7 +43,7 @@ public class ComparisonInfoDAO {
         this.fileDownloadInfoDAO = fileDownloadInfoDAO;
     }
 
-    public void setSpeedTestWebSiteDownloadInfoDAO(SpeedTestWebSiteDAO speedTestWebSiteDownloadInfoDAO) {
-        this.speedTestWebSiteDownloadInfoDAO = speedTestWebSiteDownloadInfoDAO;
+    public void setSpeedTestWebSiteDAO(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
+        this.speedTestWebSiteDAO = speedTestWebSiteDAO;
     }
 }
