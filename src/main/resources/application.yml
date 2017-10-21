@@ -9,6 +9,8 @@ spring.http.multipart.max-file-size: 5MB
 spring.http.multipart.max-request-size: 20MB
 
 # Logger
+log.dir: /home/dango
+
 logging:
   level:
     org.springframework.web: ERROR
@@ -17,4 +19,4 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
-  file: /logs/gatway_log.log
+  file: ${log.dir}/logs/case_yellow_central_log.log
