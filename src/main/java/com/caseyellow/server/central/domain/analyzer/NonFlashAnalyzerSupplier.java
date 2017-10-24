@@ -2,7 +2,6 @@ package com.caseyellow.server.central.domain.analyzer;
 
 import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.exceptions.AnalyzerException;
-import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
