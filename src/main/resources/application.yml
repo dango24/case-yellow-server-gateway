@@ -2,14 +2,14 @@
 server.port : 8080
 
 # Profiles
-spring.profiles.active: prod
+spring.profiles.active: dev
 
 # MultiPart properties
 spring.http.multipart.max-file-size: 5MB
 spring.http.multipart.max-request-size: 20MB
 
 # Logger
-log.dir: /home/dango
+log.dir: /home/ec2-user/case-yellow-central
 
 logging:
   level:
@@ -20,3 +20,6 @@ logging:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
   file: ${log.dir}/logs/case_yellow_central_log.log
+
+# Miscellaneous
+non_flash_analyzer_suffix: NonFlashAnalyzer

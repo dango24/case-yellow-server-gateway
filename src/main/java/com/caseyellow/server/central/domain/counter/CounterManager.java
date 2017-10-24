@@ -1,5 +1,6 @@
-package com.caseyellow.server.central.common;
+package com.caseyellow.server.central.domain.counter;
 
+import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteCounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;

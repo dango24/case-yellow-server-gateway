@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,8 +18,17 @@ public class UrlMapper {
 
     private Map<String, String> speedTestUrls;
     private Map<String, String> fileDownloadUrls;
+    private List<String> nonFlashIdentifiers;
 
     public UrlMapper() {
+    }
+
+    public List<String> getNonFlashIdentifiers() {
+        return nonFlashIdentifiers;
+    }
+
+    public void setNonFlashIdentifiers(List<String> nonFlashIdentifiers) {
+        this.nonFlashIdentifiers = nonFlashIdentifiers;
     }
 
     public Map<String, String> getSpeedTestUrls() {
@@ -59,5 +69,9 @@ public class UrlMapper {
 
     public boolean isValidFileDownloadIdentifier(String fileDownloadIdentifier) {
         return fileDownloadUrls.keySet().contains(fileDownloadIdentifier);
+    }
+
+    public boolean isNonFlashAble(String identifier) {
+        return nonFlashIdentifiers.contains(identifier);
     }
 }

@@ -12,7 +12,9 @@ public class SpeedTestWebSite {
     private boolean succeed;
     private String urlAddress;
     private String speedTestIdentifier;
+    private String nonFlashResult;
     private long startMeasuringTimestamp;
+    private Double downloadRateInMbps; // Mega bit per second
 
     public SpeedTestWebSite() {
     }
@@ -61,6 +63,14 @@ public class SpeedTestWebSite {
         this.startMeasuringTimestamp = startMeasuringTimestamp;
     }
 
+    public Double getDownloadRateInMbps() {
+        return downloadRateInMbps;
+    }
+
+    public void setDownloadRateInMbps(Double downloadRateInMbps) {
+        this.downloadRateInMbps = downloadRateInMbps;
+    }
+
     public boolean isSucceed() {
         return succeed;
     }
@@ -75,6 +85,14 @@ public class SpeedTestWebSite {
 
     public void setKey(int key) {
         this.key = key;
+    }
+
+    public String getNonFlashResult() {
+        return nonFlashResult;
+    }
+
+    public void setNonFlashResult(String nonFlashResult) {
+        this.nonFlashResult = nonFlashResult;
     }
 
     @Override

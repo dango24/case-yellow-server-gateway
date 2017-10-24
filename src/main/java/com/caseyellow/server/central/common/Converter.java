@@ -18,6 +18,7 @@ import java.util.function.Function;
 
 import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 public interface Converter {
@@ -149,6 +150,11 @@ public interface Converter {
         speedTestWebSiteDAO.setUrlAddress(speedTestWebSite.getUrlAddress());
         speedTestWebSiteDAO.setKey(speedTestWebSite.getKey());
 
+        if (nonNull(speedTestWebSite.getDownloadRateInMbps())) {
+            speedTestWebSiteDAO.setDownloadRateInMbps(speedTestWebSite.getDownloadRateInMbps());
+            speedTestWebSiteDAO.setAnalyzed(true);
+        }
+
         return speedTestWebSiteDAO;
     }
 
@@ -162,6 +168,7 @@ public interface Converter {
         speedTestWebSite.setStartMeasuringTimestamp(speedTestWebSiteDAO.getStartMeasuringTimestamp());
         speedTestWebSite.setUrlAddress(speedTestWebSiteDAO.getUrlAddress());
         speedTestWebSite.setKey(speedTestWebSiteDAO.getKey());
+        speedTestWebSite.setDownloadRateInMbps(speedTestWebSiteDAO.getDownloadRateInMbps());
 
         return speedTestWebSite;
     }

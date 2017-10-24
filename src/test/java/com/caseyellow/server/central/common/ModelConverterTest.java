@@ -49,7 +49,7 @@ public class ModelConverterTest {
         fileDownloadInfoDAO.setFileSizeInBytes(23456);
 
         speedTestWebSiteDAO = new SpeedTestWebSiteDAO(SPEED_TEST_WEBSITE_IDENTIFIER, HOT, false);
-        speedTestWebSiteDAO.setDownloadRateInMbps(123456789);
+        speedTestWebSiteDAO.setDownloadRateInMbps(123456789.0);
 
         comparisonInfoDAO = new ComparisonInfoDAO(speedTestWebSiteDAO, fileDownloadInfoDAO);
         testDAO = new TestDAO.TestBuilder(TEST_ID)

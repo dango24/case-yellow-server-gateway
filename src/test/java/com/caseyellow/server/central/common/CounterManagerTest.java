@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.common;
 
 import com.caseyellow.server.central.CaseYellowCentral;
+import com.caseyellow.server.central.domain.counter.CounterService;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadCounter;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteCounter;

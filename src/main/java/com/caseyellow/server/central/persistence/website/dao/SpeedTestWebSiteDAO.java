@@ -18,7 +18,7 @@ public class SpeedTestWebSiteDAO {
     private String urlAddress;
     private String speedTestIdentifier;
     private String S3FileAddress;
-    private double downloadRateInMbps; // Mega bit per second
+    private Double downloadRateInMbps; // Mega bit per second
     private long startMeasuringTimestamp;
 
     public SpeedTestWebSiteDAO() {
@@ -71,11 +71,11 @@ public class SpeedTestWebSiteDAO {
         this.S3FileAddress = s3FileAddress;
     }
 
-    public double getDownloadRateInMbps() {
+    public Double getDownloadRateInMbps() {
         return downloadRateInMbps;
     }
 
-    public void setDownloadRateInMbps(double downloadRateInMbps) {
+    public void setDownloadRateInMbps(Double downloadRateInMbps) {
         this.downloadRateInMbps = downloadRateInMbps;
     }
 

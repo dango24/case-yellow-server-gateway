@@ -35,8 +35,8 @@
       "buttonId": "DRWidgetInitiate",
       "finishIdentifier": "class=Resultstitle",
       "finishTextIdentifier": "Your Test Results",
-      "resultLocation": null,
-      "resultAttribute": null
+      "resultLocation": "id=DR-ELE-results",
+      "resultAttribute": "title"
     }
   },
   {
@@ -71,7 +71,7 @@
       "buttonId": null,
       "finishIdentifier": "class=compare-ookla-text",
       "finishTextIdentifier": "Compare on\nSPEEDTEST.NET",
-      "resultLocation": null,
+      "resultLocation": "id=speed-value",
       "resultAttribute": null
     }
   },
@@ -116,7 +116,7 @@
       "buttonId": "startBtn",
       "finishIdentifier": "id=container3",
       "finishTextIdentifier": "Click 'Share' to share this result",
-      "resultLocation": null,
+      "resultLocation": "id=container1",
       "resultAttribute": null
     }
   }

@@ -1,11 +1,13 @@
 package com.caseyellow.server.central.domain.test.services;
 
 import com.caseyellow.server.central.common.Converter;
-import com.caseyellow.server.central.common.CounterService;
+import com.caseyellow.server.central.domain.counter.CounterService;
+import com.caseyellow.server.central.domain.analyzer.NonFlashAnalyzerService;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfoIdentifiers;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.TestWrapper;
+import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.test.repository.TestRepository;
@@ -31,9 +33,11 @@ public class TestServiceImpl implements TestService {
     private TestRepository testRepository;
     private CounterService counterService;
     private FileStorageService fileUploadService;
+    private NonFlashAnalyzerService nonFlashAnalyzerService;
 
     @Autowired
-    public TestServiceImpl(TestRepository testRepository, CounterService counterService, FileStorageService fileUploadService) {
+    public TestServiceImpl(NonFlashAnalyzerService nonFlashAnalyzerService, TestRepository testRepository, CounterService counterService, FileStorageService fileUploadService) {
+        this.nonFlashAnalyzerService = nonFlashAnalyzerService;
         this.testRepository = testRepository;
         this.counterService = counterService;
         this.fileUploadService = fileUploadService;
@@ -51,6 +55,7 @@ public class TestServiceImpl implements TestService {
     public void saveTest(TestWrapper test) {
         CompletableFuture.supplyAsync(() -> test)
                          .thenApply(this::removeUnsuccessfulTests)
+                         .thenApply(this::analyzeNonFlashResult)
                          .thenApply(this::uploadSnapshots)
                          .thenApply(this::increaseComparisonInfoCounters)
                          .exceptionally(this::handleSaveTestException)
@@ -74,6 +79,23 @@ public class TestServiceImpl implements TestService {
         notifyComparisonInfoFailures(comparisonInfoFailures);
 
         return testWrapper;
+    }
+
+    private TestWrapper analyzeNonFlashResult(TestWrapper testWrapper) {
+
+        testWrapper.getTest()
+                   .getComparisonInfoTests()
+                   .stream()
+                   .map(ComparisonInfo::getSpeedTestWebSite)
+                   .filter(speedTest -> nonFlashAnalyzerService.isNonFlashAble(speedTest.getSpeedTestIdentifier()))
+                   .forEach(this::updateNonFlashSpeedTestResult);
+
+        return testWrapper;
+    }
+
+    private void updateNonFlashSpeedTestResult(SpeedTestWebSite speedTestWebSite) {
+        double downloadRateInMbps = nonFlashAnalyzerService.analyze(speedTestWebSite.getSpeedTestIdentifier(), speedTestWebSite.getNonFlashResult());
+        speedTestWebSite.setDownloadRateInMbps(downloadRateInMbps);
     }
 
     private TestDAO uploadSnapshots(TestWrapper testWrapper) {
@@ -112,14 +134,14 @@ public class TestServiceImpl implements TestService {
         return test;
     }
 
-    private void notifyComparisonInfoFailures(List<ComparisonInfo> comparisonInfoFailures) {
-        CompletableFuture.supplyAsync(() -> comparisonInfoFailures)
-                         .thenAccept(this::notifyFailedTests);
-    }
-
     private TestDAO handleSaveTestException(Throwable throwable) {
         logger.error("Failed To save test, " + throwable.getMessage(), throwable);
         return null;
+    }
+
+    private void notifyComparisonInfoFailures(List<ComparisonInfo> comparisonInfoFailures) {
+        CompletableFuture.supplyAsync(() -> comparisonInfoFailures)
+                .thenAccept(this::notifyFailedTests);
     }
 
     private void notifyFailedTests(List<ComparisonInfo> comparisonInfoFailures) {
