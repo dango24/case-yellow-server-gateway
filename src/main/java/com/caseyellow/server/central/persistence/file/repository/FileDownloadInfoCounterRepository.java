@@ -18,6 +18,7 @@ import static java.util.stream.Collectors.toMap;
 public interface FileDownloadInfoCounterRepository extends JpaRepository<FileDownloadCounter, Long> {
 
     String UPDATE_COUNTER_QUERY = "UPDATE FileDownloadCounter f set f.count = f.count+1 where f.id = :id";
+    String DECREASE_COUNTER_QUERY = "UPDATE FileDownloadCounter f set f.count = f.count-1 where f.id = :id";
     String ACTIVATION_QUERY = "UPDATE FileDownloadCounter f set f.active = :active where f.id = :id";
 
     FileDownloadCounter findByIdentifier(String identifier);
@@ -26,6 +27,12 @@ public interface FileDownloadInfoCounterRepository extends JpaRepository<FileDow
     @Transactional
     @Query(UPDATE_COUNTER_QUERY)
     void updateCounter(@Param("id")long id);
+
+
+    @Modifying
+    @Transactional
+    @Query(DECREASE_COUNTER_QUERY)
+    void decreaseCounter(@Param("id")long id);
 
     @Modifying
     @Transactional
@@ -39,6 +46,17 @@ public interface FileDownloadInfoCounterRepository extends JpaRepository<FileDow
             save(new FileDownloadCounter(identifier));
         } else {
             updateCounter(speedTestWebSiteCounter.getId());
+        }
+    }
+
+
+    default void reduceFileDownloadInfo(String identifier) {
+        FileDownloadCounter speedTestWebSiteCounter = findByIdentifier(identifier);
+
+        if (isNull(speedTestWebSiteCounter)) {
+            save(new FileDownloadCounter(identifier));
+        } else {
+            decreaseCounter(speedTestWebSiteCounter.getId());
         }
     }
 

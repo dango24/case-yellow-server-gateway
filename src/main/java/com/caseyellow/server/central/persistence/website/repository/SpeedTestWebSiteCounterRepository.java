@@ -19,6 +19,7 @@ public interface SpeedTestWebSiteCounterRepository extends JpaRepository<SpeedTe
 
     String DEFAULT_IDENTIFIER = "hot";
     String UPDATE_COUNTER_QUERY = "UPDATE SpeedTestWebSiteCounter s set s.count = s.count+1 where s.id = :id";
+    String DECREASE_COUNTER_QUERY = "UPDATE SpeedTestWebSiteCounter s set s.count = s.count-1 where s.id = :id";
     String ACTIVATION_QUERY = "UPDATE SpeedTestWebSiteCounter s set s.active = :active where s.id = :id";
 
     SpeedTestWebSiteCounter findByIdentifier(String identifier);
@@ -27,6 +28,11 @@ public interface SpeedTestWebSiteCounterRepository extends JpaRepository<SpeedTe
     @Transactional
     @Query(UPDATE_COUNTER_QUERY)
     void updateCounter(@Param("id") long id);
+
+    @Modifying
+    @Transactional
+    @Query(DECREASE_COUNTER_QUERY)
+    void decreaseCounter(@Param("id") long id);
 
     @Modifying
     @Transactional
@@ -40,6 +46,17 @@ public interface SpeedTestWebSiteCounterRepository extends JpaRepository<SpeedTe
             save(new SpeedTestWebSiteCounter(identifier));
         } else {
             updateCounter(speedTestWebSiteCounter.getId());
+        }
+    }
+
+
+    default void reduceSpeedTestWebSite(String identifier) {
+        SpeedTestWebSiteCounter speedTestWebSiteCounter = findByIdentifier(identifier);
+
+        if (isNull(speedTestWebSiteCounter)) {
+            save(new SpeedTestWebSiteCounter(identifier));
+        } else {
+            decreaseCounter(speedTestWebSiteCounter.getId());
         }
     }
 

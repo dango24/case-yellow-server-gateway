@@ -59,7 +59,7 @@ public class TestServiceImpl implements TestService {
                          .thenApply(this::uploadSnapshots)
                          .thenApply(this::increaseComparisonInfoCounters)
                          .exceptionally(this::handleSaveTestException)
-                         .thenAccept(testRepository::save);
+                         .thenAccept(this::save);
     }
 
     private TestWrapper removeUnsuccessfulTests(TestWrapper testWrapper) {
@@ -130,6 +130,26 @@ public class TestServiceImpl implements TestService {
             .stream()
             .map(ComparisonInfoIdentifiers::new)
             .forEach(identifiers -> counterService.addComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
+
+        return test;
+    }
+
+    private void save(TestDAO testDAO) {
+        try {
+            testRepository.save(testDAO);
+
+        } catch (Exception e) {
+            logger.error("Failed to save test, " + e.getMessage(), e);
+            decreaseComparisonInfoCounters(testDAO);
+        }
+    }
+
+    private TestDAO decreaseComparisonInfoCounters(TestDAO test) {
+
+        test.getComparisonInfoDAOTests()
+                .stream()
+                .map(ComparisonInfoIdentifiers::new)
+                .forEach(identifiers -> counterService.decreaseComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
 
         return test;
     }

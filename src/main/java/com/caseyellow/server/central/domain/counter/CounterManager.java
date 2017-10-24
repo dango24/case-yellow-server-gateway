@@ -33,4 +33,16 @@ public class CounterManager implements CounterService {
             fileDownloadInfoCounterRepository.addFileDownloadInfo(fileDownloadIdentifier);
         }
     }
+
+    @Override
+    public void decreaseComparisionInfoDetails(String speedTestIdentifier, String fileDownloadIdentifier) {
+
+        if (speedTestWebSiteCounterRepository.findByIdentifier(speedTestIdentifier).getCount() > 0) {
+            speedTestWebSiteCounterRepository.reduceSpeedTestWebSite(speedTestIdentifier);
+        }
+
+        if (fileDownloadInfoCounterRepository.findByIdentifier(fileDownloadIdentifier).getCount() > 0) {
+            fileDownloadInfoCounterRepository.reduceFileDownloadInfo(fileDownloadIdentifier);
+        }
+    }
 }
