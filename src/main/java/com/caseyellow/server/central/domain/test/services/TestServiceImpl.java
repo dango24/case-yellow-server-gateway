@@ -12,6 +12,7 @@ import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.test.repository.TestRepository;
 import com.caseyellow.server.central.services.storage.FileStorageService;
+import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import static com.caseyellow.server.central.common.Validator.validateTest;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -53,6 +55,10 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public void saveTest(TestWrapper test) {
+        if (!validateTest(test.getTest())) {
+           throw new IllegalArgumentException("Test is not valid, test: " + new Gson().toJson(test.getTest()));
+        }
+
         increaseComparisonInfoCounters(test.getTest());
 
         CompletableFuture.supplyAsync(() -> test)
@@ -142,6 +148,7 @@ public class TestServiceImpl implements TestService {
                 .map(ComparisonInfoIdentifiers::new)
                 .forEach(identifiers -> counterService.addComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
     }
+
     private TestDAO decreaseComparisonInfoCounters(TestDAO test) {
 
         test.getComparisonInfoDAOTests()

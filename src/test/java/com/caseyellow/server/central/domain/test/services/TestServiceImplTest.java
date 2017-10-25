@@ -37,6 +37,12 @@ public class TestServiceImplTest {
     private final static int NUM_OF_SUCCEED_TEST = 8;
     private final static int NUM_OF_FAILED_TEST = 5;
 
+    private static final String HOT_IDENTIFIER = "hot";
+    private static final String HOT_URL = "http://www.hot.net.il/heb/Internet/speed/";
+
+    private static final String GO = "go";
+    private static final String GO_URL = "storage.googleapis.com/golang/go1.7.1.windows-amd64.msi";
+
 
     private TestService testService;
     private TestRepository testRepository;
@@ -80,8 +86,18 @@ public class TestServiceImplTest {
     @Before
     public void setUp() throws Exception {
         comparisonInfoList = new ArrayList<>();
-        IntStream.range(0, NUM_OF_SUCCEED_TEST).forEach(i -> comparisonInfoList.add(new ComparisonInfo(new SpeedTestWebSite(true), new FileDownloadInfo())));
-        IntStream.range(0, NUM_OF_FAILED_TEST).forEach(i -> comparisonInfoList.add(new ComparisonInfo(new SpeedTestWebSite(false), new FileDownloadInfo())));
+        SpeedTestWebSite speedTestWebSiteSuccess = new SpeedTestWebSite(true, HOT_URL, HOT_IDENTIFIER, 23421);
+        SpeedTestWebSite speedTestWebSiteFailure = new SpeedTestWebSite(false, HOT_URL, HOT_IDENTIFIER, 23421);
+        FileDownloadInfo fileDownloadInfo = new FileDownloadInfo.FileDownloadInfoBuilder(GO)
+                                                                .addFileURL(GO_URL)
+                                                                .addFileDownloadRateKBPerSec(32434)
+                                                                .addFileDownloadedTimeInMs(543543)
+                                                                .addFileSizeInBytes(143543)
+                                                                .addStartDownloadingTime(453543)
+                                                                .build();
+
+        IntStream.range(0, NUM_OF_SUCCEED_TEST).forEach(i -> comparisonInfoList.add(new ComparisonInfo(speedTestWebSiteSuccess, fileDownloadInfo)));
+        IntStream.range(0, NUM_OF_FAILED_TEST).forEach(i -> comparisonInfoList.add(new ComparisonInfo(speedTestWebSiteFailure, fileDownloadInfo)));
     }
 
     @After
@@ -127,7 +143,7 @@ public class TestServiceImplTest {
        assertTrue(fileDownloadInfoRepository.findAll().size() == NUM_OF_SUCCEED_TEST);
     }
 
-    @org.junit.Test
+    @org.junit.Test (expected = IllegalArgumentException.class)
     public void saveTestWithNull() {
         List<ComparisonInfo> comparisonInfoList =
             IntStream.range(0, NUM_OF_FAILED_TEST)
@@ -142,6 +158,26 @@ public class TestServiceImplTest {
 
 
         testService.saveTest(new TestWrapper(test));
+    }
+
+    @org.junit.Test
+    public void saveTestWithNullCheckDB() {
+        List<ComparisonInfo> comparisonInfoList =
+                IntStream.range(0, NUM_OF_FAILED_TEST)
+                        .mapToObj(i -> new ComparisonInfo(new SpeedTestWebSite(true), null))
+                        .collect(Collectors.toList());
+
+        Test test = new Test.TestBuilder("Esfir")
+                .addComparisonInfoTests(comparisonInfoList)
+                .addSystemInfo(new SystemInfo())
+                .addSpeedTestWebsiteIdentifier("hot")
+                .build();
+
+        try {
+            testService.saveTest(new TestWrapper(test));
+        } catch (IllegalArgumentException e) {
+            assertTrue(e.getMessage().startsWith("Test is not valid"));
+        }
 
         assertTrue(testRepository.findAll().isEmpty());
         assertTrue(speedTestWebSiteRepository.findAll().isEmpty());
