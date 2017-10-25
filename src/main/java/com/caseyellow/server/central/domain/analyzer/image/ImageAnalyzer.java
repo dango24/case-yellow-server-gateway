@@ -6,6 +6,7 @@ import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
 import com.caseyellow.server.central.services.analyze.ImageAnalyzerService;
 import com.caseyellow.server.central.services.storage.FileStorageService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import java.util.List;
 
 @Service
 public class ImageAnalyzer {
+
+    private Logger logger = Logger.getLogger(ImageAnalyzer.class);
 
     private static final int SCHEDULED_TASK_INTERVAL = 1_800_000; // 30 minutes
     private static final int INITIAL_SCHEDULED_TASK = 120_000; // 2 minutes
@@ -37,8 +40,13 @@ public class ImageAnalyzer {
     }
 
     private void analyzeImage(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
-        File imageSnapshot = fileStorageService.getFile(speedTestWebSiteDAO.getS3FileAddress());
-        double analyzedImageResult = imageAnalyzerService.analyzeImage(speedTestWebSiteDAO.getSpeedTestIdentifier(), imageSnapshot);
-        speedTestWebSiteRepository.updateAnalyzedImageResult(speedTestWebSiteDAO.getId(), analyzedImageResult);
+        try {
+            File imageSnapshot = fileStorageService.getFile(speedTestWebSiteDAO.getS3FileAddress());
+            double analyzedImageResult = imageAnalyzerService.analyzeImage(speedTestWebSiteDAO.getSpeedTestIdentifier(), imageSnapshot);
+            speedTestWebSiteRepository.updateAnalyzedImageResult(speedTestWebSiteDAO.getId(), analyzedImageResult);
+
+        } catch (Exception e) {
+            logger.error("AnalyzeImage failed, " + e.getMessage(), e);
+        }
     }
 }
