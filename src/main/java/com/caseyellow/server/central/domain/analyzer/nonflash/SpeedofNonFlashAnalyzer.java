@@ -1,4 +1,4 @@
-package com.caseyellow.server.central.domain.analyzer;
+package com.caseyellow.server.central.domain.analyzer.nonflash;
 
 import com.caseyellow.server.central.exceptions.AnalyzerException;
 import org.springframework.stereotype.Component;

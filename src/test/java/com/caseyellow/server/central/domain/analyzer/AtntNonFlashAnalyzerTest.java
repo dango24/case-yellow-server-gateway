@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.domain.analyzer;
 
+import com.caseyellow.server.central.domain.analyzer.nonflash.AtntNonFlashAnalyzer;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

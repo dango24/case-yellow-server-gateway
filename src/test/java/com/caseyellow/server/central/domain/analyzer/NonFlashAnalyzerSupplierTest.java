@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.domain.analyzer;
 
 import com.caseyellow.server.central.CaseYellowCentral;
+import com.caseyellow.server.central.domain.analyzer.nonflash.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

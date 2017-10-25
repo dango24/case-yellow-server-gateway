@@ -144,6 +144,19 @@ public class SpeedTestWebSiteRepositoryTest {
         assertTrue(speedTestWebSiteRepository.findByAnalyzedFalse().size() == TOTAL_COUNT + unAnalyzedTestsCount);
     }
 
+    @Test
+    public void findByAnalyzedTrue() throws Exception {
+        int analyzedTestsCount = 20;
+        int unAnalyzedTestsCount = 5;
+
+        IntStream.range(0, analyzedTestsCount).forEach(i -> addSpeedTestWebSite(new SpeedTestWebSiteDAO(HOT_IDENTIFIER, HOT_URL, true)));
+        IntStream.range(0, unAnalyzedTestsCount).forEach(i -> addSpeedTestWebSite(new SpeedTestWebSiteDAO(BEZEQ_IDENTIFIER, BEZEQ_URL)));
+
+        assertTrue(speedTestWebSiteRepository.count() == TOTAL_COUNT + analyzedTestsCount + unAnalyzedTestsCount);
+
+        assertTrue(speedTestWebSiteRepository.findByAnalyzedTrue().size() == analyzedTestsCount);
+    }
+
     private void addSpeedTestWebSite(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
         speedTestWebSiteRepository.save(speedTestWebSiteDAO);
         speedTestWebSiteCounterRepository.addSpeedTestWebSite(speedTestWebSiteDAO.getSpeedTestIdentifier());

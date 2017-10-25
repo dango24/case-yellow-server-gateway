@@ -2,7 +2,7 @@ package com.caseyellow.server.central.domain.test.services;
 
 import com.caseyellow.server.central.common.Converter;
 import com.caseyellow.server.central.domain.counter.CounterService;
-import com.caseyellow.server.central.domain.analyzer.NonFlashAnalyzerService;
+import com.caseyellow.server.central.domain.analyzer.nonflash.NonFlashAnalyzerService;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfoIdentifiers;
 import com.caseyellow.server.central.domain.test.model.Test;

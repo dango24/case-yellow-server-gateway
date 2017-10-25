@@ -96,6 +96,10 @@ public class SpeedTestWebSiteDAO {
         this.key = key;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "SpeedTestWebSiteDAO{" +

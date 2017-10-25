@@ -2,7 +2,10 @@ package com.caseyellow.server.central.persistence.website.repository;
 
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,18 +18,21 @@ import static java.util.stream.Collectors.toMap;
  */
 public interface SpeedTestWebSiteRepository extends JpaRepository<SpeedTestWebSiteDAO, Long> {
 
-    String SELECT_IDENTIFIERS_QUERY = "select DISTINCT SPEED_TEST_IDENTIFIER from SPEED_TEST_WEB_SITE";
+    String UPDATE_ANALYZED_IMAGE_RESULT = "UPDATE SpeedTestWebSiteDAO s set s.downloadRateInMbps = :downloadRateInMbps, s.analyzed = true where s.id = :id";
     String SELECT_IDENTIFIER_AND_URL_QUERY = "select DISTINCT SPEED_TEST_IDENTIFIER , URL_ADDRESS  from SPEED_TEST_WEB_SITE";
 
     Long countBySpeedTestIdentifier(String speedTestIdentifier);
     List<SpeedTestWebSiteDAO> findBySpeedTestIdentifier(String speedTestIdentifier);
     List<SpeedTestWebSiteDAO> findByAnalyzedFalse();
+    List<SpeedTestWebSiteDAO> findByAnalyzedTrue();
 
     @Query(value = SELECT_IDENTIFIER_AND_URL_QUERY, nativeQuery = true)
     List<Object[]> selectIdentifierAndURL();
 
-    @Query(value = SELECT_IDENTIFIERS_QUERY, nativeQuery = true)
-    List<String> getAllSpeedTestIdentifiers();
+    @Modifying
+    @Transactional
+    @Query(UPDATE_ANALYZED_IMAGE_RESULT)
+    void updateAnalyzedImageResult(@Param("id") long id, @Param("downloadRateInMbps") double downloadRateInMbps);
 
     default Map<String, String> getIdentifierToURLMapper() {
         List<Object[]> identifierToURLList = selectIdentifierAndURL();
