@@ -53,11 +53,12 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public void saveTest(TestWrapper test) {
+        increaseComparisonInfoCounters(test.getTest());
+
         CompletableFuture.supplyAsync(() -> test)
                          .thenApply(this::removeUnsuccessfulTests)
                          .thenApply(this::analyzeNonFlashResult)
                          .thenApply(this::uploadSnapshots)
-                         .thenApply(this::increaseComparisonInfoCounters)
                          .exceptionally(this::handleSaveTestException)
                          .thenAccept(this::save);
     }
@@ -124,16 +125,6 @@ public class TestServiceImpl implements TestService {
         return new AbstractMap.SimpleEntry<>(fileKey, snapshotLocation);
     }
 
-    private TestDAO increaseComparisonInfoCounters(TestDAO test) {
-
-        test.getComparisonInfoDAOTests()
-            .stream()
-            .map(ComparisonInfoIdentifiers::new)
-            .forEach(identifiers -> counterService.addComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
-
-        return test;
-    }
-
     private void save(TestDAO testDAO) {
         try {
             testRepository.save(testDAO);
@@ -144,6 +135,13 @@ public class TestServiceImpl implements TestService {
         }
     }
 
+    private void increaseComparisonInfoCounters(Test test) {
+
+        test.getComparisonInfoTests()
+                .stream()
+                .map(ComparisonInfoIdentifiers::new)
+                .forEach(identifiers -> counterService.addComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
+    }
     private TestDAO decreaseComparisonInfoCounters(TestDAO test) {
 
         test.getComparisonInfoDAOTests()
