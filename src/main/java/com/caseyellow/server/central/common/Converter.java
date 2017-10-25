@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
+import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -169,6 +170,7 @@ public interface Converter {
         speedTestWebSite.setUrlAddress(speedTestWebSiteDAO.getUrlAddress());
         speedTestWebSite.setKey(speedTestWebSiteDAO.getKey());
         speedTestWebSite.setDownloadRateInMbps(speedTestWebSiteDAO.getDownloadRateInMbps());
+        speedTestWebSite.setDownloadRateInKBps(calculateDownloadRateFromMbpsToKBps(speedTestWebSiteDAO.getDownloadRateInMbps()));
 
         return speedTestWebSite;
     }

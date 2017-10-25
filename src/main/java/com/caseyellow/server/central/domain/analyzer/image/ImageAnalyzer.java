@@ -41,12 +41,13 @@ public class ImageAnalyzer {
 
     private void analyzeImage(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
         try {
+            logger.info("Start analyzing image: " + speedTestWebSiteDAO.getS3FileAddress());
             File imageSnapshot = fileStorageService.getFile(speedTestWebSiteDAO.getS3FileAddress());
             double analyzedImageResult = imageAnalyzerService.analyzeImage(speedTestWebSiteDAO.getSpeedTestIdentifier(), imageSnapshot);
             speedTestWebSiteRepository.updateAnalyzedImageResult(speedTestWebSiteDAO.getId(), analyzedImageResult);
 
         } catch (Exception e) {
-            logger.error("AnalyzeImage failed, " + e.getMessage(), e);
+            logger.error("AnalyzeImage failed for image: " + speedTestWebSiteDAO.getS3FileAddress() + " cause: " + e.getMessage(), e);
         }
     }
 }

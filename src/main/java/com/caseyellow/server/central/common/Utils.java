@@ -50,4 +50,10 @@ public interface Utils {
             throw new IORuntimeException("Failed to write file from request to tmp dir, " + e.getMessage(), e);
         }
     }
+
+     static double calculateDownloadRateFromMbpsToKBps(double downloadRateInMbps) {
+        double MBPerSec = downloadRateInMbps / 8;
+
+        return MBPerSec / Math.pow(2, 10); // Transform to KB
+    }
 }
