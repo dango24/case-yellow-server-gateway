@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.domain.test.services;
 
 import com.caseyellow.server.central.common.Converter;
+import com.caseyellow.server.central.common.Validator;
 import com.caseyellow.server.central.domain.counter.CounterService;
 import com.caseyellow.server.central.domain.analyzer.nonflash.NonFlashAnalyzerService;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
@@ -50,6 +51,7 @@ public class TestServiceImpl implements TestService {
         return testRepository.findAll()
                              .stream()
                              .map(Converter::convertTestDAOToModel)
+                             .filter(Validator::isSuccessfulTest)
                              .collect(toList());
     }
 
@@ -144,17 +146,17 @@ public class TestServiceImpl implements TestService {
     private void increaseComparisonInfoCounters(Test test) {
 
         test.getComparisonInfoTests()
-                .stream()
-                .map(ComparisonInfoIdentifiers::new)
-                .forEach(identifiers -> counterService.addComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
+            .stream()
+            .map(ComparisonInfoIdentifiers::new)
+            .forEach(identifiers -> counterService.addComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
     }
 
     private TestDAO decreaseComparisonInfoCounters(TestDAO test) {
 
         test.getComparisonInfoDAOTests()
-                .stream()
-                .map(ComparisonInfoIdentifiers::new)
-                .forEach(identifiers -> counterService.decreaseComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
+            .stream()
+            .map(ComparisonInfoIdentifiers::new)
+            .forEach(identifiers -> counterService.decreaseComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
 
         return test;
     }
@@ -166,7 +168,7 @@ public class TestServiceImpl implements TestService {
 
     private void notifyComparisonInfoFailures(List<ComparisonInfo> comparisonInfoFailures) {
         CompletableFuture.supplyAsync(() -> comparisonInfoFailures)
-                .thenAccept(this::notifyFailedTests);
+                         .thenAccept(this::notifyFailedTests);
     }
 
     private void notifyFailedTests(List<ComparisonInfo> comparisonInfoFailures) {

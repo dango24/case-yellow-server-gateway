@@ -12,6 +12,14 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public interface Validator {
 
+    static boolean isSuccessfulTest(Test test) {
+
+        return test.getComparisonInfoTests()
+                   .stream()
+                   .map(ComparisonInfo::getSpeedTestWebSite)
+                   .allMatch(SpeedTestWebSite::isSucceed);
+    }
+
     static boolean validateTest(Test test) {
         if (isNull(test) ||
             isNull(test.getSystemInfo()) ||

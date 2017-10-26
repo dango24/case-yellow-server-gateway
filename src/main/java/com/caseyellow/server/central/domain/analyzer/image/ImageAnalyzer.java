@@ -1,7 +1,6 @@
 package com.caseyellow.server.central.domain.analyzer.image;
 
-import com.caseyellow.server.central.persistence.test.dao.TestDAO;
-import com.caseyellow.server.central.persistence.test.repository.TestRepository;
+import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
 import com.caseyellow.server.central.services.analyze.ImageAnalyzerService;
@@ -47,6 +46,7 @@ public class ImageAnalyzer {
             speedTestWebSiteRepository.updateAnalyzedImageResult(speedTestWebSiteDAO.getId(), analyzedImageResult);
 
         } catch (Exception e) {
+            speedTestWebSiteRepository.updateAnalyzedState(speedTestWebSiteDAO.getId(), AnalyzedState.FAILURE);
             logger.error("AnalyzeImage failed for image: " + speedTestWebSiteDAO.getS3FileAddress() + " cause: " + e.getMessage(), e);
         }
     }

@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.persistence.website.repository;
 
+import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,12 +20,18 @@ import static java.util.stream.Collectors.toMap;
 public interface SpeedTestWebSiteRepository extends JpaRepository<SpeedTestWebSiteDAO, Long> {
 
     String UPDATE_ANALYZED_IMAGE_RESULT = "UPDATE SpeedTestWebSiteDAO s set s.downloadRateInMbps = :downloadRateInMbps, s.analyzed = true where s.id = :id";
+    String UPDATE_ANALYZED_STATE = "UPDATE SpeedTestWebSiteDAO s set s.analyzedState = :analyzedState where s.id = :id";
     String SELECT_IDENTIFIER_AND_URL_QUERY = "select DISTINCT SPEED_TEST_IDENTIFIER , URL_ADDRESS  from SPEED_TEST_WEB_SITE";
 
     Long countBySpeedTestIdentifier(String speedTestIdentifier);
     List<SpeedTestWebSiteDAO> findBySpeedTestIdentifier(String speedTestIdentifier);
     List<SpeedTestWebSiteDAO> findByAnalyzedFalse();
     List<SpeedTestWebSiteDAO> findByAnalyzedTrue();
+
+    @Modifying
+    @Transactional
+    @Query(UPDATE_ANALYZED_STATE)
+    void updateAnalyzedState(@Param("id") long id, @Param("analyzedState")AnalyzedState analyzedState);
 
     @Query(value = SELECT_IDENTIFIER_AND_URL_QUERY, nativeQuery = true)
     List<Object[]> selectIdentifierAndURL();

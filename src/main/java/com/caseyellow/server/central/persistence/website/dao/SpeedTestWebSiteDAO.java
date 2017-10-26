@@ -20,6 +20,7 @@ public class SpeedTestWebSiteDAO {
     private String S3FileAddress;
     private double downloadRateInMbps; // Mega bit per second
     private long startMeasuringTimestamp;
+    private AnalyzedState analyzedState;
 
     public SpeedTestWebSiteDAO() {
         analyzed = false;
@@ -38,6 +39,7 @@ public class SpeedTestWebSiteDAO {
         this.setUrlAddress(urlAddress);
         this.analyzed = analyzed;
         this.downloadRateInMbps = -1;
+        this.analyzedState = AnalyzedState.NOT_STARTED;
     }
 
     public String getUrlAddress() {
@@ -94,6 +96,14 @@ public class SpeedTestWebSiteDAO {
 
     public void setKey(int key) {
         this.key = key;
+    }
+
+    public AnalyzedState getAnalyzedState() {
+        return analyzedState;
+    }
+
+    public void setAnalyzedState(AnalyzedState analyzedState) {
+        this.analyzedState = analyzedState;
     }
 
     public Long getId() {
