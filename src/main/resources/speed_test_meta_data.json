@@ -19,7 +19,10 @@
         "identifier": "Mbps",
         "count": 2
       }, {
-        "identifier": "גרף קישוריות",
+        "identifier": "גרף",
+        "count": -1
+      }, {
+        "identifier": "קישוריות",
         "count": -1
       }]
     }
