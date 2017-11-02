@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -22,18 +23,16 @@ public class NonFlashAnalyzerSupplier {
     private String nonFlashAnalyzerSuffix;
 
     private UrlMapper urlMapper;
-    private ApplicationContext appContext;
     private Map<String, NonFlashAnalyzer> nonFlashAnalyzerMap;
 
     @Autowired
-    public NonFlashAnalyzerSupplier(UrlMapper urlMapper, ApplicationContext appContext) {
+    public NonFlashAnalyzerSupplier(UrlMapper urlMapper) {
         this.urlMapper = urlMapper;
-        this.appContext = appContext;
+        nonFlashAnalyzerMap = new HashMap<>();
     }
 
-    @PostConstruct
-    private void init() {
-        buildAnalyzers();
+    public void addNonFlashAnalyzer(NonFlashAnalyzer nonFlashAnalyzer) {
+        nonFlashAnalyzerMap.putIfAbsent(nonFlashAnalyzer.getIdentifier(), nonFlashAnalyzer);
     }
 
     public NonFlashAnalyzer getNonFlashAnalyzer(String identifier) {
@@ -45,14 +44,4 @@ public class NonFlashAnalyzerSupplier {
 
         return nonFlashAnalyzer;
     }
-
-    private void buildAnalyzers() {
-
-        nonFlashAnalyzerMap =
-                urlMapper.getNonFlashIdentifiers()
-                         .stream()
-                         .filter(analyzer -> nonNull(appContext.getBean(analyzer + nonFlashAnalyzerSuffix)))
-                         .collect(toMap(Function.identity(), analyzer -> (NonFlashAnalyzer)appContext.getBean(analyzer + nonFlashAnalyzerSuffix)));
-    }
-
 }

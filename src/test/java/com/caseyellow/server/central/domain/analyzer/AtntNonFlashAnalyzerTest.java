@@ -12,7 +12,7 @@ public class AtntNonFlashAnalyzerTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        atntNonFlashAnalyzer = new AtntNonFlashAnalyzer();
+        atntNonFlashAnalyzer = new AtntNonFlashAnalyzer(null);
     }
 
     @Test
