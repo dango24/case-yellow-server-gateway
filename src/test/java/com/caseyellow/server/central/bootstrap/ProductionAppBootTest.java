@@ -48,7 +48,7 @@ public class ProductionAppBootTest {
     private static final String ITUNES_IDENTIFIER = "itunes";
 
 
-    private ProductionApplicationBoot commonAppBoot;
+    private ApplicationBoot commonAppBoot;
     private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
     private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
 
@@ -72,7 +72,7 @@ public class ProductionAppBootTest {
         when(urlMapper.getFileDownloadIdentifiers()).thenReturn(new HashSet<>(fileDownloadsList));
         when(urlMapper.getSpeedTestIdentifiers()).thenReturn(new HashSet<>(speedTestList));
 
-        commonAppBoot = new ProductionApplicationBoot(urlMapper, fileDownloadInfoCounterRepository, speedTestWebSiteCounterRepository);
+        commonAppBoot = new ApplicationBoot(urlMapper, fileDownloadInfoCounterRepository, speedTestWebSiteCounterRepository);
     }
 
     @After
@@ -85,7 +85,7 @@ public class ProductionAppBootTest {
     @Test
     public void fileDownloadNoneMatchesTest() throws Exception{
 
-        Method getFileDownloadNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
+        Method getFileDownloadNotExistInDBMethod = ApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
         getFileDownloadNotExistInDBMethod.setAccessible(true);
 
         List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(commonAppBoot);
@@ -100,7 +100,7 @@ public class ProductionAppBootTest {
         IntStream.range(0, 4).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(POSTGRESQL_IDENTIFIER));
         IntStream.range(0, 3).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(ITUNES_IDENTIFIER));
 
-        Method getFileDownloadNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
+        Method getFileDownloadNotExistInDBMethod = ApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
         getFileDownloadNotExistInDBMethod.setAccessible(true);
 
         List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(commonAppBoot);
@@ -117,7 +117,7 @@ public class ProductionAppBootTest {
         IntStream.range(0, 11).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(FIREFOX_IDENTIFIER));
         IntStream.range(0, 9).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(KINECT_IDENTIFIER));
 
-        Method getFileDownloadNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
+        Method getFileDownloadNotExistInDBMethod = ApplicationBoot.class.getDeclaredMethod("getFileDownloadNotExistInDB");
         getFileDownloadNotExistInDBMethod.setAccessible(true);
 
         List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(commonAppBoot);
@@ -128,7 +128,7 @@ public class ProductionAppBootTest {
     @Test
     public void speedTestNoneMatchesTest() throws Exception{
 
-        Method getSpeedTestNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
+        Method getSpeedTestNotExistInDBMethod = ApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
         getSpeedTestNotExistInDBMethod.setAccessible(true);
 
         List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(commonAppBoot);
@@ -143,7 +143,7 @@ public class ProductionAppBootTest {
         IntStream.range(0, 7).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(BEZEQ_IDENTIFIER));
         IntStream.range(0, 5).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(OOKLA_IDENTIFIER));
 
-        Method getSpeedTestNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
+        Method getSpeedTestNotExistInDBMethod = ApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
         getSpeedTestNotExistInDBMethod.setAccessible(true);
 
         List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(commonAppBoot);
@@ -160,7 +160,7 @@ public class ProductionAppBootTest {
         IntStream.range(0, 8).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(SPEED_OF_IDENTIFIER));
         IntStream.range(0, 1).forEach(i -> speedTestWebSiteCounterRepository.addSpeedTestWebSite(ATNT_IDENTIFIER));
 
-        Method getSpeedTestNotExistInDBMethod = ProductionApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
+        Method getSpeedTestNotExistInDBMethod = ApplicationBoot.class.getDeclaredMethod("getSpeedTestNotExistInDB");
         getSpeedTestNotExistInDBMethod.setAccessible(true);
 
         List<String> speedTestNotExistInDB = (List<String>)getSpeedTestNotExistInDBMethod.invoke(commonAppBoot);
@@ -173,7 +173,7 @@ public class ProductionAppBootTest {
         assertTrue(speedTestWebSiteCounterRepository.findAll().isEmpty());
         assertTrue(fileDownloadInfoCounterRepository.findAll().isEmpty());
 
-        Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
+        Method initMethod = ApplicationBoot.class.getDeclaredMethod("init");
         initMethod.setAccessible(true);
         initMethod.invoke(commonAppBoot);
 
@@ -207,7 +207,7 @@ public class ProductionAppBootTest {
         IntStream.range(0, 2).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(JAVA_SDK_IDENTIFIER));
         IntStream.range(0, 11).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(FIREFOX_IDENTIFIER));
 
-        Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
+        Method initMethod = ApplicationBoot.class.getDeclaredMethod("init");
         initMethod.setAccessible(true);
         initMethod.invoke(commonAppBoot);
 
@@ -247,7 +247,7 @@ public class ProductionAppBootTest {
         IntStream.range(0, 9).forEach(i -> fileDownloadInfoCounterRepository.addFileDownloadInfo(KINECT_IDENTIFIER));
 
 
-        Method initMethod = ProductionApplicationBoot.class.getDeclaredMethod("init");
+        Method initMethod = ApplicationBoot.class.getDeclaredMethod("init");
         initMethod.setAccessible(true);
         initMethod.invoke(commonAppBoot);
 

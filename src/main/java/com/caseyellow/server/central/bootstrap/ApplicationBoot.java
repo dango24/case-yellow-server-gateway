@@ -16,15 +16,14 @@ import java.util.Set;
 import static java.util.stream.Collectors.toList;
 
 @Component
-@Profile("prod")
-public class ProductionApplicationBoot {
+public class ApplicationBoot {
 
     private UrlMapper urlMapper;
     private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
     private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
 
     @Autowired
-    public ProductionApplicationBoot(UrlMapper urlMapper, FileDownloadInfoCounterRepository fileDownloadInfoRepository, SpeedTestWebSiteCounterRepository speedTestWebSiteRepository) {
+    public ApplicationBoot(UrlMapper urlMapper, FileDownloadInfoCounterRepository fileDownloadInfoRepository, SpeedTestWebSiteCounterRepository speedTestWebSiteRepository) {
         this.urlMapper = urlMapper;
         this.fileDownloadInfoCounterRepository = fileDownloadInfoRepository;
         this.speedTestWebSiteCounterRepository = speedTestWebSiteRepository;
