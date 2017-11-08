@@ -19,8 +19,8 @@
         "identifier": "Mbps",
         "count": 2
       }, {
-        "identifier": "גרף קישוריות",
-        "count": -1
+        "identifier": "Latency",
+        "count": 1
       }]
     }
   },
