@@ -16,6 +16,7 @@ import java.util.Set;
 import static java.util.stream.Collectors.toList;
 
 @Component
+@Profile("prod")
 public class ApplicationBoot {
 
     private UrlMapper urlMapper;
