@@ -34,7 +34,7 @@ public class ImageAnalyzer {
 
     @Scheduled(fixedDelay = SCHEDULED_TASK_INTERVAL, initialDelay = INITIAL_SCHEDULED_TASK)
     public void analyzeImageScheduler() {
-        List<SpeedTestWebSiteDAO> speedTestWebSiteNonAnalyzed = speedTestWebSiteRepository.findByAnalyzedFalse();
+        List<SpeedTestWebSiteDAO> speedTestWebSiteNonAnalyzed = speedTestWebSiteRepository.findByAnalyzedState(AnalyzedState.NOT_STARTED);
         speedTestWebSiteNonAnalyzed.forEach(this::analyzeImage);
     }
 
