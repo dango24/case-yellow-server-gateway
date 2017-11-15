@@ -1,9 +1,0 @@
-#Postgres source
-spring.datasource.driverClassName: org.postgresql.Driver
-spring.datasource.url: jdbc:postgresql://caseyellow.cgqzew4kdsmr.eu-central-1.rds.amazonaws.com:5432/caseyellow
-spring.datasource.username: dango
-spring.datasource.password: Jackbauer24
-
-spring.jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect
-#spring.jpa.generate-ddl: true
-spring.jpa.hibernate.ddl-auto: update
