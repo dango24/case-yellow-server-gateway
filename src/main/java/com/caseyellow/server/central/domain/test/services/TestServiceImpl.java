@@ -1,9 +1,9 @@
 package com.caseyellow.server.central.domain.test.services;
 
 import com.caseyellow.server.central.common.Converter;
+import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.common.Validator;
 import com.caseyellow.server.central.domain.counter.CounterService;
-import com.caseyellow.server.central.domain.analyzer.nonflash.NonFlashAnalyzerService;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfoIdentifiers;
 import com.caseyellow.server.central.domain.test.model.Test;
@@ -12,6 +12,7 @@ import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.test.repository.TestRepository;
+import com.caseyellow.server.central.services.analyze.ImageAnalyzerService;
 import com.caseyellow.server.central.services.storage.FileStorageService;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
@@ -33,17 +34,19 @@ public class TestServiceImpl implements TestService {
 
     private Logger logger = Logger.getLogger(TestServiceImpl.class);
 
+    private UrlMapper urlMapper;
     private TestRepository testRepository;
     private CounterService counterService;
     private FileStorageService fileUploadService;
-    private NonFlashAnalyzerService nonFlashAnalyzerService;
+    private ImageAnalyzerService imageAnalyzerService;
 
     @Autowired
-    public TestServiceImpl(NonFlashAnalyzerService nonFlashAnalyzerService, TestRepository testRepository, CounterService counterService, FileStorageService fileUploadService) {
-        this.nonFlashAnalyzerService = nonFlashAnalyzerService;
+    public TestServiceImpl(ImageAnalyzerService imageAnalyzerService, UrlMapper urlMapper, TestRepository testRepository, CounterService counterService, FileStorageService fileUploadService) {
+        this.urlMapper = urlMapper;
         this.testRepository = testRepository;
         this.counterService = counterService;
         this.fileUploadService = fileUploadService;
+        this.imageAnalyzerService = imageAnalyzerService;
     }
 
     @Override
@@ -96,14 +99,14 @@ public class TestServiceImpl implements TestService {
                    .getComparisonInfoTests()
                    .stream()
                    .map(ComparisonInfo::getSpeedTestWebSite)
-                   .filter(speedTest -> nonFlashAnalyzerService.isNonFlashAble(speedTest.getSpeedTestIdentifier()))
-                   .forEach(this::updateNonFlashSpeedTestResult);
+                   .filter(speedTest -> urlMapper.isNonFlashAble(speedTest.getSpeedTestIdentifier()))
+                   .forEach(this::analyzeNonFlashSpeedTestResult);
 
         return testWrapper;
     }
 
-    private void updateNonFlashSpeedTestResult(SpeedTestWebSite speedTestWebSite) {
-        double downloadRateInMbps = nonFlashAnalyzerService.analyze(speedTestWebSite.getSpeedTestIdentifier(), speedTestWebSite.getNonFlashResult());
+    private void analyzeNonFlashSpeedTestResult(SpeedTestWebSite speedTestWebSite) {
+        double downloadRateInMbps = imageAnalyzerService.analyzeNonFlash(speedTestWebSite.getSpeedTestIdentifier(), speedTestWebSite.getNonFlashResult());
         speedTestWebSite.setDownloadRateInMbps(downloadRateInMbps);
     }
 

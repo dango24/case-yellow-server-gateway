@@ -1,4 +1,4 @@
-package com.caseyellow.server.central.domain.analyzer.image;
+package com.caseyellow.server.central.domain.analyzer.model;
 
 public class AnalyzedImage {
 

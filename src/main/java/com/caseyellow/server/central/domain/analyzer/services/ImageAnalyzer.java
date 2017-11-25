@@ -1,4 +1,4 @@
-package com.caseyellow.server.central.domain.analyzer.image;
+package com.caseyellow.server.central.domain.analyzer.services;
 
 import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;

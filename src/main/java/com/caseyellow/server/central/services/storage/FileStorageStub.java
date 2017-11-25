@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.UUID;
 
 @Service
 @Profile("dev")
@@ -11,8 +12,7 @@ public class FileStorageStub implements FileStorageService {
 
     @Override
     public String uploadFile(String userIP, File file) {
-        // Do nothing
-        return null;
+        return UUID.randomUUID().toString();
     }
 
     @Override

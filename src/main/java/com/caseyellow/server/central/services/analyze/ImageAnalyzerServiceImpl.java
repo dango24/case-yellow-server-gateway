@@ -1,6 +1,6 @@
 package com.caseyellow.server.central.services.analyze;
 
-import com.caseyellow.server.central.domain.analyzer.image.AnalyzedImage;
+import com.caseyellow.server.central.domain.analyzer.model.AnalyzedImage;
 import com.caseyellow.server.central.exceptions.AnalyzerException;
 import com.caseyellow.server.central.services.infrastrucre.RequestHandler;
 import com.caseyellow.server.central.services.infrastrucre.RetrofitBuilder;
@@ -55,12 +55,22 @@ public class ImageAnalyzerServiceImpl implements ImageAnalyzerService {
 
     }
 
+    @Override
+    public double analyzeNonFlash(String identifier, String nonFlashResult) {
+        AnalyzedImage analyzedImage = requestHandler.execute(analysisRequests.analyzeNonFlash(identifier, nonFlashResult));
+
+        if (analyzedImage.isAnalyzed()) {
+            return analyzedImage.getResult();
+        } else {
+            throw new AnalyzerException("Failed to analyze image for identifier: " + identifier + ", cause: " + analyzedImage.getMessage());
+        }
+    }
+
     private void validateArgs(String identifier, File image) {
         if (isEmpty(identifier) || isNull(image)) {
             throw new AnalyzerException("Failed to analyze image, identifier or image is null, identifier: " + identifier + " image: " + image);
         }
     }
-
 
     private UploadImage createUploadImage(String identifier, File image) {
 
