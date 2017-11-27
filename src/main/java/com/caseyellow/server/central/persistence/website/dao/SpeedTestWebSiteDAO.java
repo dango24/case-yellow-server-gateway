@@ -23,7 +23,7 @@ public class SpeedTestWebSiteDAO {
     private AnalyzedState analyzedState;
 
     public SpeedTestWebSiteDAO() {
-        analyzed = false;
+        this(null);
     }
 
     public SpeedTestWebSiteDAO(String speedTestIdentifier) {

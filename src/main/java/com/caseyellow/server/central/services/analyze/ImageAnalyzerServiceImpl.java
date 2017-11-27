@@ -50,7 +50,7 @@ public class ImageAnalyzerServiceImpl implements ImageAnalyzerService {
         if (analyzedImage.isAnalyzed()) {
             return analyzedImage.getResult();
         } else {
-            throw new AnalyzerException("Failed to analyze image for identifier: " + identifier + ", cause: " + analyzedImage.getMessage());
+            throw new AnalyzerException("Failed to analyze image for identifier: " + identifier + "for image: " + image.getName() + " , cause: " + analyzedImage.getMessage());
         }
 
     }

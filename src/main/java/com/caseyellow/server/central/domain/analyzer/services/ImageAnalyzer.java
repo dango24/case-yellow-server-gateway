@@ -34,7 +34,7 @@ public class ImageAnalyzer {
 
     @Scheduled(fixedDelay = SCHEDULED_TASK_INTERVAL, initialDelay = INITIAL_SCHEDULED_TASK)
     public void analyzeImageScheduler() {
-        List<SpeedTestWebSiteDAO> speedTestWebSiteNonAnalyzed = speedTestWebSiteRepository.findByAnalyzedFalse();
+        List<SpeedTestWebSiteDAO> speedTestWebSiteNonAnalyzed = speedTestWebSiteRepository.findByAnalyzedState(AnalyzedState.NOT_STARTED);
         speedTestWebSiteNonAnalyzed.forEach(this::analyzeImage);
     }
 
@@ -44,6 +44,7 @@ public class ImageAnalyzer {
             File imageSnapshot = fileStorageService.getFile(speedTestWebSiteDAO.getS3FileAddress());
             double analyzedImageResult = imageAnalyzerService.analyzeImage(speedTestWebSiteDAO.getSpeedTestIdentifier(), imageSnapshot);
             speedTestWebSiteRepository.updateAnalyzedImageResult(speedTestWebSiteDAO.getId(), analyzedImageResult);
+            speedTestWebSiteRepository.updateAnalyzedState(speedTestWebSiteDAO.getId(), AnalyzedState.SUCCESS);
 
         } catch (Exception e) {
             speedTestWebSiteRepository.updateAnalyzedState(speedTestWebSiteDAO.getId(), AnalyzedState.FAILURE);
