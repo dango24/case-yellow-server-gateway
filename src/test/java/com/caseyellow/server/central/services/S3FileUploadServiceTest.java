@@ -20,7 +20,7 @@ public class S3FileUploadServiceTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        s3FileStorageService = new S3FileStorageService();
+        s3FileStorageService = new S3FileStorageService(null);
         createFileUniquePathMethod = S3FileStorageService.class.getDeclaredMethod("createFileUniquePath", String.class, String.class);
         createFileUniquePathMethod.setAccessible(true);
     }
