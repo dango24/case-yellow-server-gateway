@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.configuration;
 
+import com.caseyellow.server.central.exceptions.ConfigurationException;
 import com.caseyellow.server.central.exceptions.IORuntimeException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -52,7 +53,7 @@ public class AWSConfigurationImpl implements AWSConfiguration {
     }
 
     @Override
-    public AWSConfigurationImpl buildCredentials() throws IOException {
+    public AWSConfiguration buildCredentials() throws IOException {
         buildCredentialsFromEncryptedCredentials();
         return this;
     }
@@ -85,18 +86,22 @@ public class AWSConfigurationImpl implements AWSConfiguration {
     }
 
     private String decryptCredentials(String key) throws IOException {
-        Runtime rt = Runtime.getRuntime();
         String[] commands = {credentialsPath, key};
-        Process proc = rt.exec(commands);
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+        Process process = Runtime.getRuntime().exec(commands);
+        BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
         return stdInput.readLine();
     }
 
     private void parseDecryptedCredentials(String decryptedCredentials) {
-        decryptedCredentials = decryptedCredentials.replaceAll("\\$", "");
-        String[] credentials = decryptedCredentials.split(";");
-        accessKeyID = credentials[0];
-        secretAccessKey = credentials[1];
+        try {
+            decryptedCredentials = decryptedCredentials.replaceAll("\\$", "");
+            String[] credentials = decryptedCredentials.split(";");
+            accessKeyID = credentials[0];
+            secretAccessKey = credentials[1];
+
+        } catch (Exception e) {
+            throw new ConfigurationException("Failed to decrypted credentials: " + decryptedCredentials + ", cause: " + e.getMessage(), e);
+        }
     }
 }

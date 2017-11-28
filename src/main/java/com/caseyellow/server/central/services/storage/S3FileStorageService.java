@@ -40,7 +40,8 @@ public class S3FileStorageService implements FileStorageService {
     public void init() throws IOException {
         do {
             awsConfiguration.buildCredentials();
-            AWSCredentials credentials = new BasicAWSCredentials(awsConfiguration.getAccessKeyID(), awsConfiguration.getSecretAccessKey());
+            AWSCredentials credentials = new BasicAWSCredentials(awsConfiguration.getAccessKeyID(),
+                                                                 awsConfiguration.getSecretAccessKey());
             s3Client = AmazonS3ClientBuilder.standard()
                                             .withRegion(Regions.EU_CENTRAL_1)
                                             .withCredentials(new AWSStaticCredentialsProvider(credentials))

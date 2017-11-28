@@ -7,5 +7,5 @@ public interface AWSConfiguration {
     String getSecretAccessKey();
     String getBucketName();
     String healthyPath();
-    AWSConfigurationImpl buildCredentials() throws IOException;
+    AWSConfiguration buildCredentials() throws IOException;
 }
