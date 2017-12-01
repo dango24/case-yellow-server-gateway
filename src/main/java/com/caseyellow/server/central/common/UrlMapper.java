@@ -18,8 +18,7 @@ public class UrlMapper {
     private Map<String, String> fileDownloadUrls;
     private List<String> nonFlashIdentifiers;
 
-    public UrlMapper() {
-    }
+    public UrlMapper() {}
 
     public List<String> getNonFlashIdentifiers() {
         return nonFlashIdentifiers;
