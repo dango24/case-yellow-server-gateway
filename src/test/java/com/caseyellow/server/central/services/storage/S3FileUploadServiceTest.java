@@ -1,4 +1,4 @@
-package com.caseyellow.server.central.services;
+package com.caseyellow.server.central.services.storage;
 
 import com.caseyellow.server.central.services.storage.S3FileStorageService;
 import org.junit.BeforeClass;

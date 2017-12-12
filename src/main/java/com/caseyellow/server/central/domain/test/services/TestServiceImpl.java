@@ -4,10 +4,7 @@ import com.caseyellow.server.central.common.Converter;
 import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.common.Validator;
 import com.caseyellow.server.central.domain.counter.CounterService;
-import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
-import com.caseyellow.server.central.domain.test.model.ComparisonInfoIdentifiers;
-import com.caseyellow.server.central.domain.test.model.Test;
-import com.caseyellow.server.central.domain.test.model.TestWrapper;
+import com.caseyellow.server.central.domain.test.model.*;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
@@ -37,7 +34,7 @@ public class TestServiceImpl implements TestService {
     private UrlMapper urlMapper;
     private TestRepository testRepository;
     private CounterService counterService;
-    private FileStorageService fileUploadService;
+    private FileStorageService fileStorageService;
     private ImageAnalyzerService imageAnalyzerService;
 
     @Autowired
@@ -45,7 +42,7 @@ public class TestServiceImpl implements TestService {
         this.urlMapper = urlMapper;
         this.testRepository = testRepository;
         this.counterService = counterService;
-        this.fileUploadService = fileUploadService;
+        this.fileStorageService = fileUploadService;
         this.imageAnalyzerService = imageAnalyzerService;
     }
 
@@ -56,6 +53,11 @@ public class TestServiceImpl implements TestService {
                              .map(Converter::convertTestDAOToModel)
                              .filter(Validator::isSuccessfulTest)
                              .collect(toList());
+    }
+
+    @Override
+    public PreSignedUrl generatePreSignedUrl(String userIP, String fileName) {
+        return fileStorageService.generatePreSignedUrl(userIP, fileName);
     }
 
     @Override
@@ -131,7 +133,7 @@ public class TestServiceImpl implements TestService {
 
     private Map.Entry<Integer, String> uploadFile(String userIP, Map.Entry<String, File> snapshot) {
         int fileKey = Integer.valueOf(snapshot.getKey());
-        String snapshotLocation = fileUploadService.uploadFile(userIP, snapshot.getValue());
+        String snapshotLocation = fileStorageService.uploadFile(userIP, snapshot.getValue());
 
         return new AbstractMap.SimpleEntry<>(fileKey, snapshotLocation);
     }

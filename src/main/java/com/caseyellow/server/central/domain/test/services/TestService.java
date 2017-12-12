@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.domain.test.services;
 
+import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.TestWrapper;
 
@@ -11,4 +12,5 @@ import java.util.List;
 public interface TestService {
     void saveTest(TestWrapper test);
     List<Test> getAllTests();
+    PreSignedUrl generatePreSignedUrl(String userIP, String fileName);
 }
