@@ -24,8 +24,6 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -105,13 +103,11 @@ public class S3FileStorageService implements FileStorageService {
     }
 
     public boolean isHealthy() {
-        try {
-            getFileFromS3(awsConfiguration.healthyPath(), awsConfiguration.healthyPath());
+        if (s3Client.doesObjectExist(awsConfiguration.getBucketName(), awsConfiguration.healthyPath())) {
             logger.info("The connection to s3 is healthy");
             return true;
-
-        } catch (Exception e) {
-            logger.error("Healthy check to s3 failed, " + e.getMessage(), e);
+        } else {
+            logger.error("Healthy check to s3 failed");
             return false;
         }
     }
@@ -125,35 +121,7 @@ public class S3FileStorageService implements FileStorageService {
         generatePresignedUrlRequest.setExpiration(expiration);
         URL preSignedUrl = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
 
-        UploadObject(preSignedUrl);
-        uploadFile(preSignedUrl);
 
         return new PreSignedUrl(preSignedUrl);
-    }
-
-    public void uploadFile(URL url) {
-        try {
-            File destination = new File("C:\\Users\\Dan\\Downloads\\Unders - Syria.mp3");
-            // Copy bytes from the URL to the destination file.
-            FileUtils.copyURLToFile(url, destination);
-        } catch (IOException e) {
-            logger.error("Failed to upload file, " + e.getMessage(), e);
-        }
-    }
-
-    public void UploadObject(URL url) {
-        try {
-            HttpURLConnection connection=(HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("PUT");
-            OutputStreamWriter out = new OutputStreamWriter(
-                    connection.getOutputStream());
-            out.write("This text uploaded as object.");
-            out.close();
-            int responseCode = connection.getResponseCode();
-            System.out.println("Service returned response code " + responseCode);
-        } catch (IOException e) {
-            logger.error("Failed to upload file, " + e.getMessage(), e);
-        }
     }
 }

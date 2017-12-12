@@ -2,7 +2,7 @@
 server.port : 9080
 
 # Profiles
-spring.profiles.active: prod
+spring.profiles.active: dev
 
 # MultiPart properties
 spring.http.multipart.max-file-size: 5MB
