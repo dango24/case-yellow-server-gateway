@@ -32,9 +32,9 @@
     "haveStartButton": true,
     "speedTestFlashMetaData" : null,
     "speedTestNonFlashMetaData": {
-      "buttonId": "DRWidgetInitiate",
+      "buttonId": "id=DRWidgetInitiate",
       "finishIdentifier": "class=Resultstitle",
-      "finishTextIdentifier": "Your Test Results",
+      "finishTextIdentifier": "Your Download speed is (\\d+(?:\\.\\d+)?) Mega bits",
       "resultLocation": "id=DR-ELE-results",
       "resultAttribute": "title"
     }
@@ -69,8 +69,8 @@
     "speedTestFlashMetaData" : null,
     "speedTestNonFlashMetaData": {
       "buttonId": null,
-      "finishIdentifier": "class=after-test-actions-container",
-      "finishTextIdentifier": "Compare on\nSPEEDTEST.NET",
+      "finishIdentifier": "",
+      "finishTextIdentifier": "class=\"speed-results-container succeeded\" id=\"speed-value\">(\\d+(?:\\.\\d+)?)<",
       "resultLocation": "id=speed-value",
       "resultAttribute": null
     }
@@ -79,13 +79,23 @@
     "webSiteUrl": "http://www.speedtest.net/",
     "identifier": "ookla",
     "centralized": 0,
-    "flashAble": true,
+    "flashAble": false,
     "haveStartButton": true,
-    "speedTestNonFlashMetaData": null,
+    "speedTestNonFlashMetaData": {
+      "buttonId": "class=js-start-test",
+      "finishIdentifier": "id=startBtn",
+      "finishTextIdentifier": "class=\"result-data-large number result-data-value download-speed\">(\\d+(?:\\.\\d+)?)<",
+      "resultLocation": "id=chartContainer",
+      "resultAttribute": null
+    },
     "speedTestFlashMetaData" : {
       "buttonIds": [
         {
-          "identifier": "GO",
+          "identifier": "BEGIN",
+          "count": 1
+        },
+        {
+          "identifier": "TEST",
           "count": 1
         }
       ],
@@ -109,9 +119,9 @@
     "haveStartButton": true,
     "speedTestFlashMetaData" : null,
     "speedTestNonFlashMetaData": {
-      "buttonId": "startBtn",
+      "buttonId": "id=startBtn",
       "finishIdentifier": "id=startBtn",
-      "finishTextIdentifier": "Test Again",
+      "finishTextIdentifier": "Download:.+?(\\d+(?:\\.\\d+)?)\\s+?Mbps",
       "resultLocation": "id=chartContainer",
       "resultAttribute": null
     }

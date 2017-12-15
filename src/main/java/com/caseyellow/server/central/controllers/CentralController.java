@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.controllers;
 
 import com.caseyellow.server.central.configuration.GoogleVisionConfiguration;
+import com.caseyellow.server.central.domain.analyzer.model.GoogleVisionKey;
 import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
 import com.caseyellow.server.central.domain.test.model.Test;
@@ -61,8 +62,8 @@ public class CentralController {
     @GetMapping(value = "/google-vision-key",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public String googleVisionKey() {
-        return googleVisionConfiguration.googleVisionKey();
+    public GoogleVisionKey googleVisionKey() {
+        return new GoogleVisionKey(googleVisionConfiguration.googleVisionKey());
     }
 
     @ResponseStatus(HttpStatus.OK)
