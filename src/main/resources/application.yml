@@ -2,7 +2,7 @@
 server.port : 9080
 
 # Profiles
-spring.profiles.active: dev
+spring.profiles.active: prod
 
 # MultiPart properties
 spring.http.multipart.max-file-size: 5MB
@@ -36,7 +36,7 @@ speedTestUrls :
  atnt: http://speedtest.att.com/speedtest/
  bezeq: http://www.bezeq.co.il/internetandphone/internet/speedtest/
  fast: https://www.fast.com/
- hot: http://www.hot.net.il/heb/Internet/speed/
+# hot: http://www.hot.net.il/heb/Internet/speed/
  ookla: http://www.speedtest.net/
  speedof: http://www.speedof.me/
 

@@ -2,6 +2,7 @@ package com.caseyellow.server.central.configuration;
 
 import com.caseyellow.server.central.exceptions.ConfigurationException;
 import com.caseyellow.server.central.exceptions.IORuntimeException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -18,7 +19,9 @@ import java.util.Scanner;
 @Configuration
 @Profile("prod")
 @PropertySource("aws_access.yml")
-public class AWSConfigurationImpl implements AWSConfiguration {
+public class ConfigurationServiceImpl implements AWSConfiguration, GoogleVisionConfiguration {
+
+    private Logger logger = Logger.getLogger(ConfigurationServiceImpl.class);
 
     @Value("${S3_bucket_name}")
     private String bucketName;
@@ -31,39 +34,54 @@ public class AWSConfigurationImpl implements AWSConfiguration {
 
     private String accessKeyID;
     private String secretAccessKey;
+    private String googleVisionKey;
 
     @Override
-    public String getAccessKeyID() {
+    public String accessKeyID() {
         return accessKeyID;
     }
 
     @Override
-    public String getSecretAccessKey() {
+    public String secretAccessKey() {
         return secretAccessKey;
     }
 
     @Override
-    public String getBucketName() {
+    public String googleVisionKey() {
+        return googleVisionKey;
+    }
+
+    @Override
+    public String bucketName() {
         return bucketName;
     }
 
     @Override
-    public String healthyPath() {
+    public String healthPath() {
         return healthyPath;
     }
 
     @Override
     public AWSConfiguration buildCredentials() throws IOException {
-        buildCredentialsFromEncryptedCredentials();
+        while(!buildCredentialsFromEncryptedCredentials());
+
         return this;
     }
 
-    private void buildCredentialsFromEncryptedCredentials() throws IOException {
-        String userInput = receiveUserInput();
-        String key = encryptSHA512(userInput);
-        String decryptedCredentials = decryptCredentials(key);
+    private boolean buildCredentialsFromEncryptedCredentials() throws IOException {
+        try {
+            String userInput = receiveUserInput();
+            String key = encryptSHA512(userInput);
+            String decryptedCredentials = decryptCredentials(key);
 
-        parseDecryptedCredentials(decryptedCredentials);
+            parseDecryptedCredentials(decryptedCredentials);
+
+            return true;
+
+        } catch (ConfigurationException e) {
+            logger.error("Failed to build credentials, " + e.getMessage(), e);
+            return false;
+        }
     }
 
     private String receiveUserInput() {
@@ -99,6 +117,7 @@ public class AWSConfigurationImpl implements AWSConfiguration {
             String[] credentials = decryptedCredentials.split(";");
             accessKeyID = credentials[0];
             secretAccessKey = credentials[1];
+            googleVisionKey = credentials[2];
 
         } catch (Exception e) {
             throw new ConfigurationException("Failed to decrypted credentials: " + decryptedCredentials + ", cause: " + e.getMessage(), e);

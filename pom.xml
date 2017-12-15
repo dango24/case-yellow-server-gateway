@@ -98,13 +98,6 @@
 			<version>2.3.0</version>
 		</dependency>
 
-		<!--Message Digest-->
-		<dependency>
-			<groupId>org.grails.plugins</groupId>
-			<artifactId>message-digest</artifactId>
-			<version>1.1</version>
-		</dependency>
-
 		<!--Okhttp 3-->
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>

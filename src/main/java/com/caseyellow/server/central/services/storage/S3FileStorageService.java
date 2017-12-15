@@ -46,8 +46,8 @@ public class S3FileStorageService implements FileStorageService {
     public void init() throws IOException {
         do {
             awsConfiguration.buildCredentials();
-            AWSCredentials credentials = new BasicAWSCredentials(awsConfiguration.getAccessKeyID(),
-                                                                 awsConfiguration.getSecretAccessKey());
+            AWSCredentials credentials = new BasicAWSCredentials(awsConfiguration.accessKeyID(),
+                                                                 awsConfiguration.secretAccessKey());
             s3Client = AmazonS3ClientBuilder.standard()
                                             .withRegion(Regions.EU_CENTRAL_1)
                                             .withCredentials(new AWSStaticCredentialsProvider(credentials))
@@ -60,7 +60,7 @@ public class S3FileStorageService implements FileStorageService {
     public String uploadFile(String userIP, File fileToUpload) {
         String path = createFileUniquePath(userIP, fileToUpload.getName());
         logger.info("Upload file to s3: " + path);
-        s3Client.putObject(new PutObjectRequest(awsConfiguration.getBucketName(), path, fileToUpload));
+        s3Client.putObject(new PutObjectRequest(awsConfiguration.bucketName(), path, fileToUpload));
 
         return path;
     }
@@ -80,7 +80,7 @@ public class S3FileStorageService implements FileStorageService {
     private File getFileFromS3(String identifier, String fileName) {
         logger.info("Fetch file from s3: " + identifier);
         File newFile = new File(System.getProperty("java.io.tmpdir"), fileName);
-        S3Object object = s3Client.getObject(new GetObjectRequest(awsConfiguration.getBucketName(), identifier));
+        S3Object object = s3Client.getObject(new GetObjectRequest(awsConfiguration.bucketName(), identifier));
 
         try (InputStream objectData = object.getObjectContent()) {
             FileUtils.copyInputStreamToFile(objectData, newFile);
@@ -103,7 +103,7 @@ public class S3FileStorageService implements FileStorageService {
     }
 
     public boolean isHealthy() {
-        if (s3Client.doesObjectExist(awsConfiguration.getBucketName(), awsConfiguration.healthyPath())) {
+        if (s3Client.doesObjectExist(awsConfiguration.bucketName(), awsConfiguration.healthPath())) {
             logger.info("The connection to s3 is healthy");
             return true;
         } else {
@@ -116,7 +116,7 @@ public class S3FileStorageService implements FileStorageService {
         Date expiration = new Date();
         expiration.setTime(expiration.getTime() + TimeUnit.HOURS.toMillis(1)); // Add 1 hour.
 
-        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(awsConfiguration.getBucketName(), objectKey);
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(awsConfiguration.bucketName(), objectKey);
         generatePresignedUrlRequest.setMethod(HttpMethod.PUT);
         generatePresignedUrlRequest.setExpiration(expiration);
         URL preSignedUrl = s3Client.generatePresignedUrl(generatePresignedUrlRequest);

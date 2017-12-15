@@ -3,9 +3,9 @@ package com.caseyellow.server.central.configuration;
 import java.io.IOException;
 
 public interface AWSConfiguration {
-    String getAccessKeyID();
-    String getSecretAccessKey();
-    String getBucketName();
-    String healthyPath();
+    String accessKeyID();
+    String secretAccessKey();
+    String bucketName();
+    String healthPath();
     AWSConfiguration buildCredentials() throws IOException;
 }
