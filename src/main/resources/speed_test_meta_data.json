@@ -15,13 +15,7 @@
         "identifier": "בדיקה",
         "count": 1
       }],
-      "finishIdentifiers": [{
-        "identifier": "Mbps",
-        "count": 2
-      }, {
-        "identifier": "Latency",
-        "count": 1
-      }]
+      "finishIdentifier": "resultHandler"
     }
   },
   {
@@ -48,16 +42,7 @@
     "speedTestNonFlashMetaData": null,
     "speedTestFlashMetaData" : {
       "buttonIds": null,
-      "finishIdentifiers": [
-        {
-          "identifier": "בדוק",
-          "count": 1
-        },
-        {
-          "identifier": "שוב",
-          "count": 1
-        }
-      ]
+      "finishIdentifier": "SpeedTetsAddDiagnostic"
     }
   },
   {
@@ -76,7 +61,7 @@
     }
   },
   {
-    "webSiteUrl": "http://www.speedtest.net/",
+    "webSiteUrl": "http://beta.speedtest.net/",
     "identifier": "ookla",
     "centralized": 0,
     "flashAble": false,
@@ -99,16 +84,7 @@
           "count": 1
         }
       ],
-      "finishIdentifiers": [
-        {
-          "identifier": "AGAIN",
-          "count": 1
-        },
-        {
-          "identifier": "TEST",
-          "count": 1
-        }
-      ]
+      "finishIdentifier": "www.speedtest.net/api/api.php"
     }
   },
   {

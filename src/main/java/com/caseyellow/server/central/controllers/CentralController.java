@@ -57,7 +57,6 @@ public class CentralController {
         return speedTestWebSiteService.getNextSpeedTestWebSite();
     }
 
-
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/google-vision-key",
             consumes = MediaType.APPLICATION_JSON_VALUE,
