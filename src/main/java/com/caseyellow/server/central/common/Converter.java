@@ -10,6 +10,7 @@ import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.SystemInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
+import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 
 import java.util.Collection;
@@ -154,6 +155,7 @@ public interface Converter {
         if (nonNull(speedTestWebSite.getDownloadRateInMbps())) {
             speedTestWebSiteDAO.setDownloadRateInMbps(speedTestWebSite.getDownloadRateInMbps());
             speedTestWebSiteDAO.setAnalyzed(true);
+            speedTestWebSiteDAO.setAnalyzedState(AnalyzedState.SUCCESS);
         }
 
         return speedTestWebSiteDAO;

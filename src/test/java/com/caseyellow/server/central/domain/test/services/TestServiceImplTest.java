@@ -5,7 +5,6 @@ import com.caseyellow.server.central.domain.file.model.FileDownloadInfo;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.SystemInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
-import com.caseyellow.server.central.domain.test.model.TestWrapper;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
@@ -111,7 +110,7 @@ public class TestServiceImplTest {
 
     @org.junit.Test
     public void removeUnsuccessfulTests() throws Exception{
-        Method removeUnsuccessfulTestsMethod = TestServiceImpl.class.getDeclaredMethod("removeUnsuccessfulTests", TestWrapper.class);
+        Method removeUnsuccessfulTestsMethod = TestServiceImpl.class.getDeclaredMethod("removeUnsuccessfulTests", Test.class);
         removeUnsuccessfulTestsMethod.setAccessible(true);
 
         Test beforeRemoveUnsuccessfulTestsTest = new Test();
@@ -119,9 +118,9 @@ public class TestServiceImplTest {
 
         assertTrue(beforeRemoveUnsuccessfulTestsTest.getComparisonInfoTests().size() == NUM_OF_FAILED_TEST + NUM_OF_SUCCEED_TEST);
 
-        TestWrapper afterRemoveUnsuccessfulTestsTest = (TestWrapper)removeUnsuccessfulTestsMethod.invoke(testService, new TestWrapper(beforeRemoveUnsuccessfulTestsTest));
+        Test afterRemoveUnsuccessfulTestsTest = (Test)removeUnsuccessfulTestsMethod.invoke(testService, beforeRemoveUnsuccessfulTestsTest);
 
-        assertTrue(afterRemoveUnsuccessfulTestsTest.getTest().getComparisonInfoTests().size() == NUM_OF_SUCCEED_TEST);
+        assertTrue(afterRemoveUnsuccessfulTestsTest.getComparisonInfoTests().size() == NUM_OF_SUCCEED_TEST);
     }
 
    @org.junit.Test
@@ -134,7 +133,7 @@ public class TestServiceImplTest {
 
        assertTrue(testRepository.findAll().isEmpty());
 
-       testService.saveTest(new TestWrapper(test));
+       testService.saveTest(test);
 
        TimeUnit.MILLISECONDS.sleep(700);
 
@@ -157,7 +156,7 @@ public class TestServiceImplTest {
                             .build();
 
 
-        testService.saveTest(new TestWrapper(test));
+        testService.saveTest(test);
     }
 
     @org.junit.Test
@@ -174,7 +173,7 @@ public class TestServiceImplTest {
                 .build();
 
         try {
-            testService.saveTest(new TestWrapper(test));
+            testService.saveTest(test);
         } catch (IllegalArgumentException e) {
             assertTrue(e.getMessage().startsWith("Test is not valid"));
         }

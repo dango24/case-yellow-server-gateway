@@ -31,19 +31,15 @@ public class TestServiceImpl implements TestService {
 
     private Logger logger = Logger.getLogger(TestServiceImpl.class);
 
-    private UrlMapper urlMapper;
     private TestRepository testRepository;
     private CounterService counterService;
     private FileStorageService fileStorageService;
-    private ImageAnalyzerService imageAnalyzerService;
 
     @Autowired
-    public TestServiceImpl(ImageAnalyzerService imageAnalyzerService, UrlMapper urlMapper, TestRepository testRepository, CounterService counterService, FileStorageService fileUploadService) {
-        this.urlMapper = urlMapper;
+    public TestServiceImpl(TestRepository testRepository, CounterService counterService, FileStorageService fileStorageService) {
         this.testRepository = testRepository;
         this.counterService = counterService;
-        this.fileStorageService = fileUploadService;
-        this.imageAnalyzerService = imageAnalyzerService;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -61,23 +57,20 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public void saveTest(TestWrapper test) {
-        if (!validateTest(test.getTest())) {
-           throw new IllegalArgumentException("Test is not valid, test: " + new Gson().toJson(test.getTest()));
+    public void saveTest(Test test) {
+        if (!validateTest(test)) {
+           throw new IllegalArgumentException("Test is not valid, test: " + new Gson().toJson(test));
         }
-
-        increaseComparisonInfoCounters(test.getTest());
 
         CompletableFuture.supplyAsync(() -> test)
                          .thenApply(this::removeUnsuccessfulTests)
-                         .thenApply(this::analyzeNonFlashResult)
-                         .thenApply(this::uploadSnapshots)
+                         .thenApply(this::increaseComparisonInfoCounters)
+                         .thenApply(Converter::convertTestModelToDAO)
                          .exceptionally(this::handleSaveTestException)
                          .thenAccept(this::save);
     }
 
-    private TestWrapper removeUnsuccessfulTests(TestWrapper testWrapper) {
-        Test test = testWrapper.getTest();
+    private Test removeUnsuccessfulTests(Test test) {
 
         List<ComparisonInfo> comparisonInfoSucceed = test.getComparisonInfoTests()
                                                          .stream()
@@ -92,50 +85,7 @@ public class TestServiceImpl implements TestService {
         test.setComparisonInfoTests(comparisonInfoSucceed);
         notifyComparisonInfoFailures(comparisonInfoFailures);
 
-        return testWrapper;
-    }
-
-    private TestWrapper analyzeNonFlashResult(TestWrapper testWrapper) {
-
-        testWrapper.getTest()
-                   .getComparisonInfoTests()
-                   .stream()
-                   .map(ComparisonInfo::getSpeedTestWebSite)
-                   .filter(speedTest -> urlMapper.isNonFlashAble(speedTest.getSpeedTestIdentifier()))
-                   .forEach(this::analyzeNonFlashSpeedTestResult);
-
-        return testWrapper;
-    }
-
-    private void analyzeNonFlashSpeedTestResult(SpeedTestWebSite speedTestWebSite) {
-        double downloadRateInMbps = imageAnalyzerService.analyzeNonFlash(speedTestWebSite.getSpeedTestIdentifier(), speedTestWebSite.getNonFlashResult());
-        speedTestWebSite.setDownloadRateInMbps(downloadRateInMbps);
-    }
-
-    private TestDAO uploadSnapshots(TestWrapper testWrapper) {
-        String userIP = testWrapper.getTest().getSystemInfo().getPublicIP();
-        TestDAO testDAO = Converter.convertTestModelToDAO(testWrapper.getTest());
-
-        Map<Integer, String> fileLocation =
-            testWrapper.getSnapshotLocalLocation()
-                       .entrySet()
-                       .stream()
-                       .map(snapshot -> uploadFile(userIP, snapshot))
-                       .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-        testDAO.getComparisonInfoDAOTests()
-               .stream()
-               .map(ComparisonInfoDAO::getSpeedTestWebSiteDAO)
-               .forEach(speedTestWebSite -> speedTestWebSite.setS3FileAddress(fileLocation.get(speedTestWebSite.getKey())));
-
-        return testDAO;
-    }
-
-    private Map.Entry<Integer, String> uploadFile(String userIP, Map.Entry<String, File> snapshot) {
-        int fileKey = Integer.valueOf(snapshot.getKey());
-        String snapshotLocation = fileStorageService.uploadFile(userIP, snapshot.getValue());
-
-        return new AbstractMap.SimpleEntry<>(fileKey, snapshotLocation);
+        return test;
     }
 
     private void save(TestDAO testDAO) {
@@ -148,12 +98,14 @@ public class TestServiceImpl implements TestService {
         }
     }
 
-    private void increaseComparisonInfoCounters(Test test) {
+    private Test increaseComparisonInfoCounters(Test test) {
 
         test.getComparisonInfoTests()
             .stream()
             .map(ComparisonInfoIdentifiers::new)
             .forEach(identifiers -> counterService.addComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
+
+        return test;
     }
 
     private TestDAO decreaseComparisonInfoCounters(TestDAO test) {
