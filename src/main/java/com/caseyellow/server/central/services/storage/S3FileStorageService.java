@@ -34,6 +34,8 @@ public class S3FileStorageService implements FileStorageService {
 
     private Logger logger = Logger.getLogger(S3FileStorageService.class);
 
+    private static final String SUFFIX = ".png";
+
     private AmazonS3 s3Client;
     private AWSConfiguration awsConfiguration;
 
@@ -99,7 +101,7 @@ public class S3FileStorageService implements FileStorageService {
         String uniquePath = new StringBuilder(String.valueOf(System.currentTimeMillis())).reverse().toString();
         String userIdentifier = userIP.replaceAll("\\.", "");
 
-        return userIdentifier + "/" + uniquePath + fileName.substring(separationIndex);
+        return userIdentifier + "/" + uniquePath + "-" + fileName.substring(separationIndex) + SUFFIX;
     }
 
     public boolean isHealthy() {
@@ -122,6 +124,6 @@ public class S3FileStorageService implements FileStorageService {
         URL preSignedUrl = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
 
 
-        return new PreSignedUrl(preSignedUrl);
+        return new PreSignedUrl(preSignedUrl, objectKey);
     }
 }

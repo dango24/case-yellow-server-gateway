@@ -8,11 +8,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SpeedTestWebSite {
 
-    private int key;
     private boolean succeed;
     private String urlAddress;
     private String speedTestIdentifier;
     private String nonFlashResult;
+    private String path;
     private long startMeasuringTimestamp;
     private Double downloadRateInMbps; // Mega bit per second
     private Double downloadRateInKBps; // Mega bit per second
@@ -64,6 +64,14 @@ public class SpeedTestWebSite {
         this.startMeasuringTimestamp = startMeasuringTimestamp;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public Double getDownloadRateInMbps() {
         return downloadRateInMbps;
     }
@@ -78,14 +86,6 @@ public class SpeedTestWebSite {
 
     public void setSucceed(boolean succeed) {
         this.succeed = succeed;
-    }
-
-    public int getKey() {
-        return key;
-    }
-
-    public void setKey(int key) {
-        this.key = key;
     }
 
     public String getNonFlashResult() {

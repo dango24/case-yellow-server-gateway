@@ -150,7 +150,6 @@ public interface Converter {
 
         speedTestWebSiteDAO.setStartMeasuringTimestamp(speedTestWebSite.getStartMeasuringTimestamp());
         speedTestWebSiteDAO.setUrlAddress(speedTestWebSite.getUrlAddress());
-        speedTestWebSiteDAO.setKey(speedTestWebSite.getKey());
 
         if (nonNull(speedTestWebSite.getDownloadRateInMbps())) {
             speedTestWebSiteDAO.setDownloadRateInMbps(speedTestWebSite.getDownloadRateInMbps());
@@ -170,7 +169,6 @@ public interface Converter {
 
         speedTestWebSite.setStartMeasuringTimestamp(speedTestWebSiteDAO.getStartMeasuringTimestamp());
         speedTestWebSite.setUrlAddress(speedTestWebSiteDAO.getUrlAddress());
-        speedTestWebSite.setKey(speedTestWebSiteDAO.getKey());
         speedTestWebSite.setDownloadRateInMbps(speedTestWebSiteDAO.getDownloadRateInMbps());
         speedTestWebSite.setDownloadRateInKBps(calculateDownloadRateFromMbpsToKBps(speedTestWebSiteDAO.getDownloadRateInMbps()));
 

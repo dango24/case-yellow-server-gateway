@@ -24,6 +24,6 @@ public class FileStorageStub implements FileStorageService {
 
     @Override
     public PreSignedUrl generatePreSignedUrl(String userIP, String fileName) {
-        return new PreSignedUrl(null);
+        return new PreSignedUrl(null, null);
     }
 }
