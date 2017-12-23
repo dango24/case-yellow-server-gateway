@@ -13,7 +13,6 @@ public class SpeedTestWebSiteDAO {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private int key;
     private boolean analyzed;
     private String urlAddress;
     private String speedTestIdentifier;
@@ -88,14 +87,6 @@ public class SpeedTestWebSiteDAO {
 
     public void setAnalyzed(boolean analyzed) {
         this.analyzed = analyzed;
-    }
-
-    public int getKey() {
-        return key;
-    }
-
-    public void setKey(int key) {
-        this.key = key;
     }
 
     public AnalyzedState getAnalyzedState() {

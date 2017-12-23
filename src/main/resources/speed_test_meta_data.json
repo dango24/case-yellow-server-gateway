@@ -15,7 +15,14 @@
         "identifier": "בדיקה",
         "count": 1
       }],
-      "finishIdentifier": "resultHandler"
+      "finishIdentifier": "resultHandler",
+      "finishIdentifiers": [{
+        "identifier": "Mbps",
+        "count": 2
+      }, {
+        "identifier": "גרף קישוריות",
+        "count": -1
+      }]
     }
   },
   {
@@ -42,7 +49,14 @@
     "speedTestNonFlashMetaData": null,
     "speedTestFlashMetaData" : {
       "buttonIds": null,
-      "finishIdentifier": "SpeedTetsAddDiagnostic"
+      "finishIdentifier": "SpeedTetsAddDiagnostic",
+      "finishIdentifiers": [{
+        "identifier": "בדוק",
+        "count": 1
+      }, {
+        "identifier": "שוב",
+        "count": 1
+      }]
     }
   },
   {

@@ -22,6 +22,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.math.NumberUtils.isCreatable;
 
 public interface Converter {
 
@@ -150,9 +151,10 @@ public interface Converter {
 
         speedTestWebSiteDAO.setStartMeasuringTimestamp(speedTestWebSite.getStartMeasuringTimestamp());
         speedTestWebSiteDAO.setUrlAddress(speedTestWebSite.getUrlAddress());
+        speedTestWebSiteDAO.setS3FileAddress(speedTestWebSite.getPath());
 
-        if (nonNull(speedTestWebSite.getDownloadRateInMbps())) {
-            speedTestWebSiteDAO.setDownloadRateInMbps(speedTestWebSite.getDownloadRateInMbps());
+        if (nonNull(speedTestWebSite.getNonFlashResult()) && isCreatable(speedTestWebSite.getNonFlashResult())) {
+            speedTestWebSiteDAO.setDownloadRateInMbps(Double.valueOf(speedTestWebSite.getNonFlashResult()));
             speedTestWebSiteDAO.setAnalyzed(true);
             speedTestWebSiteDAO.setAnalyzedState(AnalyzedState.SUCCESS);
         }
@@ -171,7 +173,7 @@ public interface Converter {
         speedTestWebSite.setUrlAddress(speedTestWebSiteDAO.getUrlAddress());
         speedTestWebSite.setDownloadRateInMbps(speedTestWebSiteDAO.getDownloadRateInMbps());
         speedTestWebSite.setDownloadRateInKBps(calculateDownloadRateFromMbpsToKBps(speedTestWebSiteDAO.getDownloadRateInMbps()));
-
+        speedTestWebSite.setPath(speedTestWebSiteDAO.getS3FileAddress());
         return speedTestWebSite;
     }
 
