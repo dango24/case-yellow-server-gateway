@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.domain.analyzer.services;
 
+import com.caseyellow.server.central.domain.analyzer.model.GoogleVisionRequest;
 import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
@@ -42,7 +43,8 @@ public class ImageAnalyzer {
         try {
             logger.info("Start analyzing image: " + speedTestWebSiteDAO.getS3FileAddress());
             File imageSnapshot = fileStorageService.getFile(speedTestWebSiteDAO.getS3FileAddress());
-            double analyzedImageResult = imageAnalyzerService.analyzeImage(speedTestWebSiteDAO.getSpeedTestIdentifier(), imageSnapshot);
+            GoogleVisionRequest googleVisionRequest = new GoogleVisionRequest(imageSnapshot.getAbsolutePath());
+            double analyzedImageResult = imageAnalyzerService.analyzeImage(speedTestWebSiteDAO.getSpeedTestIdentifier(), googleVisionRequest);
             speedTestWebSiteRepository.updateAnalyzedImageResult(speedTestWebSiteDAO.getId(), analyzedImageResult);
             speedTestWebSiteRepository.updateAnalyzedState(speedTestWebSiteDAO.getId(), AnalyzedState.SUCCESS);
 

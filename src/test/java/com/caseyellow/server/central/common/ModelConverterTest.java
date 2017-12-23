@@ -9,6 +9,7 @@ import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.SystemInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
+import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import org.junit.Before;
 import org.springframework.test.context.ActiveProfiles;
@@ -48,7 +49,7 @@ public class ModelConverterTest {
         fileDownloadInfoDAO.setFileName("firefox");
         fileDownloadInfoDAO.setFileSizeInBytes(23456);
 
-        speedTestWebSiteDAO = new SpeedTestWebSiteDAO(SPEED_TEST_WEBSITE_IDENTIFIER, HOT, false);
+        speedTestWebSiteDAO = new SpeedTestWebSiteDAO(SPEED_TEST_WEBSITE_IDENTIFIER, HOT, AnalyzedState.FAILURE);
         speedTestWebSiteDAO.setDownloadRateInMbps(123456789.0);
 
         comparisonInfoDAO = new ComparisonInfoDAO(speedTestWebSiteDAO, fileDownloadInfoDAO);

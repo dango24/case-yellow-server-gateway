@@ -13,7 +13,6 @@ public class SpeedTestWebSiteDAO {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private boolean analyzed;
     private String urlAddress;
     private String speedTestIdentifier;
     private String S3FileAddress;
@@ -30,15 +29,14 @@ public class SpeedTestWebSiteDAO {
     }
 
     public SpeedTestWebSiteDAO(String speedTestIdentifier, String urlAddress) {
-        this(speedTestIdentifier, urlAddress, false);
+        this(speedTestIdentifier, urlAddress, AnalyzedState.NOT_STARTED);
     }
 
-    public SpeedTestWebSiteDAO(String speedTestIdentifier, String urlAddress, boolean analyzed) {
+    public SpeedTestWebSiteDAO(String speedTestIdentifier, String urlAddress, AnalyzedState analyzedState) {
         this.setSpeedTestIdentifier(speedTestIdentifier);
         this.setUrlAddress(urlAddress);
-        this.analyzed = analyzed;
         this.downloadRateInMbps = -1;
-        this.analyzedState = AnalyzedState.NOT_STARTED;
+        this.analyzedState = analyzedState;
     }
 
     public String getUrlAddress() {
@@ -81,14 +79,6 @@ public class SpeedTestWebSiteDAO {
         this.downloadRateInMbps = downloadRateInMbps;
     }
 
-    public boolean isAnalyzed() {
-        return analyzed;
-    }
-
-    public void setAnalyzed(boolean analyzed) {
-        this.analyzed = analyzed;
-    }
-
     public AnalyzedState getAnalyzedState() {
         return analyzedState;
     }
@@ -104,7 +94,6 @@ public class SpeedTestWebSiteDAO {
     @Override
     public String toString() {
         return "SpeedTestWebSiteDAO{" +
-                "analyzed=" + analyzed +
                 ", urlAddress='" + urlAddress + '\'' +
                 ", speedTestIdentifier='" + speedTestIdentifier + '\'' +
                 ", downloadRateInMbps=" + downloadRateInMbps +

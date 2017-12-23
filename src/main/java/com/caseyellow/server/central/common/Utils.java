@@ -1,31 +1,18 @@
 package com.caseyellow.server.central.common;
 
-import com.caseyellow.server.central.exceptions.IORuntimeException;
-import org.springframework.web.multipart.MultipartFile;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.AbstractMap;
-import java.util.Map;
-
+import java.util.Base64;
 
 public interface Utils {
 
-    static Map.Entry<String, File> writeToFile(Map.Entry<String, MultipartFile> snapshot) {
-        String identifier = snapshot.getKey();
-        MultipartFile file = snapshot.getValue();
+    static byte[] createImageBase64Encode(String imgPath) throws IOException {
+        File imageFile = new File(imgPath);
+        byte[] imageBase64Encode = Base64.getEncoder().encode(FileUtils.readFileToByteArray(imageFile));
 
-        try {
-            byte[] bytes = file.getBytes();
-            File tempFileLocation = new File(System.getProperty("java.io.tmpdir"), identifier + "_" +file.getOriginalFilename());
-            Files.write(tempFileLocation.toPath(), bytes);
-
-            return new AbstractMap.SimpleEntry<>(identifier, tempFileLocation);
-
-        } catch (IOException e) {
-            throw new IORuntimeException("Failed to write file from request to tmp dir, " + e.getMessage(), e);
-        }
+        return imageBase64Encode;
     }
 
      static double calculateDownloadRateFromMbpsToKBps(double downloadRateInMbps) {

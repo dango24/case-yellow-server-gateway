@@ -155,7 +155,6 @@ public interface Converter {
 
         if (nonNull(speedTestWebSite.getNonFlashResult()) && isCreatable(speedTestWebSite.getNonFlashResult())) {
             speedTestWebSiteDAO.setDownloadRateInMbps(Double.valueOf(speedTestWebSite.getNonFlashResult()));
-            speedTestWebSiteDAO.setAnalyzed(true);
             speedTestWebSiteDAO.setAnalyzedState(AnalyzedState.SUCCESS);
         }
 
@@ -166,7 +165,7 @@ public interface Converter {
         if (isNull(speedTestWebSiteDAO)) {
             throw new ConverterException("Failed to convert, speedTestWebSiteDAO is null");
         }
-
+        boolean isAnalyzed = speedTestWebSiteDAO.getAnalyzedState() == AnalyzedState.SUCCESS;
         SpeedTestWebSite speedTestWebSite = new SpeedTestWebSite(speedTestWebSiteDAO.getSpeedTestIdentifier());
 
         speedTestWebSite.setStartMeasuringTimestamp(speedTestWebSiteDAO.getStartMeasuringTimestamp());
@@ -174,6 +173,8 @@ public interface Converter {
         speedTestWebSite.setDownloadRateInMbps(speedTestWebSiteDAO.getDownloadRateInMbps());
         speedTestWebSite.setDownloadRateInKBps(calculateDownloadRateFromMbpsToKBps(speedTestWebSiteDAO.getDownloadRateInMbps()));
         speedTestWebSite.setPath(speedTestWebSiteDAO.getS3FileAddress());
+        speedTestWebSite.setSucceed(isAnalyzed);
+
         return speedTestWebSite;
     }
 

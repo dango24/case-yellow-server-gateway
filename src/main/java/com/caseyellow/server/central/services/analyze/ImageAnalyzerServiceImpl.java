@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.services.analyze;
 
 import com.caseyellow.server.central.domain.analyzer.model.AnalyzedImage;
+import com.caseyellow.server.central.domain.analyzer.model.GoogleVisionRequest;
 import com.caseyellow.server.central.exceptions.AnalyzerException;
 import com.caseyellow.server.central.services.infrastrucre.RequestHandler;
 import com.caseyellow.server.central.services.infrastrucre.RetrofitBuilder;
@@ -41,16 +42,13 @@ public class ImageAnalyzerServiceImpl implements ImageAnalyzerService {
     }
 
     @Override
-    public double analyzeImage(String identifier, File image) {
-        validateArgs(identifier, image);
-
-        UploadImage uploadTest = createUploadImage(identifier, image);
-        AnalyzedImage analyzedImage = requestHandler.execute(analysisRequests.uploadImage(uploadTest.getPayload(), uploadTest.getPart()));
+    public double analyzeImage(String identifier, GoogleVisionRequest googleVisionRequest) {
+        AnalyzedImage analyzedImage = requestHandler.execute(analysisRequests.uploadImage(identifier, googleVisionRequest));
 
         if (analyzedImage.isAnalyzed()) {
             return analyzedImage.getResult();
         } else {
-            throw new AnalyzerException("Failed to analyze image for identifier: " + identifier + "for image: " + image.getName() + " , cause: " + analyzedImage.getMessage());
+            throw new AnalyzerException("Failed to analyze image for identifier: " + identifier + ", cause: " + analyzedImage.getMessage());
         }
 
     }

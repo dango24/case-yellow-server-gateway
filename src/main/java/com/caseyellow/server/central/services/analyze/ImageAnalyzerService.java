@@ -1,8 +1,8 @@
 package com.caseyellow.server.central.services.analyze;
 
-import java.io.File;
+import com.caseyellow.server.central.domain.analyzer.model.GoogleVisionRequest;
 
 public interface ImageAnalyzerService {
-    double analyzeImage(String identifier, File image);
+    double analyzeImage(String identifier, GoogleVisionRequest googleVisionRequest);
     double analyzeNonFlash(String identifier, String nonFlashResult);
 }

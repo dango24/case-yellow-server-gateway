@@ -19,15 +19,13 @@ import static java.util.stream.Collectors.toMap;
  */
 public interface SpeedTestWebSiteRepository extends JpaRepository<SpeedTestWebSiteDAO, Long> {
 
-    String UPDATE_ANALYZED_IMAGE_RESULT = "UPDATE SpeedTestWebSiteDAO s set s.downloadRateInMbps = :downloadRateInMbps, s.analyzed = true where s.id = :id";
+    String UPDATE_ANALYZED_IMAGE_RESULT = "UPDATE SpeedTestWebSiteDAO s set s.downloadRateInMbps = :downloadRateInMbps  where s.id = :id";
     String UPDATE_ANALYZED_STATE = "UPDATE SpeedTestWebSiteDAO s set s.analyzedState = :analyzedState where s.id = :id";
     String SELECT_IDENTIFIER_AND_URL_QUERY = "select DISTINCT SPEED_TEST_IDENTIFIER , URL_ADDRESS  from SPEED_TEST_WEB_SITE";
 
     Long countBySpeedTestIdentifier(String speedTestIdentifier);
     List<SpeedTestWebSiteDAO> findBySpeedTestIdentifier(String speedTestIdentifier);
     List<SpeedTestWebSiteDAO> findByAnalyzedState(AnalyzedState analyzedState);
-    List<SpeedTestWebSiteDAO> findByAnalyzedTrue();
-    List<SpeedTestWebSiteDAO> findByAnalyzedFalse();
 
     @Modifying
     @Transactional
