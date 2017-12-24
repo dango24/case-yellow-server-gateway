@@ -32,6 +32,9 @@ public class ConfigurationServiceImpl implements AWSConfiguration, GoogleVisionC
     @Value("${healthy_path}")
     private String healthyPath;
 
+    @Value("${encryption_key}")
+    private String encryptionKey;
+
     private String accessKeyID;
     private String secretAccessKey;
     private String googleVisionKey;
@@ -70,8 +73,7 @@ public class ConfigurationServiceImpl implements AWSConfiguration, GoogleVisionC
 
     private boolean buildCredentialsFromEncryptedCredentials() throws IOException {
         try {
-            String userInput = receiveUserInput();
-            String key = encryptSHA512(userInput);
+            String key = encryptSHA512(encryptionKey);
             String decryptedCredentials = decryptCredentials(key);
 
             parseDecryptedCredentials(decryptedCredentials);

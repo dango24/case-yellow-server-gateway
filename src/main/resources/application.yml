@@ -12,7 +12,7 @@ spring.http.multipart.max-request-size: 20MB
 analysis_url: http://localhost:7008/analysis/
 
 # Logger
-log.dir: /home/ec2-user/case-yellow-central
+log.dir: /home/ec2-user/case-yellow/logs
 
 logging:
   level:
@@ -22,7 +22,7 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
-  file: ${log.dir}/logs/case_yellow_central_log.log
+  file: ${log.dir}/case_yellow_central_log.log
 
 fileDownloadUrls:
  firefox: https://ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe
