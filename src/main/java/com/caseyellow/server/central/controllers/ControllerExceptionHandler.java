@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.controllers;
 
 import com.caseyellow.server.central.exceptions.InternalException;
+import org.apache.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,21 +10,26 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
+    private Logger logger = Logger.getLogger(ControllerExceptionHandler.class);
+
     private static final int INTERNAL_ERROR_CODE = 420;
     private static final int ILLEGAL_ARGUMENT_ERROR_CODE = 601;
 
     @ExceptionHandler(InternalException.class)
     public ResponseEntity<ErrorResponse> handleInternalException(InternalException ex)  {
+        logger.error(ex.getMessage(), ex);
         return buildErrorResponse(ex.getErrorCode(), ex.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception ex)  {
+        logger.error(ex.getMessage(), ex);
         return buildErrorResponse(ILLEGAL_ARGUMENT_ERROR_CODE, ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex)  {
+        logger.error(ex.getMessage(), ex);
         return buildErrorResponse(-1, ex.getMessage());
     }
 
@@ -35,8 +41,8 @@ public class ControllerExceptionHandler {
         }
 
         return ResponseEntity.status(INTERNAL_ERROR_CODE)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(errorResponse);
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(errorResponse);
     }
 
     public static class ErrorResponse {

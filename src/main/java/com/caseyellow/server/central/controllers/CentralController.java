@@ -57,6 +57,7 @@ public class CentralController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public GoogleVisionKey googleVisionKey() {
+        logger.info("Received GoogleVisionKey GET request");
         return new GoogleVisionKey(googleVisionConfiguration.googleVisionKey());
     }
 
