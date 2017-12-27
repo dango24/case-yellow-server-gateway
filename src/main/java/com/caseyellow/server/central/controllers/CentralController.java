@@ -3,6 +3,7 @@ package com.caseyellow.server.central.controllers;
 import com.caseyellow.server.central.configuration.GoogleVisionConfiguration;
 import com.caseyellow.server.central.domain.analyzer.model.GoogleVisionKey;
 import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
+import com.caseyellow.server.central.domain.test.model.FailedTestDetails;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
@@ -83,14 +84,21 @@ public class CentralController {
     @GetMapping("/all-tests")
     public List<Test> getAllTests() {
         logger.info("Received getAllTests GET request");
-
         return testService.getAllTests();
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/pre-signed-url")
     public PreSignedUrl generatePreSignedUrl(@RequestParam("user_ip")String userIP, @RequestParam("file_name")String fileName) {
+        logger.info("Received generatePreSignedUrl GET request for file name: " + fileName);
         return testService.generatePreSignedUrl(userIP, fileName);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/failed-test")
+    public void failedTest(@RequestBody FailedTestDetails failedTestDetails) throws IOException {
+        logger.info("Received failedTest POST request with failed test : " + failedTestDetails);
+        testService.failedTest(failedTestDetails);
     }
 
 }

@@ -1,9 +1,10 @@
 package com.caseyellow.server.central.domain.test.services;
 
 import com.caseyellow.server.central.CaseYellowCentral;
+import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
 import com.caseyellow.server.central.domain.file.services.FileDownloadService;
-import com.caseyellow.server.central.persistence.file.dao.FileDownloadCounter;
+import com.caseyellow.server.central.domain.file.services.FileDownloadServiceImp;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
@@ -16,7 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -54,10 +57,6 @@ public class FileDownloadServiceImpTest {
         this.fileDownloadInfoRepository = fileDownloadInfoRepository;
     }
 
-    @Autowired
-    public void setFileDownloadService(FileDownloadService fileDownloadService) {
-        this.fileDownloadService = fileDownloadService;
-    }
 
     @Autowired
     public void setFileDownloadInfoCounterRepository(FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository) {
@@ -66,6 +65,18 @@ public class FileDownloadServiceImpTest {
 
     @Before
     public void setUp() throws Exception {
+        Map<String, String> fileDownloadUrls  =new HashMap<>();
+        fileDownloadUrls.put(FIREFOX, FIREFOX_URL);
+        fileDownloadUrls.put(GO, GO_URL);
+        fileDownloadUrls.put(JAVA_SDK, JAVA_SDK_URL);
+        fileDownloadUrls.put(POSTGRESQL, POSTGRESQL_URL);
+        fileDownloadUrls.put(KINECT, KINECT_URL);
+        fileDownloadUrls.put(ITUNES, ITUNES_URL);
+
+        UrlMapper urlMapper = new UrlMapper();
+        urlMapper.setFileDownloadUrls(fileDownloadUrls);
+        fileDownloadService = new FileDownloadServiceImp(fileDownloadInfoCounterRepository, urlMapper);
+
         IntStream.range(0, 100).forEach(i -> addFileDownloadInfo(FIREFOX, FIREFOX_URL));
         IntStream.range(0, 53).forEach(i -> addFileDownloadInfo(GO, GO_URL));
         IntStream.range(0, 61).forEach(i -> addFileDownloadInfo(JAVA_SDK, JAVA_SDK_URL));

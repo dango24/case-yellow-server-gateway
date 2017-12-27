@@ -2,12 +2,14 @@ package com.caseyellow.server.central.common;
 
 import com.caseyellow.server.central.domain.file.model.FileDownloadInfo;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
+import com.caseyellow.server.central.domain.test.model.FailedTestDetails;
 import com.caseyellow.server.central.domain.test.model.SystemInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
 import com.caseyellow.server.central.exceptions.ConverterException;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
+import com.caseyellow.server.central.persistence.test.dao.FailedTestDAO;
 import com.caseyellow.server.central.persistence.test.dao.SystemInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
@@ -176,6 +178,24 @@ public interface Converter {
         speedTestWebSite.setSucceed(isAnalyzed);
 
         return speedTestWebSite;
+    }
+
+    static FailedTestDAO convertFailedTestModelToDAO(FailedTestDetails failedTestDetails) {
+        FailedTestDAO failedTestDAO = new FailedTestDAO();
+        failedTestDAO.setIp(failedTestDetails.getIp());
+        failedTestDAO.setErrorMessage(failedTestDetails.getErrorMessage());
+        failedTestDAO.setPath(failedTestDetails.getPath());
+
+        return failedTestDAO;
+    }
+
+    static FailedTestDetails convertFailedTestDAOToModel(FailedTestDAO failedTestDAO) {
+        FailedTestDetails failedTestDetails = new FailedTestDetails();
+        failedTestDetails.setErrorMessage(failedTestDAO.getErrorMessage());
+        failedTestDetails.setIp(failedTestDAO.getIp());
+        failedTestDetails.setPath(failedTestDAO.getPath());
+
+        return failedTestDetails;
     }
 
     static <T extends Object, R extends Object> List<R> convertModelToDto(Function<T, R> convectorFunction,
