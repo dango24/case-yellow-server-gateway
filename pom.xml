@@ -67,14 +67,12 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.195</version>
 		</dependency>
 
 		<!--Postgresql Database-->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.1.4</version>
 		</dependency>
 
 		<!--Retrofit Jackson Converter-->

@@ -9,7 +9,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.caseyellow.server.central.configuration.AWSConfiguration;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
@@ -56,15 +55,6 @@ public class S3FileStorageService implements FileStorageService {
                                             .build();
 
         } while (!isHealthy());
-    }
-
-    @Override // result.getContentMd5()
-    public String uploadFile(String userIP, File fileToUpload) {
-        String path = createFileUniquePath(userIP, fileToUpload.getName());
-        logger.info("Upload file to s3: " + path);
-        s3Client.putObject(new PutObjectRequest(awsConfiguration.bucketName(), path, fileToUpload));
-
-        return path;
     }
 
     @Override

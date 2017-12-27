@@ -2,7 +2,7 @@
 server.port : 9080
 
 # Profiles
-spring.profiles.active: dev
+spring.profiles.active: prod
 
 # Services
 analysis_url: http://localhost:7008/analysis/
