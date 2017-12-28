@@ -103,31 +103,6 @@ public class FileDownloadServiceImpTest {
     }
 
     @Test
-    public void getNextUrlsWith1Argument() throws Exception {
-        List<String> nextUrls =  getNextUrls(1);
-        assertThat(nextUrls, containsInAnyOrder(POSTGRESQL_URL));
-    }
-
-    @Test
-    public void getNextUrlsWith2Argument() throws Exception {
-        List<String> nextUrls =  getNextUrls(2);
-        assertThat(nextUrls, containsInAnyOrder(ITUNES_URL, POSTGRESQL_URL));
-    }
-
-    @Test
-    public void getNextUrlsWith3Argument() throws Exception {
-        List<String> nextUrls =  getNextUrls(3);
-        assertThat(nextUrls, containsInAnyOrder(ITUNES_URL, POSTGRESQL_URL, KINECT_URL));
-    }
-
-    @Test
-    public void getNextUrlsWithAddMoreRecords() throws Exception {
-        IntStream.range(0, 100).forEach(i -> addFileDownloadInfo(POSTGRESQL, POSTGRESQL_URL));
-        List<String> nextUrls =  getNextUrls(1);
-        assertThat(nextUrls, containsInAnyOrder(ITUNES_URL));
-    }
-
-    @Test
     public void getNextUrlsWithBigNumOfComparisonPerTest() throws Exception {
         List<String> nextUrls =  getNextUrls(1_000_000);
         assertThat(nextUrls, containsInAnyOrder(KINECT_URL, POSTGRESQL_URL, ITUNES_URL, FIREFOX_URL, GO_URL, JAVA_SDK_URL));

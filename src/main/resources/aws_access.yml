@@ -1,4 +1,5 @@
 S3_bucket_name: case-yellow-snapshot
 credentials_path: /home/ec2-user/case-yellow/resources/a.out
+#credentials_path: C:\\Users\\Dan\\Documents\\case yellow\\nmain.exe
 encryption_key: nokey
 healthy_path: we_are_one_with_the_light

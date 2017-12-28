@@ -26,7 +26,6 @@ public class FileDownloadInfoCounterRepositoryTest {
     private static final String JAVA_SDK = "java-sdk";
     private static final String ITUNES = "itunes";
 
-
     private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
 
     @Autowired
@@ -89,8 +88,24 @@ public class FileDownloadInfoCounterRepositoryTest {
 
         assertFalse(fileDownloadInfoCounterRepository.findByIdentifier(GO).isActive());
         assertFalse(fileDownloadInfoCounterRepository.findByIdentifier(FIREFOX).isActive());
+
         assertTrue(fileDownloadInfoCounterRepository.findByIdentifier(JAVA_SDK).isActive());
         assertTrue(fileDownloadInfoCounterRepository.findByIdentifier(ITUNES).isActive());
+    }
+
+    @Test
+    public void getActiveIdentifiers() throws Exception {
+        assertEquals(4, getActivateIdentifiers());
+        fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
+        fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(FIREFOX);
+
+        assertEquals(2, getActivateIdentifiers());
+
+        assertFalse(fileDownloadInfoCounterRepository.getActiveIdentifiers().contains(GO));
+        assertFalse(fileDownloadInfoCounterRepository.getActiveIdentifiers().contains(FIREFOX));
+
+        assertTrue(fileDownloadInfoCounterRepository.getActiveIdentifiers().contains(JAVA_SDK));
+        assertTrue(fileDownloadInfoCounterRepository.getActiveIdentifiers().contains(ITUNES));
     }
 
     @Test

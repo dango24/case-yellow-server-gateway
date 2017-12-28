@@ -82,6 +82,13 @@ public interface FileDownloadInfoCounterRepository extends JpaRepository<FileDow
                         .collect(Collectors.toList());
     }
 
+    default List<String> getActiveIdentifiers() {
+        return findAll().stream()
+                        .filter(FileDownloadCounter::isActive)
+                        .map(FileDownloadCounter::getIdentifier)
+                        .collect(Collectors.toList());
+    }
+
     default Map<String, Integer> groupingFileDownloadInfoByIdentifier() {
         return findAll().stream()
                         .filter(FileDownloadCounter::isActive)

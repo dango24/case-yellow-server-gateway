@@ -26,7 +26,7 @@ fileDownloadUrls:
  amazon-workSpaces: https://whois.icann.org/en/lookup?name=d2td7dqidlhjx7.cloudfront.net
  my-sql: https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-5.7.20.0.msi
  windows-games: https://download.microsoft.com/download/D/0/F/D0F9F1BD-9BE6-49E4-8729-4AAAFCAC20F9/gfwlivesetup.exe
- safari: http://support.apple.com/downloads/DL1569/en_US/Safari5.1.10SnowLeopardManual.dmg
+# safari: http://support.apple.com/downloads/DL1569/en_US/Safari5.1.10SnowLeopardManual.dmg
  bitcoin: https://bitcoin.org/bin/bitcoin-core-0.15.1/bitcoin-0.15.1-x86_64-linux-gnu.tar.gz
  vlc: http://mirror.library.ucy.ac.cy/videolan/vlc/2.2.8/win32/vlc-2.2.8-win32.exe
 # java-sdk: https://sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip

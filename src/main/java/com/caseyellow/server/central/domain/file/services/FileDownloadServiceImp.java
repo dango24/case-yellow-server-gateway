@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.Math.min;
 import static java.util.stream.Collectors.toList;
@@ -35,13 +34,8 @@ public class FileDownloadServiceImp implements FileDownloadService {
             return Collections.emptyList();
         }
 
-        nextFileDownloadIdentifiers =
-                fileDownloadInfoCounterRepository.groupingFileDownloadInfoByIdentifier()
-                                                 .entrySet()
-                                                 .stream()
-                                                 .sorted(Map.Entry.comparingByValue())
-                                                 .map(Map.Entry::getKey)
-                                                 .collect(toList());
+        nextFileDownloadIdentifiers = fileDownloadInfoCounterRepository.getActiveIdentifiers();
+        Collections.shuffle(nextFileDownloadIdentifiers);
 
         return nextFileDownloadIdentifiers.subList(0, min(nextFileDownloadIdentifiers.size(), numOfComparisonPerTest))
                                           .stream()
