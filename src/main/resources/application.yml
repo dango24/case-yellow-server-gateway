@@ -23,7 +23,7 @@ logging:
 fileDownloadUrls:
  firefox: https://ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe
  go: https://storage.googleapis.com/golang/go1.7.1.windows-amd64.msi
- amazon-workSpaces: https://whois.icann.org/en/lookup?name=d2td7dqidlhjx7.cloudfront.net
+ amazon-workSpaces: https://d2td7dqidlhjx7.cloudfront.net/prod/global/windows/Amazon+WorkSpaces.msi
  my-sql: https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-5.7.20.0.msi
  windows-games: https://download.microsoft.com/download/D/0/F/D0F9F1BD-9BE6-49E4-8729-4AAAFCAC20F9/gfwlivesetup.exe
 # safari: http://support.apple.com/downloads/DL1569/en_US/Safari5.1.10SnowLeopardManual.dmg

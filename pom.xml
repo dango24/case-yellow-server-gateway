@@ -56,11 +56,11 @@
 			<version>3.6</version>
 		</dependency>
 
-		<!--Aws Java Sdk-->
+		<!--S3 Aws Java Sdk-->
 		<dependency>
 			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk</artifactId>
-			<version>1.11.213</version>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.11.255</version>
 		</dependency>
 
 		<!--H2 Database-->
