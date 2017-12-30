@@ -1,6 +1,8 @@
 package com.caseyellow.server.central.domain.webSite.model;
 
 
+import java.util.List;
+
 public class SpeedTestMetaData {
 
     private String webSiteUrl;
@@ -10,6 +12,7 @@ public class SpeedTestMetaData {
     private boolean haveStartButton;
     private SpeedTestFlashMetaData speedTestFlashMetaData;
     private SpeedTestNonFlashMetaData speedTestNonFlashMetaData;
+    private List<Role> roles;
 
     public SpeedTestMetaData() {
     }

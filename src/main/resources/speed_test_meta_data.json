@@ -47,6 +47,13 @@
     "flashAble": true,
     "haveStartButton": false,
     "speedTestNonFlashMetaData": null,
+    "roles" : [
+      {
+        "identifier": "cssSelector=img[data-role='close-button']",
+        "command": "CLICK",
+        "mono": true
+      }
+    ],
     "speedTestFlashMetaData" : {
       "buttonIds": null,
       "finishIdentifier": "SpeedTetsAddDiagnostic",
