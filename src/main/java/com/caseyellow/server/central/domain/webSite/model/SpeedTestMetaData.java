@@ -1,8 +1,11 @@
 package com.caseyellow.server.central.domain.webSite.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SpeedTestMetaData {
 
     private String webSiteUrl;
@@ -71,5 +74,13 @@ public class SpeedTestMetaData {
 
     public void setSpeedTestNonFlashMetaData(SpeedTestNonFlashMetaData speedTestNonFlashMetaData) {
         this.speedTestNonFlashMetaData = speedTestNonFlashMetaData;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

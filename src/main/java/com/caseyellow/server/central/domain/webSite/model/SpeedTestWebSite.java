@@ -1,11 +1,9 @@
 package com.caseyellow.server.central.domain.webSite.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by Dan on 12/10/2016.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SpeedTestWebSite {
 
     private boolean succeed;
