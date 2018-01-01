@@ -11,6 +11,8 @@ import com.caseyellow.server.central.services.storage.FileStorageService;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +44,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    @Cacheable("tests")
     public List<Test> getAllTests() {
         return testRepository.findAll()
                              .stream()
@@ -61,6 +64,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    @CacheEvict(value = "tests", allEntries = true)
     public void saveTest(Test test) {
         if (!validateTest(test)) {
            throw new IllegalArgumentException("Test is not valid, test: " + new Gson().toJson(test));

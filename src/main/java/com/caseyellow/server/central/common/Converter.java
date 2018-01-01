@@ -155,12 +155,22 @@ public interface Converter {
         speedTestWebSiteDAO.setUrlAddress(speedTestWebSite.getUrlAddress());
         speedTestWebSiteDAO.setS3FileAddress(speedTestWebSite.getPath());
 
-        if (nonNull(speedTestWebSite.getNonFlashResult()) && isCreatable(speedTestWebSite.getNonFlashResult())) {
+        if (isSpeedTestResultDataExist(speedTestWebSite)) {
+            speedTestWebSiteDAO.setDownloadRateInMbps(speedTestWebSite.getDownloadRateInMbps());
+            speedTestWebSiteDAO.setAnalyzedState(AnalyzedState.SUCCESS);
+        }
+        else if (nonNull(speedTestWebSite.getNonFlashResult()) && isCreatable(speedTestWebSite.getNonFlashResult())) {
             speedTestWebSiteDAO.setDownloadRateInMbps(Double.valueOf(speedTestWebSite.getNonFlashResult()));
             speedTestWebSiteDAO.setAnalyzedState(AnalyzedState.SUCCESS);
         }
 
         return speedTestWebSiteDAO;
+    }
+
+    static boolean isSpeedTestResultDataExist(SpeedTestWebSite speedTestWebSite) {
+        return nonNull(speedTestWebSite.getDownloadRateInMbps()) &&
+               isCreatable(String.valueOf(speedTestWebSite.getDownloadRateInMbps())) &&
+               speedTestWebSite.getDownloadRateInMbps() > 0;
     }
 
     static SpeedTestWebSite convertSpeedTestWebSiteDAOlToModel(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
