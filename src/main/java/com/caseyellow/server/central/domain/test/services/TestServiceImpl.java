@@ -53,6 +53,10 @@ public class TestServiceImpl implements TestService {
                              .collect(toList());
     }
 
+    public List<TestDAO> getAllDAOTests() {
+        return testRepository.findAll();
+    }
+
     @Override
     public PreSignedUrl generatePreSignedUrl(String userIP, String fileName) {
         return fileStorageService.generatePreSignedUrl(userIP, fileName);
@@ -64,7 +68,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    @CacheEvict(value = "tests", allEntries = true)
+    @CacheEvict(value = { "tests", "countIPs", "identifiersDetails" }, allEntries = true)
     public void saveTest(Test test) {
         if (!validateTest(test)) {
            throw new IllegalArgumentException("Test is not valid, test: " + new Gson().toJson(test));
