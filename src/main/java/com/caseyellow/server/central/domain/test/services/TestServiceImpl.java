@@ -68,7 +68,6 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    @CacheEvict(value = { "tests", "countIPs", "identifiersDetails" }, allEntries = true)
     public void saveTest(Test test) {
         if (!validateTest(test)) {
            throw new IllegalArgumentException("Test is not valid, test: " + new Gson().toJson(test));
@@ -94,6 +93,7 @@ public class TestServiceImpl implements TestService {
         return test;
     }
 
+    @CacheEvict(value = { "tests", "countIPs", "identifiersDetails" }, allEntries = true)
     private void save(TestDAO testDAO) {
         try {
             testRepository.save(testDAO);
