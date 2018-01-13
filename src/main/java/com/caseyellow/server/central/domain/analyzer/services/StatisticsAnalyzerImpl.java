@@ -57,7 +57,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         return new IdentifierDetails(identifier, meanRatio, size);
     }
 
-    private List<ComparisonInfoDAO> getComparisons(String speedtestWebsite){
+    private List<ComparisonInfoDAO> getComparisons(String speedtestWebsite) { // todo dango improve method performance
 
         return testService.getAllDAOTests()
                           .stream()

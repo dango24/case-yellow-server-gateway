@@ -86,13 +86,6 @@ public class ConfigurationServiceImpl implements AWSConfiguration, GoogleVisionC
         }
     }
 
-    private String receiveUserInput() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter key:");
-
-        return scanner.nextLine();
-    }
-
     private String encryptSHA512(String target) {
         try {
             MessageDigest sh = MessageDigest.getInstance("SHA-512");
