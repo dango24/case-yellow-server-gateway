@@ -19,7 +19,7 @@ public class ImageAnalyzer {
 
     private Logger logger = Logger.getLogger(ImageAnalyzer.class);
 
-    private static final int SCHEDULED_TASK_INTERVAL = 1_800_000; // 30 minutes
+    private static final int SCHEDULED_TASK_INTERVAL = 120_000; // 2 minutes
     private static final int INITIAL_SCHEDULED_TASK = 120_000; // 2 minutes
 
     private FileStorageService fileStorageService;
