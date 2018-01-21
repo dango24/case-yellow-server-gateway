@@ -35,7 +35,7 @@
     "speedTestNonFlashMetaData": {
       "buttonId": "id=DRWidgetInitiate",
       "finishIdentifier": "class=Resultstitle",
-      "finishTextIdentifier": "Your Download speed is (\\d+(?:\\.\\d+)?) Mega bits",
+      "finishTextIdentifier": ["Your Download speed is (\\d+(?:\\.\\d+)?) Mega bits"],
       "resultLocation": "id=DR-ELE-results",
       "resultAttribute": "title"
     }
@@ -76,7 +76,8 @@
     "speedTestNonFlashMetaData": {
       "buttonId": null,
       "finishIdentifier": "",
-      "finishTextIdentifier": "class=\"speed-results-container succeeded\" id=\"speed-value\">(\\d+(?:\\.\\d+)?)<",
+      "finishTextIdentifier": ["speed-units\">Mbps", "class=\"speed-results-container succeeded\" id=\"speed-value\">(\\d+(?:\\.\\d+)?)<"],
+      "finishIdentifierKbps": ["speed-units\">Kbps", "class=\"speed-results-container succeeded\" id=\"speed-value\">(\\d+(?:\\.\\d+)?)<"],
       "resultLocation": "id=speed-value",
       "resultAttribute": null
     }
@@ -90,7 +91,8 @@
     "speedTestNonFlashMetaData": {
       "buttonId": "class=js-start-test",
       "finishIdentifier": "id=startBtn",
-      "finishTextIdentifier": "class=\"result-data-large number result-data-value download-speed\">(\\d+(?:\\.\\d+)?)<",
+      "finishTextIdentifier": ["class=\"result-data-large number result-data-value download-speed\">(\\d+(?:\\.\\d+)?)</span>\\s+<span class=\"result-data-unit\">Mbps"],
+      "finishIdentifierKbps": ["class=\"result-data-large number result-data-value download-speed\">(\\d+(?:\\.\\d+)?)</span>\\s+<span class=\"result-data-unit\">Kbps"],
       "resultLocation": "id=chartContainer",
       "resultAttribute": null
     },
@@ -118,7 +120,8 @@
     "speedTestNonFlashMetaData": {
       "buttonId": "id=startBtn",
       "finishIdentifier": "id=startBtn",
-      "finishTextIdentifier": "Download:.+?(\\d+(?:\\.\\d+)?)\\s+?Mbps",
+      "finishTextIdentifier": ["Download:.{161}(\\d+(?:\\.\\d+)?)\\s+?Mbps"],
+      "finishIdentifierKbps": ["Download:.{161}(\\d+(?:\\.\\d+)?)\\s+?kbps"],
       "resultLocation": "id=chartContainer",
       "resultAttribute": null
     }

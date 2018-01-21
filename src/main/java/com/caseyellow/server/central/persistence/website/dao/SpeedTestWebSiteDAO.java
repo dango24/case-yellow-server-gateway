@@ -16,7 +16,7 @@ public class SpeedTestWebSiteDAO {
     private String urlAddress;
     private String speedTestIdentifier;
     private String S3FileAddress;
-    private double downloadRateInMbps; // Mega bit per second
+    private double downloadRateInMbps; // Mega   bit per second
     private long startMeasuringTimestamp;
     private AnalyzedState analyzedState;
 
