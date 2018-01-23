@@ -4,11 +4,11 @@ import com.caseyellow.server.central.common.UrlMapper;
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
+import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -43,33 +43,31 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     @Cacheable("identifiersDetails")
     public Map<String, IdentifierDetails> createIdentifiersDetails() {
 
-        return urlMapper.getSpeedTestIdentifiers()
-                        .stream()
-                        .map(this::createIdentifierDetails)
-                        .collect(toMap(IdentifierDetails::getIdentifier, Function.identity()));
+        return getComparisons().entrySet()
+                               .stream()
+                               .collect(toMap(Map.Entry::getKey, entry -> createIdentifierDetails(entry.getKey(), entry.getValue())));
     }
 
-    private IdentifierDetails createIdentifierDetails(String identifier) {
-        List<ComparisonInfoDAO> comparisonInfos = getComparisons(identifier);
+    private IdentifierDetails createIdentifierDetails(String identifier, List<ComparisonInfoDAO> comparisonInfos) {
         int size = comparisonInfos.size();
         double meanRatio = getMeanRatio(comparisonInfos);
 
         return new IdentifierDetails(identifier, meanRatio, size);
     }
 
-    private List<ComparisonInfoDAO> getComparisons(String speedtestWebsite) { // todo dango improve method performance
+    private Map<String, List<ComparisonInfoDAO>> getComparisons() {
+        List<TestDAO> tests = testService.getAllDAOTests();
 
-        return testService.getAllDAOTests()
-                          .stream()
-                          .flatMap(test -> test.getComparisonInfoDAOTests().stream())
-                          .filter(comp -> comp.getSpeedTestWebSiteDAO().getSpeedTestIdentifier().equals(speedtestWebsite))
-                          .collect(toCollection(LinkedList::new));
+        return tests.stream()
+                    .flatMap(test -> test.getComparisonInfoDAOTests().stream())
+                    .collect(groupingBy(c -> c.getSpeedTestWebSiteDAO().getSpeedTestIdentifier()));
     }
 
     private double getMeanRatio(List<ComparisonInfoDAO> comparisons){
 
         return comparisons.stream()
                           .mapToDouble(this::getRatio)
+                          .filter(this::isNotOutlier)
                           .average()
                           .getAsDouble();
     }
@@ -79,6 +77,15 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         double speedtestRate = calculateDownloadRateFromMbpsToKBps(comprison.getSpeedTestWebSiteDAO().getDownloadRateInMbps());
         double downloadRate = comprison.getFileDownloadInfoDAO().getFileDownloadRateKBPerSec();
 
-        return downloadRate / speedtestRate;
+        double dango = downloadRate / speedtestRate;
+
+        if (dango > 100) {
+            System.out.println("dango");
+        }
+        return dango;
+    }
+
+    private boolean isNotOutlier(double ratio) {
+        return ratio < 100 && ratio > 0.01;
     }
 }

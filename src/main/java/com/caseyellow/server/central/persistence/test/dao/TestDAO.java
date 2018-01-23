@@ -20,6 +20,9 @@ public class TestDAO {
     @Embedded
     private SystemInfoDAO systemInfo;
 
+    @Column(name = "user_name")
+    private String user;
+
     private String speedTestWebsiteIdentifier;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -30,6 +33,7 @@ public class TestDAO {
 
     private TestDAO(TestBuilder testBuilder) {
         this.testID = testBuilder.testID;
+        this.user = testBuilder.user;
         this.systemInfo = testBuilder.systemInfo;
         this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsite;
         this.comparisonInfoDAOTests = testBuilder.comparisonInfoDAOTests;
@@ -71,9 +75,18 @@ public class TestDAO {
         comparisonInfoDAOTests.add(comparisonInfoDAO);
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
     public static class TestBuilder {
 
         private String testID;
+        private String user;
         private SystemInfoDAO systemInfo;
         private String speedTestWebsite;
         private List<ComparisonInfoDAO> comparisonInfoDAOTests;
@@ -89,6 +102,11 @@ public class TestDAO {
 
         public TestBuilder addSpeedTestWebsite(String speedTestWebsite) {
             this.speedTestWebsite = speedTestWebsite;
+            return this;
+        }
+
+        public TestBuilder addUser(String user) {
+            this.user = user;
             return this;
         }
 

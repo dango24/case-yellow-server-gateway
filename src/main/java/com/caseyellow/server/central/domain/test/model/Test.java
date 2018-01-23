@@ -1,13 +1,17 @@
 package com.caseyellow.server.central.domain.test.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 /**
  * Created by Dan on 24/10/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Test {
 
     private String testID;
+    private String user;
     private SystemInfo systemInfo;
     private String speedTestWebsiteIdentifier;
     private List<ComparisonInfo> comparisonInfoTests;
@@ -57,6 +61,14 @@ public class Test {
 
     public void addComparisonInfo(ComparisonInfo comparisonInfo) {
         comparisonInfoTests.add(comparisonInfo);
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     @Override
