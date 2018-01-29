@@ -1,7 +1,7 @@
 package com.caseyellow.server.central.bootstrap;
 
 import com.caseyellow.server.central.CaseYellowCentral;
-import com.caseyellow.server.central.common.UrlMapper;
+import com.caseyellow.server.central.common.UrlConfig;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadCounter;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteCounter;
@@ -68,7 +68,7 @@ public class ProductionAppBootTest {
     public void setUp() throws Exception {
         List<String> fileDownloadsList = Arrays.asList(FIREFOX_IDENTIFIER, GO_IDENTIFIER, JAVA_SDK_IDENTIFIER, POSTGRESQL_IDENTIFIER, KINECT_IDENTIFIER, ITUNES_IDENTIFIER);
         List<String> speedTestList = Arrays.asList(HOT_IDENTIFIER, ATNT_IDENTIFIER, BEZEQ_IDENTIFIER, FAST_IDENTIFIER, OOKLA_IDENTIFIER, SPEED_OF_IDENTIFIER);
-        UrlMapper urlMapper = mock(UrlMapper.class);
+        UrlConfig urlMapper = mock(UrlConfig.class);
         when(urlMapper.getFileDownloadIdentifiers()).thenReturn(new HashSet<>(fileDownloadsList));
         when(urlMapper.getSpeedTestIdentifiers()).thenReturn(new HashSet<>(speedTestList));
 

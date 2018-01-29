@@ -1,6 +1,6 @@
 package com.caseyellow.server.central.domain.analyzer.services;
 
-import com.caseyellow.server.central.common.UrlMapper;
+import com.caseyellow.server.central.common.UrlConfig;
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
@@ -19,11 +19,11 @@ import static java.util.stream.Collectors.*;
 @Service
 public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
-    private UrlMapper urlMapper;
+    private UrlConfig urlMapper;
     private TestService testService;
 
     @Autowired
-    public StatisticsAnalyzerImpl(TestService testService, UrlMapper urlMapper) {
+    public StatisticsAnalyzerImpl(TestService testService, UrlConfig urlMapper) {
         this.testService = testService;
         this.urlMapper = urlMapper;
     }

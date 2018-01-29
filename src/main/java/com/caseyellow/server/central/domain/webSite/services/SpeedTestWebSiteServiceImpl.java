@@ -1,8 +1,7 @@
 package com.caseyellow.server.central.domain.webSite.services;
 
-import com.caseyellow.server.central.common.UrlMapper;
+import com.caseyellow.server.central.common.UrlConfig;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
-import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteCounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +15,11 @@ import java.util.Random;
 @Service
 public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
 
-    private UrlMapper urlMapper;
+    private UrlConfig urlMapper;
     private SpeedTestWebSiteFactory speedTestWebSiteFactory;
 
     @Autowired
-    public SpeedTestWebSiteServiceImpl(UrlMapper urlMapper, SpeedTestWebSiteFactory speedTestWebSiteFactory) {
+    public SpeedTestWebSiteServiceImpl(UrlConfig urlMapper, SpeedTestWebSiteFactory speedTestWebSiteFactory) {
         this.urlMapper = urlMapper;
         this.speedTestWebSiteFactory = speedTestWebSiteFactory;
     }

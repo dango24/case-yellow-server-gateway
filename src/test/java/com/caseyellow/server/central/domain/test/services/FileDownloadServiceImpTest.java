@@ -1,7 +1,8 @@
 package com.caseyellow.server.central.domain.test.services;
 
 import com.caseyellow.server.central.CaseYellowCentral;
-import com.caseyellow.server.central.common.UrlMapper;
+import com.caseyellow.server.central.common.UrlConfig;
+import com.caseyellow.server.central.common.UrlProperty;
 import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
 import com.caseyellow.server.central.domain.file.services.FileDownloadService;
 import com.caseyellow.server.central.domain.file.services.FileDownloadServiceImp;
@@ -65,15 +66,16 @@ public class FileDownloadServiceImpTest {
 
     @Before
     public void setUp() throws Exception {
-        Map<String, String> fileDownloadUrls  =new HashMap<>();
-        fileDownloadUrls.put(FIREFOX, FIREFOX_URL);
-        fileDownloadUrls.put(GO, GO_URL);
-        fileDownloadUrls.put(JAVA_SDK, JAVA_SDK_URL);
-        fileDownloadUrls.put(POSTGRESQL, POSTGRESQL_URL);
-        fileDownloadUrls.put(KINECT, KINECT_URL);
-        fileDownloadUrls.put(ITUNES, ITUNES_URL);
+        Map<String, UrlProperty> fileDownloadUrls  =new HashMap<>();
+        fileDownloadUrls.put(FIREFOX, new UrlProperty(FIREFOX_URL));
+        fileDownloadUrls.put(GO, new UrlProperty(GO_URL));
+        fileDownloadUrls.put(JAVA_SDK, new UrlProperty(JAVA_SDK_URL));
+        fileDownloadUrls.put(POSTGRESQL, new UrlProperty(POSTGRESQL_URL));
+        fileDownloadUrls.put(KINECT, new UrlProperty(KINECT_URL));
+        fileDownloadUrls.put(ITUNES, new UrlProperty(ITUNES_URL));
 
-        UrlMapper urlMapper = new UrlMapper();
+        UrlConfig urlMapper = new UrlConfig();
+
         urlMapper.setFileDownloadUrls(fileDownloadUrls);
         fileDownloadService = new FileDownloadServiceImp(fileDownloadInfoCounterRepository, urlMapper);
 

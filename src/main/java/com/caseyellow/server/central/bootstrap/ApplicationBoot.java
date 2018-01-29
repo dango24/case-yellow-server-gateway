@@ -1,6 +1,6 @@
 package com.caseyellow.server.central.bootstrap;
 
-import com.caseyellow.server.central.common.UrlMapper;
+import com.caseyellow.server.central.common.UrlConfig;
 import com.caseyellow.server.central.exceptions.AppBootException;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteCounterRepository;
@@ -19,12 +19,12 @@ import static java.util.stream.Collectors.toList;
 @Profile("prod")
 public class ApplicationBoot {
 
-    private UrlMapper urlMapper;
+    private UrlConfig urlMapper;
     private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
     private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
 
     @Autowired
-    public ApplicationBoot(UrlMapper urlMapper, FileDownloadInfoCounterRepository fileDownloadInfoRepository, SpeedTestWebSiteCounterRepository speedTestWebSiteRepository) {
+    public ApplicationBoot(UrlConfig urlMapper, FileDownloadInfoCounterRepository fileDownloadInfoRepository, SpeedTestWebSiteCounterRepository speedTestWebSiteRepository) {
         this.urlMapper = urlMapper;
         this.fileDownloadInfoCounterRepository = fileDownloadInfoRepository;
         this.speedTestWebSiteCounterRepository = speedTestWebSiteRepository;

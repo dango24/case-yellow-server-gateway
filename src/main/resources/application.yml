@@ -24,14 +24,36 @@ logging:
   file: ${log.dir}/case_yellow_central_log.log
 
 fileDownloadUrls:
- firefox: https://ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe
- go: https://storage.googleapis.com/golang/go1.7.1.windows-amd64.msi
- amazon-workSpaces: https://d2td7dqidlhjx7.cloudfront.net/prod/global/windows/Amazon+WorkSpaces.msi
- my-sql: https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-5.7.20.0.msi
- windows-games: https://download.microsoft.com/download/D/0/F/D0F9F1BD-9BE6-49E4-8729-4AAAFCAC20F9/gfwlivesetup.exe
+ firefox:
+  url: https://ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe
+  size: 40797024
+  md5: b44giUlT9avYgJ9kXamnkQ==
+ go:
+  url: https://storage.googleapis.com/golang/go1.7.1.windows-amd64.msi
+  size: 75001856
+  md5: OfiitvYrXo5CaAduxd/ZsA==
+ amazon-workSpaces:
+  url: https://d2td7dqidlhjx7.cloudfront.net/prod/global/windows/Amazon+WorkSpaces.msi
+  size: 41832448
+  md5: ykHyS37REe6ncbvNS+FMWg==
+ my-sql:
+  url: https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-5.7.20.0.msi
+  size: 19443712
+  md5: 1TFuRAIG6w/Z8yz/83zRMg==
+ windows-games:
+  url: https://download.microsoft.com/download/D/0/F/D0F9F1BD-9BE6-49E4-8729-4AAAFCAC20F9/gfwlivesetup.exe
+  size: 73850656
+  md5: +lxxDEYc2VCfHxXcd///6g==
+ bitcoin:
+  url: https://bitcoin.org/bin/bitcoin-core-0.15.1/bitcoin-0.15.1-x86_64-linux-gnu.tar.gz
+  size: 25470246
+  md5: hBJfTIwBCkAO428CDGxLzQ==
+ vlc:
+  url: http://mirror.library.ucy.ac.cy/videolan/vlc/2.2.8/win32/vlc-2.2.8-win32.exe
+  size: 30863288
+  md5: nnNfAIro0yGEr3jTmrtnsw==
+
 # safari: http://support.apple.com/downloads/DL1569/en_US/Safari5.1.10SnowLeopardManual.dmg
- bitcoin: https://bitcoin.org/bin/bitcoin-core-0.15.1/bitcoin-0.15.1-x86_64-linux-gnu.tar.gz
- vlc: http://mirror.library.ucy.ac.cy/videolan/vlc/2.2.8/win32/vlc-2.2.8-win32.exe
 # java-sdk: https://sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip
 # postgres: https://get.enterprisedb.com/postgresql/postgresql-10.0-1-windows-x64.exe
 # kinect: https://download.microsoft.com/download/F/2/D/F2D1012E-3BC6-49C5-B8B3-5ACFF58AF7B8/KinectSDK-v2.0_1409-Setup.exe
@@ -44,8 +66,3 @@ speedTestUrls :
  hot: http://www.hot.net.il/heb/Internet/speed/
  ookla: http://beta.speedtest.net/
  speedof: http://www.speedof.me/
-
-nonFlashIdentifiers:
- - atnt
- - fast
- - speedof

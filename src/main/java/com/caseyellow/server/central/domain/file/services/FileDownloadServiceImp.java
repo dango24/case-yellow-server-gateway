@@ -1,6 +1,6 @@
 package com.caseyellow.server.central.domain.file.services;
 
-import com.caseyellow.server.central.common.UrlMapper;
+import com.caseyellow.server.central.common.UrlConfig;
 import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +15,11 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class FileDownloadServiceImp implements FileDownloadService {
 
-    private UrlMapper urlMapper;
+    private UrlConfig urlMapper;
     private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
 
     @Autowired
-    public FileDownloadServiceImp(FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository, UrlMapper urlMapper) {
+    public FileDownloadServiceImp(FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository, UrlConfig urlMapper) {
         this.fileDownloadInfoCounterRepository = fileDownloadInfoCounterRepository;
         this.urlMapper = urlMapper;
     }

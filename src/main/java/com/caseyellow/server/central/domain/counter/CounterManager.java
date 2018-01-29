@@ -1,6 +1,6 @@
 package com.caseyellow.server.central.domain.counter;
 
-import com.caseyellow.server.central.common.UrlMapper;
+import com.caseyellow.server.central.common.UrlConfig;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteCounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +11,12 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @Service
 public class CounterManager implements CounterService {
 
-    private UrlMapper urlMapper;
+    private UrlConfig urlMapper;
     private SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository;
     private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
 
     @Autowired
-    public CounterManager(UrlMapper urlMapper, SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository, FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository) {
+    public CounterManager(UrlConfig urlMapper, SpeedTestWebSiteCounterRepository speedTestWebSiteCounterRepository, FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository) {
         this.urlMapper = urlMapper;
         this.speedTestWebSiteCounterRepository = speedTestWebSiteCounterRepository;
         this.fileDownloadInfoCounterRepository = fileDownloadInfoCounterRepository;
