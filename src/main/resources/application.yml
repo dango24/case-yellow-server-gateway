@@ -28,37 +28,37 @@ fileDownloadProperties:
   identifier: firefox
   url: https://ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe
   size: 40797024
-  md5: b44giUlT9avYgJ9kXamnkQ==
+  md5: 6F8E20894953F5ABD8809F645DA9A791
  go:
   identifier: go
   url: https://storage.googleapis.com/golang/go1.7.1.windows-amd64.msi
   size: 75001856
-  md5: OfiitvYrXo5CaAduxd/ZsA==
+  md5: 39F8A2B6F62B5E8E4268076EC5DFD9B0
  amazon-workSpaces:
   identifier: amazon-workSpaces
   url: https://d2td7dqidlhjx7.cloudfront.net/prod/global/windows/Amazon+WorkSpaces.msi
   size: 41832448
-  md5: ykHyS37REe6ncbvNS+FMWg==
+  md5: CA41F24B7ED111EEA771BBCD4BE14C5A
  my-sql:
   identifier: my-sql
   url: https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-5.7.20.0.msi
   size: 19443712
-  md5: 1TFuRAIG6w/Z8yz/83zRMg==
+  md5: D5316E440206EB0FD9F32CFFF37CD132
  windows-games:
   identifier: windows-games
   url: https://download.microsoft.com/download/D/0/F/D0F9F1BD-9BE6-49E4-8729-4AAAFCAC20F9/gfwlivesetup.exe
   size: 73850656
-  md5: +lxxDEYc2VCfHxXcd///6g==
+  md5: FA5C710C461CD9509F1F15DC77FFFFEA
  bitcoin:
   identifier: bitcoin
   url: https://bitcoin.org/bin/bitcoin-core-0.15.1/bitcoin-0.15.1-x86_64-linux-gnu.tar.gz
   size: 25470246
-  md5: hBJfTIwBCkAO428CDGxLzQ==
+  md5: 84125F4C8C010A400EE36F020C6C4BCD
  vlc:
   identifier: vlc
   url: http://mirror.library.ucy.ac.cy/videolan/vlc/2.2.8/win32/vlc-2.2.8-win32.exe
   size: 30863288
-  md5: nnNfAIro0yGEr3jTmrtnsw==
+  md5: 9E735F008AE8D32184AF78D39ABB67B3
 
 # safari: http://support.apple.com/downloads/DL1569/en_US/Safari5.1.10SnowLeopardManual.dmg
 # java-sdk: https://sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip
