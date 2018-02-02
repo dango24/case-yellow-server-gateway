@@ -1,7 +1,7 @@
 package com.caseyellow.server.central.domain.file.services;
 
-import com.caseyellow.server.central.common.UrlConfig;
-import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
+import com.caseyellow.server.central.configuration.UrlConfig;
+import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,17 +15,17 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class FileDownloadServiceImp implements FileDownloadService {
 
-    private UrlConfig urlMapper;
+    private UrlConfig urlConfig;
     private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
 
     @Autowired
-    public FileDownloadServiceImp(FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository, UrlConfig urlMapper) {
+    public FileDownloadServiceImp(FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository, UrlConfig urlConfig) {
         this.fileDownloadInfoCounterRepository = fileDownloadInfoCounterRepository;
-        this.urlMapper = urlMapper;
+        this.urlConfig = urlConfig;
     }
 
     @Override
-    public List<FileDownloadMetaData> getNextFileDownloadMetaData(int numOfComparisonPerTest) {
+    public List<FileDownloadProperties> getNextFileDownloadMetaData(int numOfComparisonPerTest) {
         List<String> nextFileDownloadIdentifiers;
 
         if (numOfComparisonPerTest < 0) {
@@ -39,7 +39,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
 
         return nextFileDownloadIdentifiers.subList(0, min(nextFileDownloadIdentifiers.size(), numOfComparisonPerTest))
                                           .stream()
-                                          .map(identifier -> new FileDownloadMetaData(identifier, urlMapper.getFileDownload(identifier)))
+                                          .map(urlConfig::getFileDownloadProperties)
                                           .collect(toList());
     }
 }

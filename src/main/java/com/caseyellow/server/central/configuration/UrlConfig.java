@@ -1,5 +1,6 @@
-package com.caseyellow.server.central.common;
+package com.caseyellow.server.central.configuration;
 
+import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -12,15 +13,14 @@ import java.util.Set;
 public class UrlConfig {
 
     private Map<String, String> speedTestUrls;
-    private Map<String, UrlProperty> fileDownloadUrls;
+    private Map<String, FileDownloadProperties> fileDownloadProperties;
 
     public UrlConfig() {}
 
     @PostConstruct
     private void init() {
-        System.out.println(fileDownloadUrls);
+        System.out.println(fileDownloadProperties);
     }
-
 
     public Map<String, String> getSpeedTestUrls() {
         return speedTestUrls;
@@ -31,7 +31,7 @@ public class UrlConfig {
     }
 
     public Set<String> getFileDownloadIdentifiers() {
-        return fileDownloadUrls.keySet();
+        return fileDownloadProperties.keySet();
     }
 
     public Set<String> getSpeedTestIdentifiers() {
@@ -39,15 +39,19 @@ public class UrlConfig {
     }
 
     public String getFileDownload(String fileIdentifier) {
-        return fileDownloadUrls.get(fileIdentifier).getUrl();
+        return fileDownloadProperties.get(fileIdentifier).getUrl();
     }
 
-    public Map<String, UrlProperty> getFileDownloadUrls() {
-        return fileDownloadUrls;
+    public FileDownloadProperties getFileDownloadProperties(String identifier) {
+        return fileDownloadProperties.get(identifier);
     }
 
-    public void setFileDownloadUrls(Map<String, UrlProperty> fileDownloadUrls) {
-        this.fileDownloadUrls = fileDownloadUrls;
+    public Map<String, FileDownloadProperties> getFileDownloadProperties() {
+        return fileDownloadProperties;
+    }
+
+    public void setFileDownloadProperties(Map<String, FileDownloadProperties> fileDownloadProperties) {
+        this.fileDownloadProperties = fileDownloadProperties;
     }
 
     public boolean isValidSpeedTestIdentifier(String speedTestIdentifier) {
@@ -55,6 +59,6 @@ public class UrlConfig {
     }
 
     public boolean isValidFileDownloadIdentifier(String fileDownloadIdentifier) {
-        return fileDownloadUrls.keySet().contains(fileDownloadIdentifier);
+        return fileDownloadProperties.keySet().contains(fileDownloadIdentifier);
     }
 }

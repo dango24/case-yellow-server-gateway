@@ -23,32 +23,39 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
   file: ${log.dir}/case_yellow_central_log.log
 
-fileDownloadUrls:
+fileDownloadProperties:
  firefox:
+  identifier: firefox
   url: https://ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe
   size: 40797024
   md5: b44giUlT9avYgJ9kXamnkQ==
  go:
+  identifier: go
   url: https://storage.googleapis.com/golang/go1.7.1.windows-amd64.msi
   size: 75001856
   md5: OfiitvYrXo5CaAduxd/ZsA==
  amazon-workSpaces:
+  identifier: amazon-workSpaces
   url: https://d2td7dqidlhjx7.cloudfront.net/prod/global/windows/Amazon+WorkSpaces.msi
   size: 41832448
   md5: ykHyS37REe6ncbvNS+FMWg==
  my-sql:
+  identifier: my-sql
   url: https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-5.7.20.0.msi
   size: 19443712
   md5: 1TFuRAIG6w/Z8yz/83zRMg==
  windows-games:
+  identifier: windows-games
   url: https://download.microsoft.com/download/D/0/F/D0F9F1BD-9BE6-49E4-8729-4AAAFCAC20F9/gfwlivesetup.exe
   size: 73850656
   md5: +lxxDEYc2VCfHxXcd///6g==
  bitcoin:
+  identifier: bitcoin
   url: https://bitcoin.org/bin/bitcoin-core-0.15.1/bitcoin-0.15.1-x86_64-linux-gnu.tar.gz
   size: 25470246
   md5: hBJfTIwBCkAO428CDGxLzQ==
  vlc:
+  identifier: vlc
   url: http://mirror.library.ucy.ac.cy/videolan/vlc/2.2.8/win32/vlc-2.2.8-win32.exe
   size: 30863288
   md5: nnNfAIro0yGEr3jTmrtnsw==

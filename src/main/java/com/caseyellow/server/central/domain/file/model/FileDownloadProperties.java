@@ -1,22 +1,24 @@
-package com.caseyellow.server.central.common;
+package com.caseyellow.server.central.domain.file.model;
 
-public class UrlProperty {
+public class FileDownloadProperties {
 
     private int size;
     private String url;
     private String md5;
+    private String identifier;
 
-    public UrlProperty() {
+    public FileDownloadProperties() {
     }
 
-    public UrlProperty(String url) {
-        this(url, 0, null);
+    public FileDownloadProperties(String url) {
+        this(null, url, 0, null);
     }
 
-    public UrlProperty(String url, int size, String md5) {
+    public FileDownloadProperties(String identifier, String url, int size, String md5) {
         this.url = url;
         this.size = size;
         this.md5 = md5;
+        this.identifier = identifier;
     }
 
     public String getUrl() {
@@ -41,5 +43,13 @@ public class UrlProperty {
 
     public void setMd5(String md5) {
         this.md5 = md5;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

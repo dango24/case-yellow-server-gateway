@@ -1,9 +1,8 @@
 package com.caseyellow.server.central.domain.test.services;
 
 import com.caseyellow.server.central.CaseYellowCentral;
-import com.caseyellow.server.central.common.UrlConfig;
-import com.caseyellow.server.central.common.UrlProperty;
-import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
+import com.caseyellow.server.central.configuration.UrlConfig;
+import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
 import com.caseyellow.server.central.domain.file.services.FileDownloadService;
 import com.caseyellow.server.central.domain.file.services.FileDownloadServiceImp;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
@@ -66,17 +65,17 @@ public class FileDownloadServiceImpTest {
 
     @Before
     public void setUp() throws Exception {
-        Map<String, UrlProperty> fileDownloadUrls  =new HashMap<>();
-        fileDownloadUrls.put(FIREFOX, new UrlProperty(FIREFOX_URL));
-        fileDownloadUrls.put(GO, new UrlProperty(GO_URL));
-        fileDownloadUrls.put(JAVA_SDK, new UrlProperty(JAVA_SDK_URL));
-        fileDownloadUrls.put(POSTGRESQL, new UrlProperty(POSTGRESQL_URL));
-        fileDownloadUrls.put(KINECT, new UrlProperty(KINECT_URL));
-        fileDownloadUrls.put(ITUNES, new UrlProperty(ITUNES_URL));
+        Map<String, FileDownloadProperties> fileDownloadUrls  =new HashMap<>();
+        fileDownloadUrls.put(FIREFOX, new FileDownloadProperties(FIREFOX_URL));
+        fileDownloadUrls.put(GO, new FileDownloadProperties(GO_URL));
+        fileDownloadUrls.put(JAVA_SDK, new FileDownloadProperties(JAVA_SDK_URL));
+        fileDownloadUrls.put(POSTGRESQL, new FileDownloadProperties(POSTGRESQL_URL));
+        fileDownloadUrls.put(KINECT, new FileDownloadProperties(KINECT_URL));
+        fileDownloadUrls.put(ITUNES, new FileDownloadProperties(ITUNES_URL));
 
         UrlConfig urlMapper = new UrlConfig();
 
-        urlMapper.setFileDownloadUrls(fileDownloadUrls);
+        urlMapper.setFileDownloadProperties(fileDownloadUrls);
         fileDownloadService = new FileDownloadServiceImp(fileDownloadInfoCounterRepository, urlMapper);
 
         IntStream.range(0, 100).forEach(i -> addFileDownloadInfo(FIREFOX, FIREFOX_URL));
@@ -113,7 +112,7 @@ public class FileDownloadServiceImpTest {
     private List<String> getNextUrls(int numOfComparisonPerTest) {
         return fileDownloadService.getNextFileDownloadMetaData(numOfComparisonPerTest)
                                   .stream()
-                                  .map(FileDownloadMetaData::getFileURL)
+                                  .map(FileDownloadProperties::getUrl)
                                   .collect(Collectors.toList());
     }
 

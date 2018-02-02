@@ -2,7 +2,7 @@ package com.caseyellow.server.central.controllers;
 
 import com.caseyellow.server.central.configuration.GoogleVisionConfiguration;
 import com.caseyellow.server.central.domain.analyzer.model.GoogleVisionKey;
-import com.caseyellow.server.central.domain.file.model.FileDownloadMetaData;
+import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
 import com.caseyellow.server.central.domain.test.model.FailedTestDetails;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
 import com.caseyellow.server.central.domain.test.model.Test;
@@ -54,19 +54,10 @@ public class CentralController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/google-vision-key",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public GoogleVisionKey googleVisionKey() {
-        logger.info("Received GoogleVisionKey GET request");
-        return new GoogleVisionKey(googleVisionConfiguration.googleVisionKey());
-    }
-
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/next-urls",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<FileDownloadMetaData> getFileDownloadMetaData(@RequestParam("num_of_comparison_per_test") int numOfComparisonPerTest) {
+    public List<FileDownloadProperties> getFileDownloadMetaData(@RequestParam("num_of_comparison_per_test") int numOfComparisonPerTest) {
         logger.info("Received getFileDownloadMetaData GET request with num_of_comparison_per_test: " + numOfComparisonPerTest);
         return fileDownloadService.getNextFileDownloadMetaData(numOfComparisonPerTest);
     }
@@ -85,6 +76,15 @@ public class CentralController {
     public List<Test> getAllTests() {
         logger.info("Received getAllTests GET request");
         return testService.getAllTests();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/google-vision-key",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public GoogleVisionKey googleVisionKey() {
+        logger.info("Received GoogleVisionKey GET request");
+        return new GoogleVisionKey(googleVisionConfiguration.googleVisionKey());
     }
 
     @ResponseStatus(HttpStatus.OK)

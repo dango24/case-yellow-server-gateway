@@ -1,6 +1,6 @@
 package com.caseyellow.server.central.domain.analyzer.services;
 
-import com.caseyellow.server.central.common.UrlConfig;
+import com.caseyellow.server.central.configuration.UrlConfig;
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;

@@ -1,6 +1,6 @@
 package com.caseyellow.server.central.domain.webSite.services;
 
-import com.caseyellow.server.central.common.UrlConfig;
+import com.caseyellow.server.central.configuration.UrlConfig;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
