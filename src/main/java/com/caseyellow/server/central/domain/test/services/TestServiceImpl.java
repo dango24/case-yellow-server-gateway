@@ -2,11 +2,14 @@ package com.caseyellow.server.central.domain.test.services;
 
 import com.caseyellow.server.central.common.Converter;
 import com.caseyellow.server.central.common.Validator;
+import com.caseyellow.server.central.configuration.ConnectionConfig;
 import com.caseyellow.server.central.domain.counter.CounterService;
 import com.caseyellow.server.central.domain.test.model.*;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
+import com.caseyellow.server.central.persistence.test.dao.UserDetailsDAO;
 import com.caseyellow.server.central.persistence.test.repository.FailedTestRepository;
 import com.caseyellow.server.central.persistence.test.repository.TestRepository;
+import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
 import com.caseyellow.server.central.services.storage.FileStorageService;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
@@ -16,9 +19,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static com.caseyellow.server.central.common.Validator.validateTest;
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -26,21 +31,27 @@ public class TestServiceImpl implements TestService {
 
     private Logger logger = Logger.getLogger(TestServiceImpl.class);
 
-    private TestRepository testRepository;
     private CounterService counterService;
+    private ConnectionConfig connectionConfig;
+    private TestRepository testRepository;
     private FailedTestRepository failedTestRepository;
+    private UserDetailsRepository userDetailsRepository;
     private FileStorageService fileStorageService;
 
     @Autowired
     public TestServiceImpl(TestRepository testRepository,
                            CounterService counterService,
+                           ConnectionConfig connectionConfig,
                            FileStorageService fileStorageService,
-                           FailedTestRepository failedTestRepository) {
+                           FailedTestRepository failedTestRepository,
+                           UserDetailsRepository userDetailsRepository) {
 
         this.testRepository = testRepository;
         this.counterService = counterService;
+        this.connectionConfig = connectionConfig;
         this.fileStorageService = fileStorageService;
         this.failedTestRepository = failedTestRepository;
+        this.userDetailsRepository = userDetailsRepository;
     }
 
     @Override
@@ -55,6 +66,11 @@ public class TestServiceImpl implements TestService {
 
     public List<TestDAO> getAllDAOTests() {
         return testRepository.findAll();
+    }
+
+    @Override
+    public Map<String, List<String>> getConnectionDetails() {
+        return connectionConfig.getAllConnectionDetails();
     }
 
     @Override
@@ -80,6 +96,13 @@ public class TestServiceImpl implements TestService {
                          .thenApply(Converter::convertTestModelToDAO)
                          .exceptionally(this::handleSaveTestException)
                          .thenAccept(this::save);
+    }
+
+    @Override
+    public boolean isUserExist(String userName) {
+        UserDetailsDAO userDetailsDAO = userDetailsRepository.findByUserName(userName);
+
+        return nonNull(userDetailsDAO);
     }
 
     private Test removeUnsuccessfulTests(Test test) {

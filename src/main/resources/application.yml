@@ -73,3 +73,26 @@ speedTestUrls :
  hot: http://www.hot.net.il/heb/Internet/speed/
  ookla: http://beta.speedtest.net/
  speedof: http://www.speedof.me/
+
+connection-details:
+  speed:
+    - 15
+    - 40
+    - 100
+    - 200
+
+  isp:
+    - 012 SMILE
+    - 013
+    - 019 TELECOM
+    - BEZEQ BENLEUMI
+    - NETVISION
+    - PARTNER
+    - RIMON
+    - HOT-NET
+
+  infrastructure:
+    - HOT
+    - BEZEQ
+    - UNLIMITED
+    - PARTNER

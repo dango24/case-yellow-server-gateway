@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by writeToFile on 6/25/17.
@@ -51,6 +52,15 @@ public class CentralController {
     public SpeedTestMetaData getNextSpeedTestWebSite() {
         logger.info("Received getNextSpeedTestWebSite GET request");
         return speedTestWebSiteService.getNextSpeedTestWebSite();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/is-user-exist",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean isUserExist(@RequestParam("user_name") String userName) {
+        logger.info("Received isUserExist GET request");
+        return testService.isUserExist(userName);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -99,6 +109,13 @@ public class CentralController {
     public void failedTest(@RequestBody FailedTestDetails failedTestDetails) throws IOException {
         logger.info("Received failedTest POST request with failed test : " + failedTestDetails);
         testService.failedTest(failedTestDetails);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/connection-details")
+    private Map<String, List<String>> connectionDetails() {
+        logger.info("Received getConnectionDetails GET request with");
+        return testService.getConnectionDetails();
     }
 
 }
