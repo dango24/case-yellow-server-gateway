@@ -33,7 +33,7 @@ public class S3FileStorageService implements FileStorageService {
 
     private Logger logger = Logger.getLogger(S3FileStorageService.class);
 
-    private static final String SUFFIX = ".png";
+    private static final String FILE_EXTENSION = ".png";
 
     private AmazonS3 s3Client;
     private AWSConfiguration awsConfiguration;
@@ -86,12 +86,13 @@ public class S3FileStorageService implements FileStorageService {
     }
 
     private String createFileUniquePath(String userIP, String fileName) {
-        int separationIndex = fileName.indexOf("_");
-        separationIndex = separationIndex >= 0 ? separationIndex : 0;
-        String uniquePath = new StringBuilder(String.valueOf(System.currentTimeMillis())).reverse().toString();
         String userIdentifier = userIP.replaceAll("\\.", "");
 
-        return userIdentifier + "/" + uniquePath + ";" + fileName.substring(separationIndex) + SUFFIX;
+        return new StringBuilder().append(userIdentifier)
+                                  .append(File.separator)
+                                  .append(fileName)
+                                  .append(FILE_EXTENSION)
+                                  .toString();
     }
 
     public boolean isHealthy() {

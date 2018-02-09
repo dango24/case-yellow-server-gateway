@@ -23,6 +23,7 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - %m%n"
   file: ${log.dir}/case_yellow_central_log.log
 
+# Files Download Properties
 fileDownloadProperties:
  firefox:
   identifier: firefox
