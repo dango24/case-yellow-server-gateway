@@ -79,6 +79,12 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    public void saveUserDetails(UserDetails userDetails) {
+        UserDetailsDAO userDetailsDAO = Converter.convertUserDetailsModelToDAO(userDetails);
+        userDetailsRepository.save(userDetailsDAO);
+    }
+
+    @Override
     public void failedTest(FailedTestDetails failedTestDetails) {
         failedTestRepository.save(Converter.convertFailedTestModelToDAO(failedTestDetails));
     }

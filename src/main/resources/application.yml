@@ -83,10 +83,9 @@ connection-details:
 
   isp:
     - 012 SMILE
-    - 013
+    - 013 NETVISION
     - 019 TELECOM
     - BEZEQ BENLEUMI
-    - NETVISION
     - PARTNER
     - RIMON
     - HOT-NET

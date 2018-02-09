@@ -1,17 +1,11 @@
 package com.caseyellow.server.central.common;
 
 import com.caseyellow.server.central.domain.file.model.FileDownloadInfo;
-import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
-import com.caseyellow.server.central.domain.test.model.FailedTestDetails;
-import com.caseyellow.server.central.domain.test.model.SystemInfo;
-import com.caseyellow.server.central.domain.test.model.Test;
+import com.caseyellow.server.central.domain.test.model.*;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestWebSite;
 import com.caseyellow.server.central.exceptions.ConverterException;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
-import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
-import com.caseyellow.server.central.persistence.test.dao.FailedTestDAO;
-import com.caseyellow.server.central.persistence.test.dao.SystemInfoDAO;
-import com.caseyellow.server.central.persistence.test.dao.TestDAO;
+import com.caseyellow.server.central.persistence.test.dao.*;
 import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 
@@ -207,6 +201,16 @@ public interface Converter {
         failedTestDetails.setPath(failedTestDAO.getPath());
 
         return failedTestDetails;
+    }
+
+    static UserDetailsDAO convertUserDetailsModelToDAO(UserDetails userDetails) {
+        UserDetailsDAO userDetailsDAO = new UserDetailsDAO();
+        userDetailsDAO.setUserName(userDetails.getUserName());
+        userDetailsDAO.setInfrastructure(userDetails.getInfrastructure());
+        userDetailsDAO.setIsp(userDetails.getIsp());
+        userDetailsDAO.setSpeed(userDetails.getSpeed());
+
+        return userDetailsDAO;
     }
 
     static <T extends Object, R extends Object> List<R> convertModelToDto(Function<T, R> convectorFunction,

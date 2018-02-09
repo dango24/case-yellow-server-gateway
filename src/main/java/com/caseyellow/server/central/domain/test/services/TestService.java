@@ -3,6 +3,7 @@ package com.caseyellow.server.central.domain.test.services;
 import com.caseyellow.server.central.domain.test.model.FailedTestDetails;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
 import com.caseyellow.server.central.domain.test.model.Test;
+import com.caseyellow.server.central.domain.test.model.UserDetails;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 
 import java.util.List;
@@ -19,4 +20,5 @@ public interface TestService {
     List<TestDAO> getAllDAOTests();
     Map<String, List<String>> getConnectionDetails();
     PreSignedUrl generatePreSignedUrl(String userIP, String fileName);
+    void saveUserDetails(UserDetails userDetails);
 }

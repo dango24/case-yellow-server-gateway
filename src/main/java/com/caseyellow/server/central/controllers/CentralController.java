@@ -6,6 +6,7 @@ import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
 import com.caseyellow.server.central.domain.test.model.FailedTestDetails;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
 import com.caseyellow.server.central.domain.test.model.Test;
+import com.caseyellow.server.central.domain.test.model.UserDetails;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
 import com.caseyellow.server.central.domain.webSite.services.SpeedTestWebSiteService;
 import com.caseyellow.server.central.domain.file.services.FileDownloadService;
@@ -116,6 +117,13 @@ public class CentralController {
     private Map<String, List<String>> connectionDetails() {
         logger.info("Received getConnectionDetails GET request with");
         return testService.getConnectionDetails();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/save-user-details")
+    public void saveUserDetails(@RequestBody UserDetails userDetails) {
+        logger.info("Received saveConnectionDetails POST request with user details: " + userDetails);
+        testService.saveUserDetails(userDetails);
     }
 
 }
