@@ -85,6 +85,7 @@ connection-details:
   isp:
     - 012 SMILE
     - 013 NETVISION
+    - 018 XPHONE
     - 019 TELECOM
     - BEZEQ BENLEUMI
     - PARTNER
