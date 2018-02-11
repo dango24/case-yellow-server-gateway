@@ -10,7 +10,4 @@ public interface AnalysisRequests {
 
     @POST("analyze-image")
     Call<AnalyzedImage> uploadImage(@Query("identifier") String identifier, @Body GoogleVisionRequest googleVisionRequest);
-
-    @GET("analyze-nonflash")
-    Call<AnalyzedImage> analyzeNonFlash(String identifier, String nonFlashResult);
 }
