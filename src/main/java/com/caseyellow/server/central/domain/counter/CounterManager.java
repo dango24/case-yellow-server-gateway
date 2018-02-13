@@ -23,7 +23,7 @@ public class CounterManager implements CounterService {
     }
 
     @Override
-    public void addComparisionInfoDetails(String speedTestIdentifier, String fileDownloadIdentifier) {
+    public void increaseComparisionInfoDetails(String speedTestIdentifier, String fileDownloadIdentifier) {
 
         if (isNotEmpty(speedTestIdentifier) && urlConfig.isValidSpeedTestIdentifier(speedTestIdentifier)) {
             speedTestWebSiteCounterRepository.addSpeedTestWebSite(speedTestIdentifier);
