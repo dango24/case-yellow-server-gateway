@@ -138,7 +138,7 @@ public class TestServiceImpl implements TestService {
         test.getComparisonInfoTests()
             .stream()
             .map(ComparisonInfoIdentifiers::new)
-            .forEach(identifiers -> counterService.addComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
+            .forEach(identifiers -> counterService.increaseComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
 
         return test;
     }
