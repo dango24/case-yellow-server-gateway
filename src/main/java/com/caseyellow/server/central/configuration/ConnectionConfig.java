@@ -13,22 +13,19 @@ import java.util.Map;
 public class ConnectionConfig {
 
     private List<String> speed;
-    private List<String> isp;
     private List<String> infrastructure;
 
     public ConnectionConfig() {
     }
 
-    public ConnectionConfig(List<String> speed, List<String> isp, List<String> infrastructure) {
+    public ConnectionConfig(List<String> speed, List<String> infrastructure) {
         this.speed = speed;
-        this.isp = isp;
         this.infrastructure = infrastructure;
     }
 
     public Map<String, List<String>> getAllConnectionDetails() {
         Map<String, List<String>> allConnectionDetails = new HashMap<>();
         allConnectionDetails.put("speed", speed);
-        allConnectionDetails.put("isp", isp);
         allConnectionDetails.put("infrastructure", infrastructure);
 
         return allConnectionDetails;
@@ -40,14 +37,6 @@ public class ConnectionConfig {
 
     public void setSpeed(List<String> speed) {
         this.speed = speed;
-    }
-
-    public List<String> getIsp() {
-        return isp;
-    }
-
-    public void setIsp(List<String> isp) {
-        this.isp = isp;
     }
 
     public List<String> getInfrastructure() {

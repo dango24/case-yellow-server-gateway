@@ -7,6 +7,9 @@ spring.profiles.active: prod
 # Services
 analysis_url: http://localhost:7008/analysis/
 
+# FileDownloadService properties
+num_of_comparison_per_test: 3
+
 # Flyway
 flyway.baseline-on-migrate: true
 
@@ -81,16 +84,6 @@ connection-details:
     - 40
     - 100
     - 200
-
-  isp:
-    - 012 SMILE
-    - 013 NETVISION
-    - 018 XPHONE
-    - 019 TELECOM
-    - BEZEQ BENLEUMI
-    - PARTNER
-    - RIMON
-    - HOT-NET
 
   infrastructure:
     - HOT

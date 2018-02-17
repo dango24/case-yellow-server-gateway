@@ -68,9 +68,9 @@ public class CentralController {
     @GetMapping(value = "/next-urls",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<FileDownloadProperties> getFileDownloadMetaData(@RequestParam("num_of_comparison_per_test") int numOfComparisonPerTest) {
-        logger.info("Received getFileDownloadMetaData GET request with num_of_comparison_per_test: " + numOfComparisonPerTest);
-        return fileDownloadService.getNextFileDownloadMetaData(numOfComparisonPerTest);
+    public List<FileDownloadProperties> getFileDownloadMetaData() {
+        logger.info("Received getFileDownloadMetaData GET request");
+        return fileDownloadService.getNextFileDownloadMetaData();
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)

@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalDouble;
 import java.util.function.Function;
 
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.*;
 
 @Service
@@ -45,7 +47,9 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
         return getComparisons().entrySet()
                                .stream()
-                               .collect(toMap(Map.Entry::getKey, entry -> createIdentifierDetails(entry.getKey(), entry.getValue())));
+                               .map(entry -> createIdentifierDetails(entry.getKey(), entry.getValue()))
+                               .filter(this::isValidIdentifierDetails)
+                               .collect(toMap(IdentifierDetails::getIdentifier, Function.identity()));
     }
 
     private IdentifierDetails createIdentifierDetails(String identifier, List<ComparisonInfoDAO> comparisonInfos) {
@@ -53,6 +57,10 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         double meanRatio = getMeanRatio(comparisonInfos);
 
         return new IdentifierDetails(identifier, meanRatio, size);
+    }
+
+    private boolean isValidIdentifierDetails(IdentifierDetails identifierDetails) {
+        return identifierDetails.getMeanRatio() > 0;
     }
 
     private Map<String, List<ComparisonInfoDAO>> getComparisons() {
@@ -65,24 +73,38 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
     private double getMeanRatio(List<ComparisonInfoDAO> comparisons){
 
-        return comparisons.stream()
+        OptionalDouble optionalDouble =
+                comparisons.stream()
+                          .filter(this::isValidSubTest)
                           .mapToDouble(this::getRatio)
                           .filter(this::isNotOutlier)
-                          .average()
-                          .getAsDouble();
+                          .average();
+
+        if (optionalDouble.isPresent()) {
+            return optionalDouble.getAsDouble();
+        } else {
+            return -1;
+        }
+    }
+
+    private boolean isValidSubTest(ComparisonInfoDAO comparisonInfo) {
+        if (isNull(comparisonInfo.getSpeedTestWebSiteDAO()) ||
+            isNull(comparisonInfo.getSpeedTestWebSiteDAO())) {
+            return false;
+        }
+
+        double speedTestRate = comparisonInfo.getSpeedTestWebSiteDAO().getDownloadRateInMbps();
+        double downloadRate = comparisonInfo.getFileDownloadInfoDAO().getFileDownloadRateKBPerSec();
+
+        return speedTestRate > 0 && downloadRate > 0;
     }
 
     private double getRatio(ComparisonInfoDAO comprison){
-
-        double speedtestRate = calculateDownloadRateFromMbpsToKBps(comprison.getSpeedTestWebSiteDAO().getDownloadRateInMbps());
+        double speedTestRate = calculateDownloadRateFromMbpsToKBps(comprison.getSpeedTestWebSiteDAO().getDownloadRateInMbps());
         double downloadRate = comprison.getFileDownloadInfoDAO().getFileDownloadRateKBPerSec();
+        double ratio = downloadRate / speedTestRate;
 
-        double dango = downloadRate / speedtestRate;
-
-        if (dango > 100) {
-            System.out.println("dango");
-        }
-        return dango;
+        return ratio;
     }
 
     private boolean isNotOutlier(double ratio) {

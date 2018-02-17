@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +95,8 @@ public class FileDownloadServiceImpTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void getNextUrlsWithNegativeArgument() throws Exception {
-        fileDownloadService.getNextFileDownloadMetaData(-1);
+        addNumOfComparisonPerTest(-1);
+        fileDownloadService.getNextFileDownloadMetaData();
     }
 
     @Test
@@ -109,8 +111,9 @@ public class FileDownloadServiceImpTest {
         assertThat(nextUrls, containsInAnyOrder(KINECT_URL, POSTGRESQL_URL, ITUNES_URL, FIREFOX_URL, GO_URL, JAVA_SDK_URL));
     }
 
-    private List<String> getNextUrls(int numOfComparisonPerTest) {
-        return fileDownloadService.getNextFileDownloadMetaData(numOfComparisonPerTest)
+    private List<String> getNextUrls(int numOfComparisonPerTest) throws NoSuchFieldException, IllegalAccessException {
+        addNumOfComparisonPerTest(numOfComparisonPerTest);
+        return fileDownloadService.getNextFileDownloadMetaData()
                                   .stream()
                                   .map(FileDownloadProperties::getUrl)
                                   .collect(Collectors.toList());
@@ -119,6 +122,12 @@ public class FileDownloadServiceImpTest {
     private void addFileDownloadInfo(String identifier, String url) {
         fileDownloadInfoRepository.save(new FileDownloadInfoDAO(identifier, url));
         fileDownloadInfoCounterRepository.addFileDownloadInfo(identifier);
+    }
+
+    private void addNumOfComparisonPerTest(int numOfComparisonPerTest) throws NoSuchFieldException, IllegalAccessException {
+        Field numOfComparisonPerTestField = FileDownloadServiceImp.class.getDeclaredField("numOfComparisonPerTest");
+        numOfComparisonPerTestField.setAccessible(true);
+        numOfComparisonPerTestField.set(fileDownloadService, numOfComparisonPerTest);
     }
 
 }
