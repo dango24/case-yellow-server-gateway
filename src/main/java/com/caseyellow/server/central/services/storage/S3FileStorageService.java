@@ -89,7 +89,7 @@ public class S3FileStorageService implements FileStorageService {
         String userIdentifier = userIP.replaceAll("\\.", "");
 
         return new StringBuilder().append(userIdentifier)
-                                  .append("/")
+                                  .append("-")
                                   .append(fileName)
                                   .append(FILE_EXTENSION)
                                   .toString();
