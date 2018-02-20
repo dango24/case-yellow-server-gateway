@@ -6,5 +6,5 @@ import java.io.File;
 
 public interface FileStorageService {
     File getFile(String identifier);
-    PreSignedUrl generatePreSignedUrl(String userIP, String fileName);
+    PreSignedUrl generatePreSignedUrl(String fileKey);
 }

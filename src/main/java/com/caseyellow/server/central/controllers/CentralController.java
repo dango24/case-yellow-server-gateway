@@ -100,9 +100,9 @@ public class CentralController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/pre-signed-url")
-    public PreSignedUrl generatePreSignedUrl(@RequestParam("user_ip")String userIP, @RequestParam("file_name")String fileName) {
-        logger.info("Received generatePreSignedUrl GET request for file name: " + fileName);
-        return testService.generatePreSignedUrl(userIP, fileName);
+    public PreSignedUrl generatePreSignedUrl(@RequestParam("file_key")String fileKey) {
+        logger.info("Received generatePreSignedUrl GET request for file key: " + fileKey);
+        return testService.generatePreSignedUrl(fileKey);
     }
 
     @ResponseStatus(HttpStatus.OK)

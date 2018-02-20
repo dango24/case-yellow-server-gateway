@@ -74,8 +74,8 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public PreSignedUrl generatePreSignedUrl(String userIP, String fileName) {
-        return fileStorageService.generatePreSignedUrl(userIP, fileName);
+    public PreSignedUrl generatePreSignedUrl(String fileKey) {
+        return fileStorageService.generatePreSignedUrl(fileKey);
     }
 
     @Override

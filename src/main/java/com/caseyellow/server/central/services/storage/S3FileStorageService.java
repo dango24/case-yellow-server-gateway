@@ -33,8 +33,6 @@ public class S3FileStorageService implements FileStorageService {
 
     private Logger logger = Logger.getLogger(S3FileStorageService.class);
 
-    private static final String FILE_EXTENSION = ".png";
-
     private AmazonS3 s3Client;
     private AWSConfiguration awsConfiguration;
 
@@ -75,31 +73,6 @@ public class S3FileStorageService implements FileStorageService {
     }
 
     @Override
-    public PreSignedUrl generatePreSignedUrl(String userIP, String fileName) {
-        String uniquePath = createFileUniquePath(userIP, fileName);
-        return generatePreSignedUrl(uniquePath);
-    }
-
-    private String createFileUniquePath(String userIP, String fileName) {
-        String userIdentifier = userIP.replaceAll("\\.", "");
-
-        return new StringBuilder().append(userIdentifier)
-                                  .append("-")
-                                  .append(fileName)
-                                  .append(FILE_EXTENSION)
-                                  .toString();
-    }
-
-    public boolean isHealthy() {
-        if (s3Client.doesObjectExist(awsConfiguration.bucketName(), awsConfiguration.healthPath())) {
-            logger.info("The connection to s3 is healthy");
-            return true;
-        } else {
-            logger.error("Healthy check to s3 failed");
-            return false;
-        }
-    }
-
     public PreSignedUrl generatePreSignedUrl(String objectKey) {
         Date expiration = new Date();
         expiration.setTime(expiration.getTime() + TimeUnit.HOURS.toMillis(1)); // Add 1 hour.
@@ -111,5 +84,15 @@ public class S3FileStorageService implements FileStorageService {
 
 
         return new PreSignedUrl(preSignedUrl, objectKey);
+    }
+
+    public boolean isHealthy() {
+        if (s3Client.doesObjectExist(awsConfiguration.bucketName(), awsConfiguration.healthPath())) {
+            logger.info("The connection to s3 is healthy");
+            return true;
+        } else {
+            logger.error("Healthy check to s3 failed");
+            return false;
+        }
     }
 }

@@ -19,6 +19,6 @@ public interface TestService {
     List<Test> getAllTests();
     List<TestDAO> getAllDAOTests();
     Map<String, List<String>> getConnectionDetails();
-    PreSignedUrl generatePreSignedUrl(String userIP, String fileName);
+    PreSignedUrl generatePreSignedUrl(String fileKey);
     void saveUserDetails(UserDetails userDetails);
 }
