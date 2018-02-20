@@ -41,8 +41,8 @@ fileDownloadProperties:
  amazon-workSpaces:
   identifier: amazon-workSpaces
   url: https://d2td7dqidlhjx7.cloudfront.net/prod/global/windows/Amazon+WorkSpaces.msi
-  size: 41832448
-  md5: CA41F24B7ED111EEA771BBCD4BE14C5A
+  size: 41840640
+  md5: 5934D5DF3FFC688F590B517EFA5EEC12
  my-sql:
   identifier: my-sql
   url: https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-web-community-5.7.20.0.msi
