@@ -59,19 +59,8 @@ public class S3FileStorageService implements FileStorageService {
 
     @Override
     public File getFile(String identifier) {
-        String fileName = identifier.split("/")[1];
-        return getFileFromS3(identifier, fileName);
-    }
-
-    @Override
-    public PreSignedUrl generatePreSignedUrl(String userIP, String fileName) {
-        String uniquePath = createFileUniquePath(userIP, fileName);
-        return generatePreSignedUrl(uniquePath);
-    }
-
-    private File getFileFromS3(String identifier, String fileName) {
         logger.info("Fetch file from s3: " + identifier);
-        File newFile = new File(System.getProperty("java.io.tmpdir"), fileName);
+        File newFile = new File(System.getProperty("java.io.tmpdir"), identifier.substring(identifier.lastIndexOf("_") +1));
         S3Object object = s3Client.getObject(new GetObjectRequest(awsConfiguration.bucketName(), identifier));
 
         try (InputStream objectData = object.getObjectContent()) {
@@ -83,6 +72,12 @@ public class S3FileStorageService implements FileStorageService {
         }
 
         return newFile;
+    }
+
+    @Override
+    public PreSignedUrl generatePreSignedUrl(String userIP, String fileName) {
+        String uniquePath = createFileUniquePath(userIP, fileName);
+        return generatePreSignedUrl(uniquePath);
     }
 
     private String createFileUniquePath(String userIP, String fileName) {

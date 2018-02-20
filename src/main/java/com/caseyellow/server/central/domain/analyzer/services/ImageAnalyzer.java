@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.domain.analyzer.services;
 
+import com.caseyellow.server.central.common.Utils;
 import com.caseyellow.server.central.domain.analyzer.model.GoogleVisionRequest;
 import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
@@ -40,9 +41,11 @@ public class ImageAnalyzer {
     }
 
     private void analyzeImage(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
+        File imageSnapshot = null;
+        logger.info("Start analyzing image: " + speedTestWebSiteDAO.getS3FileAddress());
+
         try {
-            logger.info("Start analyzing image: " + speedTestWebSiteDAO.getS3FileAddress());
-            File imageSnapshot = fileStorageService.getFile(speedTestWebSiteDAO.getS3FileAddress());
+            imageSnapshot = fileStorageService.getFile(speedTestWebSiteDAO.getS3FileAddress());
             GoogleVisionRequest googleVisionRequest = new GoogleVisionRequest(imageSnapshot.getAbsolutePath());
             double analyzedImageResult = imageAnalyzerService.analyzeImage(speedTestWebSiteDAO.getSpeedTestIdentifier(), googleVisionRequest);
             speedTestWebSiteRepository.updateAnalyzedImageResult(speedTestWebSiteDAO.getId(), analyzedImageResult);
@@ -51,6 +54,8 @@ public class ImageAnalyzer {
         } catch (Exception e) {
             speedTestWebSiteRepository.updateAnalyzedState(speedTestWebSiteDAO.getId(), AnalyzedState.FAILURE);
             logger.error("AnalyzeImage failed for image: " + speedTestWebSiteDAO.getS3FileAddress() + " cause: " + e.getMessage(), e);
+        } finally {
+            Utils.deleteFile(imageSnapshot);
         }
     }
 }

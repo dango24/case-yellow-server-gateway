@@ -1,12 +1,17 @@
 package com.caseyellow.server.central.common;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
+import static java.util.Objects.nonNull;
+
 public interface Utils {
+
+    Logger log = Logger.getLogger(Utils.class);
 
     static byte[] createImageBase64Encode(String imgPath) throws IOException {
         File imageFile = new File(imgPath);
@@ -19,5 +24,15 @@ public interface Utils {
         double MBPerSec = downloadRateInMbps / 8;
 
         return MBPerSec * Math.pow(2, 10); // Transform to KB
+    }
+
+    static void deleteFile(File file) {
+        try {
+            if (nonNull(file) && file.exists()) {
+                FileUtils.deleteDirectory(file);
+            }
+        } catch (IOException e) {
+            log.error(String.format("Failed to delete file: %s", e.getMessage()));
+        }
     }
 }
