@@ -190,6 +190,7 @@ public interface Converter {
         failedTestDAO.setIp(failedTestDetails.getIp());
         failedTestDAO.setErrorMessage(failedTestDetails.getErrorMessage());
         failedTestDAO.setPath(failedTestDetails.getPath());
+        failedTestDAO.setUser(failedTestDetails.getUser());
 
         return failedTestDAO;
     }

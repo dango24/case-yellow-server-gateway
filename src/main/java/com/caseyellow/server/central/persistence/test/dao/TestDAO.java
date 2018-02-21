@@ -25,6 +25,9 @@ public class TestDAO {
 
     private String speedTestWebsiteIdentifier;
 
+    @Column(name = "timestamp")
+    private Long timestamp;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "test_id")
     private List<ComparisonInfoDAO> comparisonInfoDAOTests;
@@ -81,6 +84,22 @@ public class TestDAO {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public static class TestBuilder {

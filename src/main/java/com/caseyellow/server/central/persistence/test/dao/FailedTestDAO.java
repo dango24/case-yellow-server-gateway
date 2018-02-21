@@ -14,6 +14,12 @@ public class FailedTestDAO {
     private String path;
     private String errorMessage;
 
+    @Column(name = "user_name")
+    private String user;
+
+    @Column(name = "timestamp")
+    private Long timestamp;
+
     public FailedTestDAO() {
     }
 
@@ -53,5 +59,21 @@ public class FailedTestDAO {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 }

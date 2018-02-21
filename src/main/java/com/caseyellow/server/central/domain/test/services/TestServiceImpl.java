@@ -5,6 +5,7 @@ import com.caseyellow.server.central.common.Validator;
 import com.caseyellow.server.central.configuration.ConnectionConfig;
 import com.caseyellow.server.central.domain.counter.CounterService;
 import com.caseyellow.server.central.domain.test.model.*;
+import com.caseyellow.server.central.persistence.test.dao.FailedTestDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.test.dao.UserDetailsDAO;
 import com.caseyellow.server.central.persistence.test.repository.FailedTestRepository;
@@ -85,8 +86,21 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    public long userLastTest(String user) {
+        return testRepository.lastUserFailedTest(user);
+    }
+
+    @Override
+    public long userLastFailedTest(String user) {
+        return failedTestRepository.lastUserFailedTest(user);
+    }
+
+    @Override
     public void failedTest(FailedTestDetails failedTestDetails) {
-        failedTestRepository.save(Converter.convertFailedTestModelToDAO(failedTestDetails));
+        FailedTestDAO failedTest = Converter.convertFailedTestModelToDAO(failedTestDetails);
+        failedTest.setTimestamp(System.currentTimeMillis());
+
+        failedTestRepository.save(failedTest);
     }
 
     @Override
@@ -125,7 +139,11 @@ public class TestServiceImpl implements TestService {
 
     private void save(TestDAO testDAO) {
         try {
-            testRepository.save(testDAO);
+
+            if (nonNull(testDAO)) {
+                testDAO.setTimestamp(System.currentTimeMillis());
+                testRepository.save(testDAO);
+            }
 
         } catch (Exception e) {
             logger.error("Failed to save test, " + e.getMessage(), e);

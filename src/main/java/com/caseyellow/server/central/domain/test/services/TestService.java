@@ -21,4 +21,6 @@ public interface TestService {
     Map<String, List<String>> getConnectionDetails();
     PreSignedUrl generatePreSignedUrl(String fileKey);
     void saveUserDetails(UserDetails userDetails);
+    long userLastTest(String user);
+    long userLastFailedTest(String user);
 }

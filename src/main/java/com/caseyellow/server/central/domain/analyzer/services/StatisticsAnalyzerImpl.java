@@ -3,8 +3,10 @@ package com.caseyellow.server.central.domain.analyzer.services;
 import com.caseyellow.server.central.configuration.UrlConfig;
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.test.services.TestService;
+import com.caseyellow.server.central.exceptions.AnalyzerException;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
+import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.util.function.Function;
 
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.*;
 
 @Service
@@ -23,11 +26,13 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
     private UrlConfig urlMapper;
     private TestService testService;
+    private UserDetailsRepository userDetailsRepository;
 
     @Autowired
-    public StatisticsAnalyzerImpl(TestService testService, UrlConfig urlMapper) {
-        this.testService = testService;
+    public StatisticsAnalyzerImpl(TestService testService, UserDetailsRepository userDetailsRepository, UrlConfig urlMapper) {
         this.urlMapper = urlMapper;
+        this.testService = testService;
+        this.userDetailsRepository = userDetailsRepository;
     }
 
     @Override
@@ -50,6 +55,26 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                                .map(entry -> createIdentifierDetails(entry.getKey(), entry.getValue()))
                                .filter(this::isValidIdentifierDetails)
                                .collect(toMap(IdentifierDetails::getIdentifier, Function.identity()));
+    }
+
+    @Override
+    public long userLastTest(String user) {
+        if (nonNull(userDetailsRepository.findByUserName(user))) {
+            return testService.userLastTest(user);
+
+        } else {
+            throw new AnalyzerException(String.format("User: %s not exist", user));
+        }
+    }
+
+    @Override
+    public long userLastFailedTest(String user) {
+        if (nonNull(userDetailsRepository.findByUserName(user))) {
+            return testService.userLastFailedTest(user);
+
+        } else {
+            throw new AnalyzerException(String.format("User: %s not exist", user));
+        }
     }
 
     private IdentifierDetails createIdentifierDetails(String identifier, List<ComparisonInfoDAO> comparisonInfos) {
