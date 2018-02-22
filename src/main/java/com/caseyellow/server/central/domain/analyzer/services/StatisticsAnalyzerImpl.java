@@ -2,10 +2,10 @@ package com.caseyellow.server.central.domain.analyzer.services;
 
 import com.caseyellow.server.central.configuration.UrlConfig;
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
+import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
+import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.exceptions.AnalyzerException;
-import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
-import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -39,7 +39,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     @Cacheable("countIPs")
     public Map<String, Long> countIPs(){
 
-        return testService.getAllDAOTests()
+        return testService.getAllTests()
                           .stream()
                           .map(s -> s.getSystemInfo().getPublicIP())
                           .collect(groupingBy(Function.identity(), counting()));
@@ -77,7 +77,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         }
     }
 
-    private IdentifierDetails createIdentifierDetails(String identifier, List<ComparisonInfoDAO> comparisonInfos) {
+    private IdentifierDetails createIdentifierDetails(String identifier, List<ComparisonInfo> comparisonInfos) {
         int size = comparisonInfos.size();
         double meanRatio = getMeanRatio(comparisonInfos);
 
@@ -88,15 +88,15 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         return identifierDetails.getMeanRatio() > 0;
     }
 
-    private Map<String, List<ComparisonInfoDAO>> getComparisons() {
-        List<TestDAO> tests = testService.getAllDAOTests();
+    private Map<String, List<ComparisonInfo>> getComparisons() {
+        List<Test> tests = testService.getAllTests();
 
         return tests.stream()
-                    .flatMap(test -> test.getComparisonInfoDAOTests().stream())
-                    .collect(groupingBy(c -> c.getSpeedTestWebSiteDAO().getSpeedTestIdentifier()));
+                    .flatMap(test -> test.getComparisonInfoTests().stream())
+                    .collect(groupingBy(c -> c.getSpeedTestWebSite().getSpeedTestIdentifier()));
     }
 
-    private double getMeanRatio(List<ComparisonInfoDAO> comparisons){
+    private double getMeanRatio(List<ComparisonInfo> comparisons){
 
         OptionalDouble optionalDouble =
                 comparisons.stream()
@@ -112,21 +112,21 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         }
     }
 
-    private boolean isValidSubTest(ComparisonInfoDAO comparisonInfo) {
-        if (isNull(comparisonInfo.getSpeedTestWebSiteDAO()) ||
-            isNull(comparisonInfo.getSpeedTestWebSiteDAO())) {
+    private boolean isValidSubTest(ComparisonInfo comparisonInfo) {
+        if (isNull(comparisonInfo.getSpeedTestWebSite()) ||
+            isNull(comparisonInfo.getSpeedTestWebSite())) {
             return false;
         }
 
-        double speedTestRate = comparisonInfo.getSpeedTestWebSiteDAO().getDownloadRateInMbps();
-        double downloadRate = comparisonInfo.getFileDownloadInfoDAO().getFileDownloadRateKBPerSec();
+        double speedTestRate = comparisonInfo.getSpeedTestWebSite().getDownloadRateInMbps();
+        double downloadRate = comparisonInfo.getFileDownloadInfo().getFileDownloadRateKBPerSec();
 
         return speedTestRate > 0 && downloadRate > 0;
     }
 
-    private double getRatio(ComparisonInfoDAO comprison){
-        double speedTestRate = calculateDownloadRateFromMbpsToKBps(comprison.getSpeedTestWebSiteDAO().getDownloadRateInMbps());
-        double downloadRate = comprison.getFileDownloadInfoDAO().getFileDownloadRateKBPerSec();
+    private double getRatio(ComparisonInfo comparisonInfo){
+        double speedTestRate = calculateDownloadRateFromMbpsToKBps(comparisonInfo.getSpeedTestWebSite().getDownloadRateInMbps());
+        double downloadRate = comparisonInfo.getFileDownloadInfo().getFileDownloadRateKBPerSec();
         double ratio = downloadRate / speedTestRate;
 
         return ratio;

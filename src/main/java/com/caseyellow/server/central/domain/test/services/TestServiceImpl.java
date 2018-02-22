@@ -32,18 +32,18 @@ public class TestServiceImpl implements TestService {
 
     private Logger logger = Logger.getLogger(TestServiceImpl.class);
 
-    private CounterService counterService;
     private ConnectionConfig connectionConfig;
+    private CounterService counterService;
+    private FileStorageService fileStorageService;
     private TestRepository testRepository;
     private FailedTestRepository failedTestRepository;
     private UserDetailsRepository userDetailsRepository;
-    private FileStorageService fileStorageService;
 
     @Autowired
-    public TestServiceImpl(TestRepository testRepository,
+    public TestServiceImpl(ConnectionConfig connectionConfig,
                            CounterService counterService,
-                           ConnectionConfig connectionConfig,
                            FileStorageService fileStorageService,
+                           TestRepository testRepository,
                            FailedTestRepository failedTestRepository,
                            UserDetailsRepository userDetailsRepository) {
 
@@ -58,6 +58,7 @@ public class TestServiceImpl implements TestService {
     @Override
     @Cacheable("tests")
     public List<Test> getAllTests() {
+
         return testRepository.findAll()
                              .stream()
                              .map(Converter::convertTestDAOToModel)
@@ -65,8 +66,23 @@ public class TestServiceImpl implements TestService {
                              .collect(toList());
     }
 
-    public List<TestDAO> getAllDAOTests() {
-        return testRepository.findAll();
+    @Override
+    public List<Test> getAllUserTests(String user) {
+
+        return testRepository.findByUser(user)
+                             .stream()
+                             .map(Converter::convertTestDAOToModel)
+                             .filter(Validator::isSuccessfulTest)
+                             .collect(toList());
+    }
+
+    @Override
+    public List<FailedTest> getAllUserFailedTests(String user) {
+
+        return failedTestRepository.findByUser(user)
+                                   .stream()
+                                   .map(Converter::convertFailedTestDAOToModel)
+                                   .collect(toList());
     }
 
     @Override
@@ -96,7 +112,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public void failedTest(FailedTestDetails failedTestDetails) {
+    public void saveFailedTest(FailedTest failedTestDetails) {
         FailedTestDAO failedTest = Converter.convertFailedTestModelToDAO(failedTestDetails);
         failedTest.setTimestamp(System.currentTimeMillis());
 

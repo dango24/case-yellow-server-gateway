@@ -3,17 +3,17 @@ package com.caseyellow.server.central.domain.test.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FailedTestDetails {
+public class FailedTest {
 
     private String ip;
     private String path;
     private String errorMessage;
     private String user;
 
-    public FailedTestDetails() {
+    public FailedTest() {
     }
 
-    private FailedTestDetails(String ip, String path, String errorMessage, String user) {
+    private FailedTest(String ip, String path, String errorMessage, String user) {
         this.path = path;
         this.errorMessage = errorMessage;
         this.ip = ip;
@@ -54,7 +54,7 @@ public class FailedTestDetails {
 
     @Override
     public String toString() {
-        return "FailedTestDetails{" +
+        return "FailedTest{" +
                 "ip='" + ip + '\'' +
                 ", path='" + path + '\'' +
                 ", errorMessage='" + errorMessage + '\'' +
@@ -92,8 +92,8 @@ public class FailedTestDetails {
             return this;
         }
 
-        public FailedTestDetails build() {
-            return new FailedTestDetails(ip, path, errorMessage, user);
+        public FailedTest build() {
+            return new FailedTest(ip, path, errorMessage, user);
         }
     }
 }

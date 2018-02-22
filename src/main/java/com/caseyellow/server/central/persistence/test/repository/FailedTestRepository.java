@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 /**
  * Created by dango on 9/18/17.
  */
@@ -14,4 +16,6 @@ public interface FailedTestRepository extends JpaRepository<FailedTestDAO, Long>
 
     @Query(LAST_USER_FAILED_TEST_QUERY)
     long lastUserFailedTest(@Param("user") String user);
+
+    List<FailedTestDAO> findByUser(String user);
 }

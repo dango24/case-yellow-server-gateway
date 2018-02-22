@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Base64;
 
 import static java.util.Objects.nonNull;
@@ -29,7 +30,7 @@ public interface Utils {
     static void deleteFile(File file) {
         try {
             if (nonNull(file) && file.exists()) {
-                FileUtils.deleteDirectory(file);
+                Files.deleteIfExists(file.toPath());
             }
         } catch (IOException e) {
             log.error(String.format("Failed to delete file: %s", e.getMessage()));

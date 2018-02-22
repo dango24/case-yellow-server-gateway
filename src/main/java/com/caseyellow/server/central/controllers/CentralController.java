@@ -3,7 +3,7 @@ package com.caseyellow.server.central.controllers;
 import com.caseyellow.server.central.configuration.GoogleVisionConfiguration;
 import com.caseyellow.server.central.domain.analyzer.model.GoogleVisionKey;
 import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
-import com.caseyellow.server.central.domain.test.model.FailedTestDetails;
+import com.caseyellow.server.central.domain.test.model.FailedTest;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.UserDetails;
@@ -15,7 +15,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
@@ -83,7 +89,9 @@ public class CentralController {
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @GetMapping("/all-tests")
+    @GetMapping(value = "/all-tests",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Test> getAllTests() {
         logger.info("Received getAllTests GET request");
         return testService.getAllTests();
@@ -91,39 +99,64 @@ public class CentralController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/google-vision-key",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
     public GoogleVisionKey googleVisionKey() {
         logger.info("Received GoogleVisionKey GET request");
         return new GoogleVisionKey(googleVisionConfiguration.googleVisionKey());
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/pre-signed-url")
+    @GetMapping(value = "/pre-signed-url",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
     public PreSignedUrl generatePreSignedUrl(@RequestParam("file_key")String fileKey) {
         logger.info("Received generatePreSignedUrl GET request for file key: " + fileKey);
         return testService.generatePreSignedUrl(fileKey);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/failed-test")
-    public void failedTest(@RequestBody FailedTestDetails failedTestDetails) throws IOException {
-        logger.info("Received failedTest POST request with failed test : " + failedTestDetails);
-        testService.failedTest(failedTestDetails);
+    @PostMapping(value = "/failed-test",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public void failedTest(@RequestBody FailedTest failedTest) throws IOException {
+        logger.info("Received saveFailedTest POST request with failed test : " + failedTest);
+        testService.saveFailedTest(failedTest);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/connection-details")
+    @GetMapping(value = "/connection-details",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
     private Map<String, List<String>> connectionDetails() {
         logger.info("Received getConnectionDetails GET request with");
         return testService.getConnectionDetails();
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/save-user-details")
+    @PostMapping(value = "/save-user-details",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
     public void saveUserDetails(@RequestBody UserDetails userDetails) {
         logger.info("Received saveConnectionDetails POST request with user details: " + userDetails);
         testService.saveUserDetails(userDetails);
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/all-user-tests",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Test> getAllUserTests(@RequestParam("user") String user) {
+        logger.info(String.format("Received getAllUserTests GET request for user: %s", user));
+        return testService.getAllUserTests(user);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/all-user-failed-tests",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<FailedTest> getAllUserFailedTests(@RequestParam("user") String user) {
+        logger.info(String.format("Received getAllUserFailedTests GET request for user: %s", user));
+        return testService.getAllUserFailedTests(user);
+    }
 }

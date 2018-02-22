@@ -185,23 +185,23 @@ public interface Converter {
         return speedTestWebSite;
     }
 
-    static FailedTestDAO convertFailedTestModelToDAO(FailedTestDetails failedTestDetails) {
+    static FailedTestDAO convertFailedTestModelToDAO(FailedTest failedTest) {
         FailedTestDAO failedTestDAO = new FailedTestDAO();
-        failedTestDAO.setIp(failedTestDetails.getIp());
-        failedTestDAO.setErrorMessage(failedTestDetails.getErrorMessage());
-        failedTestDAO.setPath(failedTestDetails.getPath());
-        failedTestDAO.setUser(failedTestDetails.getUser());
+        failedTestDAO.setIp(failedTest.getIp());
+        failedTestDAO.setErrorMessage(failedTest.getErrorMessage());
+        failedTestDAO.setPath(failedTest.getPath());
+        failedTestDAO.setUser(failedTest.getUser());
 
         return failedTestDAO;
     }
 
-    static FailedTestDetails convertFailedTestDAOToModel(FailedTestDAO failedTestDAO) {
-        FailedTestDetails failedTestDetails = new FailedTestDetails();
-        failedTestDetails.setErrorMessage(failedTestDAO.getErrorMessage());
-        failedTestDetails.setIp(failedTestDAO.getIp());
-        failedTestDetails.setPath(failedTestDAO.getPath());
+    static FailedTest convertFailedTestDAOToModel(FailedTestDAO failedTestDAO) {
+        FailedTest failedTest = new FailedTest();
+        failedTest.setErrorMessage(failedTestDAO.getErrorMessage());
+        failedTest.setIp(failedTestDAO.getIp());
+        failedTest.setPath(failedTestDAO.getPath());
 
-        return failedTestDetails;
+        return failedTest;
     }
 
     static UserDetailsDAO convertUserDetailsModelToDAO(UserDetails userDetails) {
