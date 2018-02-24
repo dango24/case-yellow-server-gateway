@@ -200,6 +200,7 @@ public interface Converter {
         failedTest.setErrorMessage(failedTestDAO.getErrorMessage());
         failedTest.setIp(failedTestDAO.getIp());
         failedTest.setPath(failedTestDAO.getPath());
+        failedTest.setUser(failedTestDAO.getUser());
 
         return failedTest;
     }
