@@ -98,18 +98,12 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
     private double getMeanRatio(List<ComparisonInfo> comparisons){
 
-        OptionalDouble optionalDouble =
-                comparisons.stream()
+        return comparisons.stream()
                           .filter(this::isValidSubTest)
                           .mapToDouble(this::getRatio)
                           .filter(this::isNotOutlier)
-                          .average();
-
-        if (optionalDouble.isPresent()) {
-            return optionalDouble.getAsDouble();
-        } else {
-            return -1;
-        }
+                          .average()
+                          .orElse(-1);
     }
 
     private boolean isValidSubTest(ComparisonInfo comparisonInfo) {
