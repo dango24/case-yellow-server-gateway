@@ -8,6 +8,7 @@
     "haveStartButton": true,
     "speedTestNonFlashMetaData": null,
     "speedTestFlashMetaData" : {
+      "maxAttempts": 5,
       "buttonIds": [{
         "identifier": "התחל",
         "count": 1

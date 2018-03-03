@@ -5,6 +5,7 @@ import java.util.Set;
 public class SpeedTestFlashMetaData {
 
     private String finishIdentifier;
+    private int maxAttempts;
     private Set<WordIdentifier> buttonIds;
     private Set<WordIdentifier> finishIdentifiers;
 
@@ -33,5 +34,13 @@ public class SpeedTestFlashMetaData {
 
     public void setFinishIdentifiers(Set<WordIdentifier> finishIdentifiers) {
         this.finishIdentifiers = finishIdentifiers;
+    }
+
+    public int getMaxAttempts() {
+        return maxAttempts;
+    }
+
+    public void setMaxAttempts(int maxAttempts) {
+        this.maxAttempts = maxAttempts;
     }
 }
