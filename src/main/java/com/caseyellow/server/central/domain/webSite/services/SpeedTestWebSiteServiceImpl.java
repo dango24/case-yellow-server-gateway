@@ -29,6 +29,12 @@ public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
         List<String> speedTestIdentifiers = new ArrayList<>(urlMapper.getSpeedTestIdentifiers());
         int random = new Random().nextInt(speedTestIdentifiers.size());
 
-        return speedTestWebSiteFactory.getSpeedTestWebSiteFromIdentifier(speedTestIdentifiers.get(random));
+//        return speedTestWebSiteFactory.getSpeedTestWebSiteFromIdentifier(speedTestIdentifiers.get(random));
+
+
+        random = new Random().nextInt(2);
+        String identifier = random%2 == 0 ? "hot" : "bezeq";
+
+        return speedTestWebSiteFactory.getSpeedTestWebSiteFromIdentifier(identifier);
     }
 }
