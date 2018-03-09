@@ -18,7 +18,7 @@ public class GoogleVisionRequest {
 
     public GoogleVisionRequest(String imgPath, String md5) throws IOException {
         this();
-        VisionRequest visionRequest = new VisionRequest(imgPath);
+        VisionRequest visionRequest = new VisionRequest(imgPath, md5);
         addRequest(visionRequest);
     }
 
