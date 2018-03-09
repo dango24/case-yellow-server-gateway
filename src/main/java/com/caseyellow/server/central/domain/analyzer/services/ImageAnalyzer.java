@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.List;
 
+import static com.caseyellow.server.central.common.Utils.convertToMD5;
+
 @Service
 public class ImageAnalyzer {
 
@@ -46,7 +48,7 @@ public class ImageAnalyzer {
 
         try {
             imageSnapshot = fileStorageService.getFile(speedTestWebSiteDAO.getS3FileAddress());
-            GoogleVisionRequest googleVisionRequest = new GoogleVisionRequest(imageSnapshot.getAbsolutePath());
+            GoogleVisionRequest googleVisionRequest = new GoogleVisionRequest(imageSnapshot.getAbsolutePath(), convertToMD5(imageSnapshot));
             double analyzedImageResult = imageAnalyzerService.analyzeImage(speedTestWebSiteDAO.getSpeedTestIdentifier(), googleVisionRequest);
             speedTestWebSiteRepository.updateAnalyzedImageResult(speedTestWebSiteDAO.getId(), analyzedImageResult);
             speedTestWebSiteRepository.updateAnalyzedState(speedTestWebSiteDAO.getId(), AnalyzedState.SUCCESS);

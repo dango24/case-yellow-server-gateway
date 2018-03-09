@@ -36,7 +36,8 @@ public class ImageAnalyzerServiceImpl implements ImageAnalyzerService {
 
     @Override
     public double analyzeImage(String identifier, GoogleVisionRequest googleVisionRequest) {
-        AnalyzedImage analyzedImage = requestHandler.execute(analysisRequests.uploadImage(identifier, googleVisionRequest));
+        String md5 = googleVisionRequest.getRequests().get(0).getImage().getMd5();
+        AnalyzedImage analyzedImage = requestHandler.execute(analysisRequests.uploadImage(identifier, md5, googleVisionRequest));
 
         if (analyzedImage.isAnalyzed()) {
             return analyzedImage.getResult();

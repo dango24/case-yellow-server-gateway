@@ -13,6 +13,10 @@ public class GoogleVisionRequest {
     }
 
     public GoogleVisionRequest(String imgPath) throws IOException {
+        this(imgPath, null);
+    }
+
+    public GoogleVisionRequest(String imgPath, String md5) throws IOException {
         this();
         VisionRequest visionRequest = new VisionRequest(imgPath);
         addRequest(visionRequest);
