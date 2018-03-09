@@ -7,8 +7,9 @@ public class FailedTest {
 
     private String ip;
     private String path;
-    private String errorMessage;
     private String user;
+    private String errorMessage;
+    private String clientVersion;
 
     public FailedTest() {
     }
@@ -50,6 +51,14 @@ public class FailedTest {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getClientVersion() {
+        return clientVersion;
+    }
+
+    public void setClientVersion(String clientVersion) {
+        this.clientVersion = clientVersion;
     }
 
     @Override

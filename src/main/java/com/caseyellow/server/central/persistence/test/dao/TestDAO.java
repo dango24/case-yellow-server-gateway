@@ -28,6 +28,9 @@ public class TestDAO {
     @Column(name = "timestamp")
     private Long timestamp;
 
+    @Column(name = "client_version")
+    private String clientVersion;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "test_id")
     private List<ComparisonInfoDAO> comparisonInfoDAOTests;
@@ -38,6 +41,7 @@ public class TestDAO {
         this.testID = testBuilder.testID;
         this.user = testBuilder.user;
         this.systemInfo = testBuilder.systemInfo;
+        this.clientVersion = testBuilder.clientVersion;
         this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsite;
         this.comparisonInfoDAOTests = testBuilder.comparisonInfoDAOTests;
     }
@@ -102,10 +106,19 @@ public class TestDAO {
         this.timestamp = timestamp;
     }
 
+    public String getClientVersion() {
+        return clientVersion;
+    }
+
+    public void setClientVersion(String clientVersion) {
+        this.clientVersion = clientVersion;
+    }
+
     public static class TestBuilder {
 
         private String testID;
         private String user;
+        private String clientVersion;
         private SystemInfoDAO systemInfo;
         private String speedTestWebsite;
         private List<ComparisonInfoDAO> comparisonInfoDAOTests;
@@ -131,6 +144,11 @@ public class TestDAO {
 
         public TestBuilder addComparisonInfoTests(List<ComparisonInfoDAO> comparisonInfoDAOTests) {
             this.comparisonInfoDAOTests = comparisonInfoDAOTests;
+            return this;
+        }
+
+        public TestBuilder addClientVersion(String clientVersion) {
+            this.clientVersion = clientVersion;
             return this;
         }
 

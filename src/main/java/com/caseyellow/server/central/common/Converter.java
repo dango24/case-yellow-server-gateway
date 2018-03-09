@@ -30,6 +30,7 @@ public interface Converter {
         TestDAO testDAO = new TestDAO.TestBuilder(test.getTestID())
                                      .addSpeedTestWebsite(test.getSpeedTestWebsiteIdentifier())
                                      .addUser(test.getUser())
+                                     .addClientVersion(test.getClientVersion())
                                      .addSystemInfo(convertSystemInfoModelToDAO(test.getSystemInfo()))
                                      .addComparisonInfoTests(convertDAOToModel(Converter::convertComparisonInfoModelToDAO, test.getComparisonInfoTests()))
                                      .build();
@@ -44,6 +45,7 @@ public interface Converter {
 
         Test test = new Test.TestBuilder(testDAO.getTestID())
                             .addSpeedTestWebsiteIdentifier(testDAO.getSpeedTestWebsiteIdentifier())
+                            .addClientVersion(testDAO.getClientVersion())
                             .addSystemInfo(convertSystemInfoDAOlToModel(testDAO.getSystemInfo()))
                             .addComparisonInfoTests(convertModelToDto(Converter::convertComparisonInfoDAOToModel, testDAO.getComparisonInfoDAOTests()))
                             .build();
@@ -191,6 +193,7 @@ public interface Converter {
         failedTestDAO.setErrorMessage(failedTest.getErrorMessage());
         failedTestDAO.setPath(failedTest.getPath());
         failedTestDAO.setUser(failedTest.getUser());
+        failedTestDAO.setClientVersion(failedTest.getClientVersion());
 
         return failedTestDAO;
     }
@@ -201,6 +204,7 @@ public interface Converter {
         failedTest.setIp(failedTestDAO.getIp());
         failedTest.setPath(failedTestDAO.getPath());
         failedTest.setUser(failedTestDAO.getUser());
+        failedTest.setClientVersion(failedTestDAO.getClientVersion());
 
         return failedTest;
     }

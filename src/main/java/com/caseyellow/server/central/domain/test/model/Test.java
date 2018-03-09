@@ -12,6 +12,7 @@ public class Test {
 
     private String testID;
     private String user;
+    private String clientVersion;
     private SystemInfo systemInfo;
     private String speedTestWebsiteIdentifier;
     private List<ComparisonInfo> comparisonInfoTests;
@@ -22,6 +23,7 @@ public class Test {
     private Test(TestBuilder testBuilder) {
         this.testID = testBuilder.testID;
         this.systemInfo = testBuilder.systemInfo;
+        this.clientVersion = testBuilder.clientVersion;
         this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsiteIdentifier;
         this.comparisonInfoTests = testBuilder.comparisonInfoTests;
     }
@@ -71,6 +73,14 @@ public class Test {
         this.user = user;
     }
 
+    public String getClientVersion() {
+        return clientVersion;
+    }
+
+    public void setClientVersion(String clientVersion) {
+        this.clientVersion = clientVersion;
+    }
+
     @Override
     public String toString() {
         return "Test{" +
@@ -86,6 +96,7 @@ public class Test {
 
         // Fields
         private String testID;
+        private String clientVersion;
         private SystemInfo systemInfo;
         private String speedTestWebsiteIdentifier;
         private List<ComparisonInfo> comparisonInfoTests;
@@ -109,8 +120,14 @@ public class Test {
             return this;
         }
 
+        public TestBuilder addClientVersion(String clientVersion) {
+            this.clientVersion = clientVersion;
+            return this;
+        }
+
         public Test build() {
             return new Test(this);
         }
+
     }
 }

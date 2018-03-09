@@ -14,6 +14,9 @@ public class FailedTestDAO {
     private String path;
     private String errorMessage;
 
+    @Column(name = "client_version")
+    private String clientVersion;
+
     @Column(name = "user_name")
     private String user;
 
@@ -75,5 +78,13 @@ public class FailedTestDAO {
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getClientVersion() {
+        return clientVersion;
+    }
+
+    public void setClientVersion(String clientVersion) {
+        this.clientVersion = clientVersion;
     }
 }
