@@ -67,7 +67,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public List<Test> getAllUserTests(String user) {
+    public List<Test> getAllTestsByUser(String user) {
 
         return testRepository.findByUser(user)
                              .stream()

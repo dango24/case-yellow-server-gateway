@@ -48,13 +48,13 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
     @Override
     @Cacheable("identifiersDetails")
-    public Map<String, IdentifierDetails> createIdentifiersDetails() {
+    public Map<String, IdentifierDetails> createIdentifiersDetails(String user) {
 
-        return getComparisons().entrySet()
-                               .stream()
-                               .map(entry -> createIdentifierDetails(entry.getKey(), entry.getValue()))
-                               .filter(this::isValidIdentifierDetails)
-                               .collect(toMap(IdentifierDetails::getIdentifier, Function.identity()));
+        return getComparisons(user).entrySet()
+                                   .stream()
+                                   .map(entry -> createIdentifierDetails(entry.getKey(), entry.getValue()))
+                                   .filter(this::isValidIdentifierDetails)
+                                   .collect(toMap(IdentifierDetails::getIdentifier, Function.identity()));
     }
 
     @Override
@@ -88,8 +88,14 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         return identifierDetails.getMeanRatio() > 0;
     }
 
-    private Map<String, List<ComparisonInfo>> getComparisons() {
-        List<Test> tests = testService.getAllTests();
+    private Map<String, List<ComparisonInfo>> getComparisons(String user) {
+        List<Test> tests;
+
+        if (isNull(user)) {
+            tests = testService.getAllTests();
+        } else {
+            tests = testService.getAllTestsByUser(user);
+        }
 
         return tests.stream()
                     .flatMap(test -> test.getComparisonInfoTests().stream())

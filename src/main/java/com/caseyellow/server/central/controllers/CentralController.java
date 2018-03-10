@@ -147,8 +147,8 @@ public class CentralController {
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Test> getAllUserTests(@RequestParam("user") String user) {
-        logger.info(String.format("Received getAllUserTests GET request for user: %s", user));
-        return testService.getAllUserTests(user);
+        logger.info(String.format("Received getAllTestsByUser GET request for user: %s", user));
+        return testService.getAllTestsByUser(user);
     }
 
     @ResponseStatus(HttpStatus.OK)

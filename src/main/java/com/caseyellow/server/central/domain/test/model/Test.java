@@ -13,6 +13,8 @@ public class Test {
     private String testID;
     private String user;
     private String clientVersion;
+    private Long startTime;
+    private Long endTime;
     private SystemInfo systemInfo;
     private String speedTestWebsiteIdentifier;
     private List<ComparisonInfo> comparisonInfoTests;
@@ -22,6 +24,9 @@ public class Test {
 
     private Test(TestBuilder testBuilder) {
         this.testID = testBuilder.testID;
+        this.user = testBuilder.user;
+        this.startTime = testBuilder.startTime;
+        this.endTime = testBuilder.endTime;
         this.systemInfo = testBuilder.systemInfo;
         this.clientVersion = testBuilder.clientVersion;
         this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsiteIdentifier;
@@ -81,10 +86,30 @@ public class Test {
         this.clientVersion = clientVersion;
     }
 
+    public Long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
+    }
+
+    public Long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Long endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public String toString() {
         return "Test{" +
                 "testID='" + testID + '\'' +
+                ", user='" + user + '\'' +
+                ", clientVersion='" + clientVersion + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
                 ", systemInfo=" + systemInfo +
                 ", speedTestWebsiteIdentifier='" + speedTestWebsiteIdentifier + '\'' +
                 ", comparisonInfoTests=" + comparisonInfoTests +
@@ -96,7 +121,10 @@ public class Test {
 
         // Fields
         private String testID;
+        private String user;
         private String clientVersion;
+        private Long startTime;
+        private Long endTime;
         private SystemInfo systemInfo;
         private String speedTestWebsiteIdentifier;
         private List<ComparisonInfo> comparisonInfoTests;
@@ -125,9 +153,23 @@ public class Test {
             return this;
         }
 
+        public TestBuilder addUser(String user) {
+            this.user = user;
+            return this;
+        }
+
+        public TestBuilder addStartTime(Long startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        public TestBuilder addEndTime(Long endTime) {
+            this.endTime = endTime;
+            return this;
+        }
+
         public Test build() {
             return new Test(this);
         }
-
     }
 }

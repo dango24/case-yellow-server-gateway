@@ -28,6 +28,12 @@ public class TestDAO {
     @Column(name = "timestamp")
     private Long timestamp;
 
+    @Column(name = "start_time")
+    private Long startTime;
+
+    @Column(name = "end_time")
+    private Long endTime;
+
     @Column(name = "client_version")
     private String clientVersion;
 
@@ -40,6 +46,8 @@ public class TestDAO {
     private TestDAO(TestBuilder testBuilder) {
         this.testID = testBuilder.testID;
         this.user = testBuilder.user;
+        this.startTime = testBuilder.startTime;
+        this.endTime = testBuilder.endTime;
         this.systemInfo = testBuilder.systemInfo;
         this.clientVersion = testBuilder.clientVersion;
         this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsite;
@@ -114,11 +122,29 @@ public class TestDAO {
         this.clientVersion = clientVersion;
     }
 
+    public Long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
+    }
+
+    public Long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Long endTime) {
+        this.endTime = endTime;
+    }
+
     public static class TestBuilder {
 
         private String testID;
         private String user;
         private String clientVersion;
+        private Long startTime;
+        private Long endTime;
         private SystemInfoDAO systemInfo;
         private String speedTestWebsite;
         private List<ComparisonInfoDAO> comparisonInfoDAOTests;
@@ -149,6 +175,16 @@ public class TestDAO {
 
         public TestBuilder addClientVersion(String clientVersion) {
             this.clientVersion = clientVersion;
+            return this;
+        }
+
+        public TestBuilder addStartTime(Long startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        public TestBuilder addEndTime(Long endTime) {
+            this.endTime = endTime;
             return this;
         }
 

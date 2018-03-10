@@ -31,6 +31,8 @@ public interface Converter {
                                      .addSpeedTestWebsite(test.getSpeedTestWebsiteIdentifier())
                                      .addUser(test.getUser())
                                      .addClientVersion(test.getClientVersion())
+                                     .addStartTime(test.getStartTime())
+                                     .addEndTime(test.getEndTime())
                                      .addSystemInfo(convertSystemInfoModelToDAO(test.getSystemInfo()))
                                      .addComparisonInfoTests(convertDAOToModel(Converter::convertComparisonInfoModelToDAO, test.getComparisonInfoTests()))
                                      .build();
@@ -46,6 +48,9 @@ public interface Converter {
         Test test = new Test.TestBuilder(testDAO.getTestID())
                             .addSpeedTestWebsiteIdentifier(testDAO.getSpeedTestWebsiteIdentifier())
                             .addClientVersion(testDAO.getClientVersion())
+                            .addUser(testDAO.getUser())
+                            .addStartTime(testDAO.getStartTime())
+                            .addEndTime(testDAO.getEndTime())
                             .addSystemInfo(convertSystemInfoDAOlToModel(testDAO.getSystemInfo()))
                             .addComparisonInfoTests(convertModelToDto(Converter::convertComparisonInfoDAOToModel, testDAO.getComparisonInfoDAOTests()))
                             .build();

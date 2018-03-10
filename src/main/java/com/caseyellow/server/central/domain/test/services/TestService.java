@@ -20,7 +20,7 @@ public interface TestService {
     boolean isUserExist(String userName);
     PreSignedUrl generatePreSignedUrl(String fileKey);
     List<Test> getAllTests();
-    List<Test> getAllUserTests(String user);
+    List<Test> getAllTestsByUser(String user);
     List<FailedTest> getAllUserFailedTests(String user);
     Map<String, List<String>> getConnectionDetails();
 }
