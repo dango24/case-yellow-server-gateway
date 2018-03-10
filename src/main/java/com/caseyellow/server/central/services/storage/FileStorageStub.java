@@ -20,4 +20,9 @@ public class FileStorageStub implements FileStorageService {
     public PreSignedUrl generatePreSignedUrl(String fileKey) {
         return new PreSignedUrl(null, null);
     }
+
+    @Override
+    public boolean isObjectExist(String path) {
+        return false;
+    }
 }

@@ -28,7 +28,7 @@ public interface Utils {
     }
 
      static double calculateDownloadRateFromMbpsToKBps(double downloadRateInMbps) {
-        double MBPerSec = downloadRateInMbps / 8;
+        double MBPerSec = downloadRateInMbps / 8.0;
 
         return MBPerSec * Math.pow(2, 10); // Transform to KB
     }

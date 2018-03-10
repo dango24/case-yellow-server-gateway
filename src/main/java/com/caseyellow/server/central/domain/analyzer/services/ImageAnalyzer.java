@@ -69,10 +69,15 @@ public class ImageAnalyzer {
     }
 
     private String getS3Path(String s3FileAddress) {
-        if (s3FileAddress.startsWith(testsDir)) {
+        if (fileStorageService.isObjectExist(s3FileAddress)) {
+            logger.info(String.format("S3 path exist: %s", s3FileAddress));
             return s3FileAddress;
-        } else {
+
+        } else if(!s3FileAddress.startsWith(testsDir) && fileStorageService.isObjectExist(testsDir + s3FileAddress)) {
+            logger.info(String.format("S3 path exist: %s", testsDir + s3FileAddress));
             return testsDir + s3FileAddress;
         }
+
+        throw new IllegalArgumentException(String.format("Path: %s not exist in s3", s3FileAddress));
     }
 }

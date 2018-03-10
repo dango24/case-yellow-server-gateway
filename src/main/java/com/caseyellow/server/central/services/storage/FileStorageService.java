@@ -7,4 +7,5 @@ import java.io.File;
 public interface FileStorageService {
     File getFile(String identifier);
     PreSignedUrl generatePreSignedUrl(String fileKey);
+    boolean isObjectExist(String path);
 }

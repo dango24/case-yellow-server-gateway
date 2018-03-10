@@ -86,6 +86,11 @@ public class S3FileStorageService implements FileStorageService {
         return new PreSignedUrl(preSignedUrl, objectKey);
     }
 
+    @Override
+    public boolean isObjectExist(String path) {
+        return s3Client.doesObjectExist(awsConfiguration.bucketName(), path);
+    }
+
     public boolean isHealthy() {
         if (s3Client.doesObjectExist(awsConfiguration.bucketName(), awsConfiguration.healthPath())) {
             logger.info("The connection to s3 is healthy");
