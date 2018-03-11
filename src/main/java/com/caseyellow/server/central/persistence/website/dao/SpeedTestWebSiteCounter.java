@@ -1,10 +1,17 @@
 package com.caseyellow.server.central.persistence.website.dao;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class SpeedTestWebSiteCounter {
 
@@ -16,44 +23,9 @@ public class SpeedTestWebSiteCounter {
     private int count;
     private boolean active;
 
-    public SpeedTestWebSiteCounter() {
-    }
-
     public SpeedTestWebSiteCounter(String identifier) {
         this.identifier = identifier;
         this.count = 0;
         this.active = true;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 }

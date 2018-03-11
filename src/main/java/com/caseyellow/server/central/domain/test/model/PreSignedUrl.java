@@ -1,33 +1,16 @@
 package com.caseyellow.server.central.domain.test.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.net.URL;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PreSignedUrl {
 
     private URL preSignedUrl;
     private String key;
-
-    public PreSignedUrl() {
-    }
-
-    public PreSignedUrl(URL preSignedUrl, String key) {
-        this.preSignedUrl = preSignedUrl;
-        this.key = key;
-    }
-
-    public URL getPreSignedUrl() {
-        return preSignedUrl;
-    }
-
-    public void setPreSignedUrl(URL preSignedUrl) {
-        this.preSignedUrl = preSignedUrl;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
 }

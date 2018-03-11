@@ -2,12 +2,18 @@ package com.caseyellow.server.central.persistence.test.dao;
 
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 /**
  * Created by Dan on 12/10/2016.
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "comparison_info")
 public class ComparisonInfoDAO {
@@ -24,26 +30,8 @@ public class ComparisonInfoDAO {
     @JoinColumn(name = "speed_test_webSite_download_info_id", unique = true)
     private SpeedTestWebSiteDAO speedTestWebSiteDAO;
 
-    public ComparisonInfoDAO() {}
-
     public ComparisonInfoDAO(SpeedTestWebSiteDAO speedTestWebSiteDownloadInfoDAO, FileDownloadInfoDAO fileDownloadInfoDAO) {
         this.speedTestWebSiteDAO = speedTestWebSiteDownloadInfoDAO;
         this.fileDownloadInfoDAO = fileDownloadInfoDAO;
-    }
-
-    public SpeedTestWebSiteDAO getSpeedTestWebSiteDAO() {
-        return speedTestWebSiteDAO;
-    }
-
-    public FileDownloadInfoDAO getFileDownloadInfoDAO() {
-        return fileDownloadInfoDAO;
-    }
-
-    public void setFileDownloadInfoDAO(FileDownloadInfoDAO fileDownloadInfoDAO) {
-        this.fileDownloadInfoDAO = fileDownloadInfoDAO;
-    }
-
-    public void setSpeedTestWebSiteDAO(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
-        this.speedTestWebSiteDAO = speedTestWebSiteDAO;
     }
 }

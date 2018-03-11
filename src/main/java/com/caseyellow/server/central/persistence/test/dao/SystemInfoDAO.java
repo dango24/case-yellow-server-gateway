@@ -1,11 +1,17 @@
 package com.caseyellow.server.central.persistence.test.dao;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Embeddable;
 
 /**
  * Created by Dan on 12/10/2016.
  */
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
 public class SystemInfoDAO {
 
@@ -13,55 +19,4 @@ public class SystemInfoDAO {
     private String browser;
     private String publicIP;
     private String connection; // LAN / Wifi connection
-
-    public SystemInfoDAO() {}
-
-    public SystemInfoDAO(String operatingSystem, String browser, String publicIP, String connection) {
-        this.operatingSystem = operatingSystem;
-        this.browser = browser;
-        this.publicIP = publicIP;
-        this.connection = connection;
-    }
-
-    public String getOperatingSystem() {
-        return operatingSystem;
-    }
-
-    public String getBrowser() {
-        return browser;
-    }
-
-    public String getPublicIP() {
-        return publicIP;
-    }
-
-    public String getConnection() {
-        return connection;
-    }
-
-    public void setOperatingSystem(String operatingSystem) {
-        this.operatingSystem = operatingSystem;
-    }
-
-    public void setBrowser(String browser) {
-        this.browser = browser;
-    }
-
-    public void setPublicIP(String publicIP) {
-        this.publicIP = publicIP;
-    }
-
-    public void setConnection(String connection) {
-        this.connection = connection;
-    }
-
-    @Override
-    public String toString() {
-        return "SystemInfoDAO{" +
-                "operatingSystem='" + operatingSystem + '\'' +
-                ", browser='" + browser + '\'' +
-                ", publicIP='" + publicIP + '\'' +
-                ", connection='" + connection + '\'' +
-                '}';
-    }
 }
