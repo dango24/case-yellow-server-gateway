@@ -22,10 +22,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 import static com.caseyellow.server.central.common.Validator.validateTest;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @Service
 public class TestServiceImpl implements TestService {
@@ -59,11 +61,21 @@ public class TestServiceImpl implements TestService {
     @Cacheable("tests")
     public List<Test> getAllTests() {
 
-        return testRepository.findAll()
-                             .stream()
-                             .map(Converter::convertTestDAOToModel)
-                             .filter(Validator::isSuccessfulTest)
-                             .collect(toList());
+        List<Test> tests =
+                testRepository.findAll()
+                              .stream()
+                              .map(Converter::convertTestDAOToModel)
+                              .filter(Validator::isSuccessfulTest)
+                              .collect(toList());
+
+        Map<String, UserDetailsDAO> userDetails =
+                userDetailsRepository.findAll()
+                                     .stream()
+                                     .collect(toMap(UserDetailsDAO::getUserName, Function.identity()));
+
+        tests.forEach(test -> insertUserDetails(test.getSystemInfo(), userDetails.get(test.getUser())));
+
+        return tests;
     }
 
     @Override
@@ -190,5 +202,11 @@ public class TestServiceImpl implements TestService {
     private TestDAO handleSaveTestException(Throwable throwable) {
         logger.error("Failed To save test, " + throwable.getMessage(), throwable);
         return null;
+    }
+
+    private void insertUserDetails(SystemInfo systemInfo, UserDetailsDAO userDetails) {
+        systemInfo.setIsp(userDetails.getIsp());
+        systemInfo.setInfrastructure(userDetails.getInfrastructure());
+        systemInfo.setSpeed(userDetails.getSpeed());
     }
 }
