@@ -60,32 +60,32 @@ public class TestServiceImpl implements TestService {
     @Override
     @Cacheable("tests")
     public List<Test> getAllTests() {
-
-        List<Test> tests =
-                testRepository.findAll()
-                              .stream()
-                              .map(Converter::convertTestDAOToModel)
-                              .filter(Validator::isSuccessfulTest)
-                              .collect(toList());
-
-        Map<String, UserDetailsDAO> userDetails =
-                userDetailsRepository.findAll()
-                                     .stream()
-                                     .collect(toMap(UserDetailsDAO::getUserName, Function.identity()));
-
-        tests.forEach(test -> insertUserDetails(test.getSystemInfo(), userDetails.get(test.getUser())));
-
-        return tests;
+        List<TestDAO> tests = testRepository.findAll();
+        return convertToTestModel(tests);
     }
 
     @Override
     public List<Test> getAllTestsByUser(String user) {
+        List<TestDAO> userTests = testRepository.findByUser(user);
+        return convertToTestModel(userTests);
+    }
 
-        return testRepository.findByUser(user)
-                             .stream()
-                             .map(Converter::convertTestDAOToModel)
-                             .filter(Validator::isSuccessfulTest)
-                             .collect(toList());
+    private List<Test> convertToTestModel(List<TestDAO> testsDao) {
+
+        List<Test> tests =
+                testsDao.stream()
+                        .map(Converter::convertTestDAOToModel)
+                        .filter(Validator::isSuccessfulTest)
+                        .collect(toList());
+
+        Map<String, UserDetailsDAO> userDetails =
+                userDetailsRepository.findAll()
+                        .stream()
+                        .collect(toMap(UserDetailsDAO::getUserName, Function.identity()));
+
+        tests.forEach(test -> insertUserDetails(test.getSystemInfo(), userDetails.get(test.getUser())));
+
+        return tests;
     }
 
     @Override
