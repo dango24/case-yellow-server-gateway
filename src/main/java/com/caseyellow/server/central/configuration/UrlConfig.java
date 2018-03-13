@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.configuration;
 
 import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +9,7 @@ import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 @Component
 @ConfigurationProperties
 public class UrlConfig {
@@ -19,7 +21,7 @@ public class UrlConfig {
 
     @PostConstruct
     private void init() {
-        System.out.println(fileDownloadProperties);
+        log.info(fileDownloadProperties.toString());
     }
 
     public Map<String, String> getSpeedTestUrls() {
