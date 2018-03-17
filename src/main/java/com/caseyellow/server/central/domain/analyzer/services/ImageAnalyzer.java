@@ -7,6 +7,7 @@ import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
 import com.caseyellow.server.central.services.analyze.ImageAnalyzerService;
 import com.caseyellow.server.central.services.storage.FileStorageService;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,6 @@ import java.io.File;
 import java.util.List;
 
 import static com.caseyellow.server.central.common.Utils.convertToMD5;
-import static com.sun.javafx.util.Utils.isWindows;
 
 @Service
 @Profile("prod")
@@ -45,7 +45,7 @@ public class ImageAnalyzer {
 
     @Scheduled(fixedDelay = SCHEDULED_TASK_INTERVAL, initialDelay = INITIAL_SCHEDULED_TASK)
     public void analyzeImageScheduler() {
-        if (!isWindows()) {
+        if (SystemUtils.IS_OS_LINUX) {
             List<SpeedTestWebSiteDAO> speedTestWebSiteNonAnalyzed = speedTestWebSiteRepository.findByAnalyzedState(AnalyzedState.NOT_STARTED);
             speedTestWebSiteNonAnalyzed.forEach(this::analyzeImage);
         }
