@@ -14,14 +14,13 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
 
 @Configuration
 @Profile("prod")
 @PropertySource("aws_access.yml")
-public class ConfigurationServiceImpl implements AWSConfiguration, GoogleVisionConfiguration {
+public class AWSConfigurationImpl implements AWSConfiguration {
 
-    private Logger logger = Logger.getLogger(ConfigurationServiceImpl.class);
+    private Logger logger = Logger.getLogger(AWSConfigurationImpl.class);
 
     @Value("${S3_bucket_name}")
     private String bucketName;
@@ -37,7 +36,6 @@ public class ConfigurationServiceImpl implements AWSConfiguration, GoogleVisionC
 
     private String accessKeyID;
     private String secretAccessKey;
-    private String googleVisionKey;
 
     @Override
     public String accessKeyID() {
@@ -47,11 +45,6 @@ public class ConfigurationServiceImpl implements AWSConfiguration, GoogleVisionC
     @Override
     public String secretAccessKey() {
         return secretAccessKey;
-    }
-
-    @Override
-    public String googleVisionKey() {
-        return googleVisionKey;
     }
 
     @Override
@@ -112,7 +105,6 @@ public class ConfigurationServiceImpl implements AWSConfiguration, GoogleVisionC
             String[] credentials = decryptedCredentials.split(";");
             accessKeyID = credentials[0];
             secretAccessKey = credentials[1];
-            googleVisionKey = credentials[2];
 
         } catch (Exception e) {
             throw new ConfigurationException("Failed to decrypted credentials: " + decryptedCredentials + ", cause: " + e.getMessage(), e);

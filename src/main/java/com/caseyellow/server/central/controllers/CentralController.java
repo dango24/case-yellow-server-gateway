@@ -1,7 +1,5 @@
 package com.caseyellow.server.central.controllers;
 
-import com.caseyellow.server.central.configuration.GoogleVisionConfiguration;
-import com.caseyellow.server.central.domain.analyzer.model.GoogleVisionKey;
 import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
 import com.caseyellow.server.central.domain.test.model.FailedTest;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
@@ -39,17 +37,14 @@ public class CentralController {
     private TestService testService;
     private FileDownloadService fileDownloadService;
     private SpeedTestWebSiteService speedTestWebSiteService;
-    private GoogleVisionConfiguration googleVisionConfiguration;
 
     @Autowired
     public CentralController(TestService testService,
                              FileDownloadService fileDownloadService,
-                             SpeedTestWebSiteService speedTestWebSiteService,
-                             GoogleVisionConfiguration googleVisionConfiguration) {
+                             SpeedTestWebSiteService speedTestWebSiteService) {
         this.testService = testService;
         this.fileDownloadService = fileDownloadService;
         this.speedTestWebSiteService = speedTestWebSiteService;
-        this.googleVisionConfiguration = googleVisionConfiguration;
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -95,15 +90,6 @@ public class CentralController {
     public List<Test> getAllTests() {
         logger.info("Received getAllTests GET request");
         return testService.getAllTests();
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/google-vision-key",
-                consumes = MediaType.APPLICATION_JSON_VALUE,
-                produces = MediaType.APPLICATION_JSON_VALUE)
-    public GoogleVisionKey googleVisionKey() {
-        logger.info("Received GoogleVisionKey GET request");
-        return new GoogleVisionKey(googleVisionConfiguration.googleVisionKey());
     }
 
     @ResponseStatus(HttpStatus.OK)
