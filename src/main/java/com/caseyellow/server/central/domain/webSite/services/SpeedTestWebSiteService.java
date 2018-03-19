@@ -2,6 +2,10 @@ package com.caseyellow.server.central.domain.webSite.services;
 
 
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
+import com.caseyellow.server.central.domain.webSite.model.SpeedTestNonFlashMetaData;
+import com.caseyellow.server.central.domain.webSite.model.WordIdentifier;
+
+import java.util.Set;
 
 
 /**
@@ -9,4 +13,6 @@ import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
  */
 public interface SpeedTestWebSiteService {
     SpeedTestMetaData getNextSpeedTestWebSite();
+    Set<WordIdentifier> getTextIdentifiers(String identifier, boolean startTest);
+    SpeedTestNonFlashMetaData getSpeedTestNonFlashMetaData(String identifier);
 }

@@ -6,6 +6,8 @@ import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.UserDetails;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
+import com.caseyellow.server.central.domain.webSite.model.SpeedTestNonFlashMetaData;
+import com.caseyellow.server.central.domain.webSite.model.WordIdentifier;
 import com.caseyellow.server.central.domain.webSite.services.SpeedTestWebSiteService;
 import com.caseyellow.server.central.domain.file.services.FileDownloadService;
 import com.caseyellow.server.central.domain.test.services.TestService;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by writeToFile on 6/25/17.
@@ -144,5 +147,21 @@ public class CentralController {
     public List<FailedTest> getAllUserFailedTests(@RequestParam("user") String user) {
         logger.info(String.format("Received getAllUserFailedTests GET request for user: %s", user));
         return testService.getAllUserFailedTests(user);
+    }
+
+    @GetMapping(value = "/text-identifiers",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public Set<WordIdentifier> getTextIdentifiers(@RequestParam("identifier") String identifier, @RequestParam("startTest") boolean startTest) {
+        logger.info(String.format("Received getTextIdentifiers GET request with identifier: %s", identifier));
+        return speedTestWebSiteService.getTextIdentifiers(identifier, startTest);
+    }
+
+    @GetMapping(value = "/speedtest-non-flash-meta-data",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public SpeedTestNonFlashMetaData getSpeedTestNonFlashMetaData(@RequestParam("identifier")String identifier) {
+        logger.info(String.format("Received getSpeedTestNonFlashMetaData GET request with identifier: %s", identifier));
+        return speedTestWebSiteService.getSpeedTestNonFlashMetaData(identifier);
     }
 }
