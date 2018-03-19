@@ -2,6 +2,9 @@ package com.caseyellow.server.central.controllers;
 
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.analyzer.services.StatisticsAnalyzer;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,18 +47,26 @@ public class StatisticController {
     }
 
     @GetMapping("/user-last-test")
-    public String userLastTest(@RequestParam("user") String user) {
+    public UserLastTest userLastTest(@RequestParam("user") String user) {
         logger.info(String.format("Received userLastTest GET request, for user: %s", user));
         long lastTestTimestamp = statisticAnalyzer.userLastTest(user);
 
-        return dateFormat.format(new Date(lastTestTimestamp));
+        return new UserLastTest(dateFormat.format(new Date(lastTestTimestamp)));
     }
 
     @GetMapping("/user-last-failed-test")
-    public String userLastFailedTest(@RequestParam("user") String user) {
+    public UserLastTest userLastFailedTest(@RequestParam("user") String user) {
         logger.info(String.format("Received userLastFailedTest GET request, for user: %s", user));
         long lastTestTimestamp = statisticAnalyzer.userLastFailedTest(user);
 
-        return dateFormat.format(new Date(lastTestTimestamp));
+        return new UserLastTest(dateFormat.format(new Date(lastTestTimestamp)));
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class UserLastTest {
+
+        private String last_test;
     }
 }
