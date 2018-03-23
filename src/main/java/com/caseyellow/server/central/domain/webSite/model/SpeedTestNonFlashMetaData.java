@@ -17,6 +17,9 @@ public class SpeedTestNonFlashMetaData {
     private String finishIdentifier;
     private String resultLocation;
     private String resultAttribute;
+    private String retrieveResultFromPayloadFloat;
+    private String retrieveResultFromPayloadInteger;
     private List<String> finishIdentifierKbps;
+    private List<String> finishIdentifierMbps;
     private List<String> finishTextIdentifier;
 }
