@@ -83,7 +83,7 @@ speedTestUrls :
  fast: https://www.fast.com/
  hot: http://www.hot.net.il/heb/Internet/speed/
  ookla: http://beta.speedtest.net/
- speedof: http://www.speedof.me/
+# speedof: http://www.speedof.me/
 
 connection-details:
   speed:

@@ -121,8 +121,8 @@
     "speedTestNonFlashMetaData": {
       "buttonId": "id=startBtn",
       "finishIdentifier": "id=startBtn",
-      "finishTextIdentifier": ["Download:.{161}(\\d+(?:\\.\\d+)?)\\s+?Mbps"],
-      "finishIdentifierKbps": ["Download:.{161}(\\d+(?:\\.\\d+)?)\\s+?kbps"],
+      "finishTextIdentifier": ["Download:.{140,250}(\\d+(?:\\.\\d+)?)\\s+?Mbps"],
+      "finishIdentifierKbps": ["Download:.{140,250}(\\d+(?:\\.\\d+)?)\\s+?kbps"],
       "resultLocation": "id=chartContainer",
       "resultAttribute": null
     }
