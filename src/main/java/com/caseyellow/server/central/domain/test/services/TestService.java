@@ -4,6 +4,7 @@ import com.caseyellow.server.central.domain.test.model.FailedTest;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.model.UserDetails;
+import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 
 import java.util.List;
 import java.util.Map;
@@ -23,4 +24,6 @@ public interface TestService {
     List<Test> getAllTestsByUser(String user);
     List<FailedTest> getAllUserFailedTests(String user);
     Map<String, List<String>> getConnectionDetails();
+    Map<String,Long> countUserTests();
+    List<LastUserTest> lastUserTests();
 }

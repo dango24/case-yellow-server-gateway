@@ -8,6 +8,8 @@ import com.caseyellow.server.central.domain.test.model.*;
 import com.caseyellow.server.central.persistence.test.dao.FailedTestDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.test.dao.UserDetailsDAO;
+import com.caseyellow.server.central.persistence.test.model.LastUserTest;
+import com.caseyellow.server.central.persistence.test.model.UserTestCount;
 import com.caseyellow.server.central.persistence.test.repository.FailedTestRepository;
 import com.caseyellow.server.central.persistence.test.repository.TestRepository;
 import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
@@ -100,6 +102,19 @@ public class TestServiceImpl implements TestService {
     @Override
     public Map<String, List<String>> getConnectionDetails() {
         return connectionConfig.getAllConnectionDetails();
+    }
+
+    @Override
+    public Map<String, Long> countUserTests() {
+        List<UserTestCount> userTestsCount = testRepository.countUserTests();
+
+        return userTestsCount.stream()
+                             .collect(toMap(UserTestCount::getUserName, UserTestCount::getCount));
+    }
+
+    @Override
+    public List<LastUserTest> lastUserTests() {
+        return testRepository.getAllUsersLastTests();
     }
 
     @Override

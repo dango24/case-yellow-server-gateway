@@ -1,7 +1,7 @@
 package com.caseyellow.server.central.domain.analyzer.services;
 
-import com.caseyellow.server.central.configuration.UrlConfig;
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
+import com.caseyellow.server.central.domain.mail.EmailService;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.services.TestService;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.OptionalDouble;
 import java.util.function.Function;
 
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
@@ -24,14 +23,15 @@ import static java.util.stream.Collectors.*;
 @Service
 public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
-    private UrlConfig urlMapper;
+    private EmailService emailService;
     private TestService testService;
     private UserDetailsRepository userDetailsRepository;
 
     @Autowired
-    public StatisticsAnalyzerImpl(TestService testService, UserDetailsRepository userDetailsRepository, UrlConfig urlMapper) {
-        this.urlMapper = urlMapper;
+    public StatisticsAnalyzerImpl(TestService testService, UserDetailsRepository userDetailsRepository, EmailService emailService) {
+
         this.testService = testService;
+        this.emailService = emailService;
         this.userDetailsRepository = userDetailsRepository;
     }
 
@@ -44,6 +44,11 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                           .map(s -> s.getSystemInfo().getPublicIP())
                           .collect(groupingBy(Function.identity(), counting()));
 
+    }
+
+    @Override
+    public Map<String, Long> countUserTests() {
+        return testService.countUserTests();
     }
 
     @Override
@@ -75,6 +80,11 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         } else {
             throw new AnalyzerException(String.format("User: %s not exist", user));
         }
+    }
+
+    @Override
+    public void notifyLastTests() {
+        emailService.sendNotification();
     }
 
     private IdentifierDetails createIdentifierDetails(String identifier, List<ComparisonInfo> comparisonInfos) {

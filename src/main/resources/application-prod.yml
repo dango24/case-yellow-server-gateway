@@ -7,3 +7,16 @@ spring.datasource.password: nopass
 spring.jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect
 #spring.jpa.generate-ddl: true
 spring.jpa.hibernate.ddl-auto: validate
+
+# mil service
+spring.mail.host: smtp.gmail.com
+spring.mail.port: 587
+spring.mail.username: caseyellow22@gmail.com
+spring.mail.password: nopass
+spring.mail.properties.mail.smtp.auth: true
+spring.mail.properties.mail.smtp.starttls.enable: true
+
+emails:
+  - dangolan24@gmail.com
+  - koriatoren@gmail.com
+  - oriamitay82@gmail.com
