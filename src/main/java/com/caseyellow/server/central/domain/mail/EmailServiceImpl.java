@@ -5,6 +5,7 @@ import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -16,16 +17,16 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Profile("prod")
 @ConfigurationProperties
 public class EmailServiceImpl implements EmailService {
 
     private static final String EMAIL_SUBJECT = "Case Yellow missing in action";
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
 
-    private List<String> emails;
-
     private JavaMailSender emailSender;
     private TestService testService;
+    private List<String> emails;
 
     @Autowired
     public EmailServiceImpl(TestService testService, JavaMailSender emailSender) {
