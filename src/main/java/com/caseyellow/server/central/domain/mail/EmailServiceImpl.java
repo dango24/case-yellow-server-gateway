@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,12 @@ import java.util.stream.Collectors;
 public class EmailServiceImpl implements EmailService {
 
     private static final String EMAIL_SUBJECT = "Case Yellow missing in action";
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+    public static SimpleDateFormat DATE_FORMAT;
+
+    static {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Jerusalem"));
+    }
 
     private JavaMailSender emailSender;
     private TestService testService;
