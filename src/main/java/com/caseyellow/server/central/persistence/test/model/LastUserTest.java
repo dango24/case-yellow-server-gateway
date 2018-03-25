@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static com.caseyellow.server.central.domain.mail.EmailServiceImpl.dateFormat;
+import static com.caseyellow.server.central.domain.mail.EmailServiceImpl.DATE_FORMAT;
 
 @Data
 @NoArgsConstructor
@@ -16,6 +16,6 @@ public class LastUserTest {
 
     @Override
     public String toString() {
-        return String.format("%s last test: %s", user, dateFormat.format(timestamp));
+        return String.format("%s last test: %s", user, DATE_FORMAT.format(timestamp));
     }
 }

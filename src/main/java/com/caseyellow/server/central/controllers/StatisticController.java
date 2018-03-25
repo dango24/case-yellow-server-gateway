@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.Map;
 
-import static com.caseyellow.server.central.domain.mail.EmailServiceImpl.dateFormat;
+import static com.caseyellow.server.central.domain.mail.EmailServiceImpl.DATE_FORMAT;
 
 @Slf4j
 @RestController
@@ -56,7 +56,7 @@ public class StatisticController {
         log.info(String.format("Received userLastTest GET request, for user: %s", user));
         long lastTestTimestamp = statisticAnalyzer.userLastTest(user);
 
-        return new UserLastTest(dateFormat.format(new Date(lastTestTimestamp)));
+        return new UserLastTest(DATE_FORMAT.format(new Date(lastTestTimestamp)));
     }
 
     @GetMapping("/user-last-failed-test")
@@ -64,7 +64,7 @@ public class StatisticController {
         log.info(String.format("Received userLastFailedTest GET request, for user: %s", user));
         long lastTestTimestamp = statisticAnalyzer.userLastFailedTest(user);
 
-        return new UserLastTest(dateFormat.format(new Date(lastTestTimestamp)));
+        return new UserLastTest(DATE_FORMAT.format(new Date(lastTestTimestamp)));
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
