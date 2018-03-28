@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -25,18 +26,18 @@ public interface SpeedTestWebSiteCounterRepository extends JpaRepository<SpeedTe
     SpeedTestWebSiteCounter findByIdentifier(String identifier);
 
     @Modifying
-    @Transactional
     @Query(UPDATE_COUNTER_QUERY)
+    @Transactional(propagation = Propagation.REQUIRED)
     void updateCounter(@Param("id") long id);
 
     @Modifying
-    @Transactional
     @Query(DECREASE_COUNTER_QUERY)
+    @Transactional(propagation = Propagation.REQUIRED)
     void decreaseCounter(@Param("id") long id);
 
     @Modifying
-    @Transactional
     @Query(ACTIVATION_QUERY)
+    @Transactional(propagation = Propagation.REQUIRED)
     void updateActivation(@Param("id")long id, @Param("active")boolean active);
 
     default void addSpeedTestWebSite(String identifier) {
