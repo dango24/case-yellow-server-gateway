@@ -71,6 +71,27 @@
     }
   },
   {
+    "webSiteUrl": "http://speedtest.googlefiber.net/",
+    "identifier": "google",
+    "centralized": 0,
+    "flashAble": false,
+    "haveStartButton": true,
+    "speedTestFlashMetaData" : null,
+    "roles" : [
+      {
+        "identifier": "id=view39",
+        "command": "CLICK",
+        "mono": true
+      }
+    ],
+    "speedTestNonFlashMetaData": {
+      "buttonId": "id=run-test",
+      "finishIdentifierMbps": ["class=\"\">Done</span>"],
+      "retrieveResultFromPayloadFloat": "downloadSpeedMbps\">(\\d+(:?\\.\\d+))</span>",
+      "retrieveResultFromPayloadInteger": "downloadSpeedMbps\">(\\d+(:?\\.\\d+))</span>"
+    }
+  },
+  {
     "webSiteUrl": "https://www.fast.com/",
     "identifier": "fast",
     "centralized": 0,
