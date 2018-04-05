@@ -4,13 +4,16 @@ import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @Profile("prod")
+@Configuration
 @ConfigurationProperties
 public class EmailServiceImpl implements EmailService {
 
@@ -29,6 +33,9 @@ public class EmailServiceImpl implements EmailService {
         DATE_FORMAT = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("Asia/Jerusalem"));
     }
+
+    @Value("${spring.mail.username}")
+    private String userName;
 
     private JavaMailSender emailSender;
     private TestService testService;
@@ -46,6 +53,7 @@ public class EmailServiceImpl implements EmailService {
             testService.lastUserTests()
                         .stream()
                         .filter(this::isLastTestOverOneDay)
+                        .sorted(Comparator.comparing(LastUserTest::getTimestamp))
                         .collect(Collectors.toList());
 
         String mailBody = buildMailBody(lastUserTests);
@@ -71,6 +79,8 @@ public class EmailServiceImpl implements EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
+        message.setFrom(userName);
+
         emailSender.send(message);
     }
 
