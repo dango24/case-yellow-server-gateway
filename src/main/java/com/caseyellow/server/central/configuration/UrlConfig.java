@@ -21,7 +21,8 @@ public class UrlConfig {
 
     @PostConstruct
     private void init() {
-        log.info(fileDownloadProperties.toString());
+        log.info(String.format("FileDownloadProperties are: %s", fileDownloadProperties.toString()));
+        log.info(String.format("SpeedTestUrls are: %s", speedTestUrls.toString()));
     }
 
     public Map<String, String> getSpeedTestUrls() {

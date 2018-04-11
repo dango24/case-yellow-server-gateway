@@ -13,22 +13,11 @@ num_of_comparison_per_test: 3
 # Flyway
 flyway.baseline-on-migrate: true
 
-# Logger
-log.dir: /home/ec2-user/case-yellow/logs
-
-logging:
-  level:
-    org.springframework.web: ERROR
-    caseyellow.server.gateway: INFO
-    org.hibernate: INFO
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - [%X{correlation-id}] - %m%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - [%X{correlation-id}] - %m%n"
-  file: ${log.dir}/caseyellow-central-log
+# misc
+snapshot_dir: successful-tests/
 
 # Files Download Properties
 fileDownloadProperties:
-
  firefox:
   identifier: firefox
   url: https://ftp.mozilla.org/pub/firefox/releases/37.0b1/win32/en-US/Firefox%20Setup%2037.0b1.exe
@@ -59,17 +48,23 @@ fileDownloadProperties:
   size: 73850656
   md5: FA5C710C461CD9509F1F15DC77FFFFEA
 
- bitcoin:
-  identifier: bitcoin
-  url: https://bitcoin.org/bin/bitcoin-core-0.15.1/bitcoin-0.15.1-x86_64-linux-gnu.tar.gz
-  size: 25470246
-  md5: 84125F4C8C010A400EE36F020C6C4BCD
-
  vlc:
   identifier: vlc
   url: http://mirror.library.ucy.ac.cy/videolan/vlc/2.2.8/win32/vlc-2.2.8-win32.exe
   size: 30863288
   md5: 9E735F008AE8D32184AF78D39ABB67B3
+
+ quicktime:
+  identifier: quicktime
+  url: https://secure-appldnld.apple.com/QuickTime/031-43075-20160107-C0844134-B3CD-11E5-B1C0-43CA8D551951/QuickTimeInstaller.exe
+  size: 41896256
+  md5: 1A762049BEF7FC3A53014833757DE2D2
+
+# bitcoin:
+#  identifier: bitcoin
+#  url: https://bitcoin.org/bin/bitcoin-core-0.15.1/bitcoin-0.15.1-x86_64-linux-gnu.tar.gz
+#  size: 25470246
+#  md5: 84125F4C8C010A400EE36F020C6C4BCD
 
 # safari: http://support.apple.com/downloads/DL1569/en_US/Safari5.1.10SnowLeopardManual.dmg
 # java-sdk: https://sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip
@@ -83,8 +78,8 @@ speedTestUrls :
  fast: https://www.fast.com/
  hot: http://www.hot.net.il/heb/Internet/speed/
  ookla: http://beta.speedtest.net/
- speedof: http://www.speedof.me/
  google: http://speedtest.googlefiber.net/
+# speedof: http://www.speedof.me/
 
 connection-details:
   speed:
@@ -98,3 +93,17 @@ connection-details:
     - BEZEQ
     - UNLIMITED
     - PARTNER
+
+
+# Logger
+log.dir: /home/ec2-user/case-yellow/logs
+
+logging:
+  level:
+    org.springframework.web: ERROR
+    caseyellow.server.gateway: INFO
+    org.hibernate: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - [%X{correlation-id}] - %m%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] - %-5p %c{1}:%L - [%X{correlation-id}] - %m%n"
+  file: ${log.dir}/caseyellow-central-log

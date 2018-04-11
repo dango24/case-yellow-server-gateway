@@ -2,11 +2,14 @@ package com.caseyellow.server.central.bootstrap;
 
 import com.caseyellow.server.central.configuration.UrlConfig;
 import com.caseyellow.server.central.exceptions.AppBootException;
+import com.caseyellow.server.central.persistence.file.dao.FileDownloadCounter;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
+import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteCounter;
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteCounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.HashSet;
@@ -31,9 +34,11 @@ public class ApplicationBoot {
     }
 
     @PostConstruct
+    @Transactional
     private void init() throws AppBootException {
         addNewIdentifiers();
         disableNonActiveIdentifiers();
+        enableActiveIdentifiers();
     }
 
     private void addNewIdentifiers() {
@@ -47,6 +52,31 @@ public class ApplicationBoot {
         if (!fileDownloadNotExistInDB.isEmpty()) {
             fileDownloadNotExistInDB.forEach(fileDownloadInfoCounterRepository::addFileDownloadInfo);
         }
+    }
+
+    private void enableActiveIdentifiers() {
+        activeFileDownloadInfo();
+        activeSpeedTestWebSite();
+    }
+
+    private void activeFileDownloadInfo() {
+        Set<String> fileDownloadIdentifiersFromResources = urlMapper.getFileDownloadIdentifiers();
+
+        fileDownloadInfoCounterRepository.findAll()
+                                         .stream()
+                                         .map(FileDownloadCounter::getIdentifier)
+                                         .filter(fileDownloadIdentifiersFromResources::contains)
+                                         .forEach(fileDownloadInfoCounterRepository::activeFileDownloadInfo);
+    }
+
+    private void activeSpeedTestWebSite() {
+        Set<String> speedTestIdentifiersFromResources = urlMapper.getSpeedTestIdentifiers();
+
+        speedTestWebSiteCounterRepository.findAll()
+                                         .stream()
+                                         .map(SpeedTestWebSiteCounter::getIdentifier)
+                                         .filter(speedTestIdentifiersFromResources::contains)
+                                         .forEach(speedTestWebSiteCounterRepository::activeSpeedTestWebSite);
     }
 
     private List<String> getFileDownloadNotExistInDB() {
