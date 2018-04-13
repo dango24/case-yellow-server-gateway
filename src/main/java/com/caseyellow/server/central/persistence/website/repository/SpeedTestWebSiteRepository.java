@@ -19,10 +19,11 @@ import static java.util.stream.Collectors.toMap;
  */
 public interface SpeedTestWebSiteRepository extends JpaRepository<SpeedTestWebSiteDAO, Long> {
 
-    String UPDATE_ANALYZED_IMAGE_RESULT = "UPDATE SpeedTestWebSiteDAO s set s.downloadRateInMbps = :downloadRateInMbps  where s.id = :id";
+    String UPDATE_ANALYZED_IMAGE_RESULT_BY_ID = "UPDATE SpeedTestWebSiteDAO s set s.downloadRateInMbps = :downloadRateInMbps  where s.id = :id";
     String UPDATE_ANALYZED_STATE = "UPDATE SpeedTestWebSiteDAO s set s.analyzedState = :analyzedState where s.id = :id";
     String SELECT_IDENTIFIER_AND_URL_QUERY = "select DISTINCT SPEED_TEST_IDENTIFIER , URL_ADDRESS  from SPEED_TEST_WEB_SITE";
 
+    SpeedTestWebSiteDAO findByS3FileAddress(String path);
     Long countBySpeedTestIdentifier(String speedTestIdentifier);
     List<SpeedTestWebSiteDAO> findBySpeedTestIdentifier(String speedTestIdentifier);
     List<SpeedTestWebSiteDAO> findByAnalyzedState(AnalyzedState analyzedState);
@@ -37,8 +38,8 @@ public interface SpeedTestWebSiteRepository extends JpaRepository<SpeedTestWebSi
 
     @Modifying
     @Transactional
-    @Query(UPDATE_ANALYZED_IMAGE_RESULT)
-    void updateAnalyzedImageResult(@Param("id") long id, @Param("downloadRateInMbps") double downloadRateInMbps);
+    @Query(UPDATE_ANALYZED_IMAGE_RESULT_BY_ID)
+    void updateAnalyzedImageResultById(@Param("id") long id, @Param("downloadRateInMbps") double downloadRateInMbps);
 
     default Map<String, String> getIdentifierToURLMapper() {
         List<Object[]> identifierToURLList = selectIdentifierAndURL();

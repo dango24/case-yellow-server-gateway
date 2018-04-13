@@ -1,15 +1,14 @@
 package com.caseyellow.server.central.domain.analyzer.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Value;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AnalyzedImage {
 
-    private String message;
-    private boolean analyzed;
-    private double result;
+    public String message;
+    public String path;
+    public boolean analyzed;
+    public double result;
 }
