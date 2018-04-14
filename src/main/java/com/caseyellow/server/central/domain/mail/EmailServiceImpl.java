@@ -1,5 +1,13 @@
 package com.caseyellow.server.central.domain.mail;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
+import com.amazonaws.services.simpleemail.model.*;
+import com.caseyellow.server.central.configuration.AWSConfiguration;
 import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import lombok.extern.slf4j.Slf4j;
@@ -8,8 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -34,17 +40,25 @@ public class EmailServiceImpl implements EmailService {
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("Asia/Jerusalem"));
     }
 
-    @Value("${spring.mail.username}")
-    private String userName;
+    @Value("${email.username}")
+    private String emailUser;
 
-    private JavaMailSender emailSender;
-    private TestService testService;
     private List<String> emails;
+    private TestService testService;
+    private AmazonSimpleEmailService emailService;
 
     @Autowired
-    public EmailServiceImpl(TestService testService, JavaMailSender emailSender) {
-        this.emailSender = emailSender;
+    public EmailServiceImpl(TestService testService, AWSConfiguration awsConfiguration) {
         this.testService = testService;
+
+        AWSCredentials credentials =
+                new BasicAWSCredentials(awsConfiguration.accessKeyID(), awsConfiguration.secretAccessKey());
+
+        this.emailService =
+                AmazonSimpleEmailServiceClientBuilder.standard()
+                                                     .withRegion(Regions.EU_WEST_1)
+                                                     .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                                                     .build();
     }
 
     @Override
@@ -75,13 +89,16 @@ public class EmailServiceImpl implements EmailService {
 
     private void sendSimpleMessage(String to, String subject, String text) {
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(text);
-        message.setFrom(userName);
+        Message message =
+                new Message().withBody(new Body().withText(new Content().withCharset("UTF-8").withData(text)))
+                             .withSubject(new Content().withCharset("UTF-8").withData(subject));
 
-        emailSender.send(message);
+        SendEmailRequest request =
+                new SendEmailRequest().withDestination(new Destination().withToAddresses(to))
+                                      .withMessage(message)
+                                      .withSource(emailUser);
+
+        emailService.sendEmail(request);
     }
 
     public List<String> getEmails() {

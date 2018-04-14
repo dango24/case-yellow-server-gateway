@@ -8,17 +8,12 @@ spring.jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect
 #spring.jpa.generate-ddl: true
 spring.jpa.hibernate.ddl-auto: validate
 
-# mail service
-spring.mail.host: smtp.gmail.com
-spring.mail.port: 587
-spring.mail.username: caseyellow22@gmail.com
-spring.mail.password: nopass
-spring.mail.properties.mail.smtp.auth: true
-spring.mail.properties.mail.smtp.starttls.enable: true
-
 # SQS
 sqs.queue.endpoint: https://sqs.eu-central-1.amazonaws.com
 sqs.central.queue: cy-central-queue
+
+# mail service
+email.username: caseyellow22@gmail.com
 
 emails:
   - dangolan24@gmail.com
