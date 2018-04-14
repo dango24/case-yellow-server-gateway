@@ -11,6 +11,11 @@ public class Configuration {
     @Bean
     @Profile("dev")
     public EmailService devEmailService() {
-        return new EmailServiceImpl(null, null);
+        return new EmailService() {
+            @Override
+            public void sendNotification() {
+
+            }
+        };
     }
 }
