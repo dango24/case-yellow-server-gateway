@@ -4,9 +4,6 @@ server.port : 9080
 # Profiles
 spring.profiles.active: prod
 
-# Services
-analysis_url: http://localhost:7008/analysis/
-
 # FileDownloadService properties
 num_of_comparison_per_test: 3
 

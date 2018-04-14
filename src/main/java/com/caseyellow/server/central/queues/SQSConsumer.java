@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Slf4j
-@Profile("prod")
 @Component
+@Profile("prod")
 public class SQSConsumer {
 
     private ObjectMapper objectMapper;
@@ -34,7 +34,7 @@ public class SQSConsumer {
 
             case SNAPSHOT_ANALYZED:
                 AnalyzedImage analyzedImage = objectMapper.readValue(message.getPayload(), AnalyzedImage.class);
-                imageAnalyzer.updateAnalyzedImageByPath(analyzedImage.path, analyzedImage.result);
+                imageAnalyzer.updateAnalyzedImageResult(analyzedImage.path, analyzedImage.result);
         }
 
     }
