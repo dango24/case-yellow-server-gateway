@@ -9,6 +9,7 @@ public class AnalyzedImage {
 
     public String message;
     public String path;
+    public String md5;
     public boolean analyzed;
     public double result;
 }

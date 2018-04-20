@@ -3,6 +3,7 @@ package com.caseyellow.server.central.common;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.File;
@@ -43,17 +44,12 @@ public interface Utils {
         }
     }
 
-    static String convertToMD5(File file)  {
-
-        try (InputStream in = new FileInputStream(file)) {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(IOUtils.toByteArray(in));
-
-            return DatatypeConverter.printHexBinary(md.digest());
-
-        } catch (IOException | NoSuchAlgorithmException e) {
-            log.error(String.format("Failed to convert to MD5, error: %s", e.getMessage(), e));
-            return "UNKNOWN";
-        }
+    static void putMDC(String data) {
+        MDC.put("correlation-id", data);
     }
+
+    static void removeMDC() {
+        MDC.remove("correlation-id");
+    }
+
 }

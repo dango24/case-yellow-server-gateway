@@ -27,10 +27,13 @@ public class ImageAnalyzerImpl implements ImageAnalyzer {
 
     @Override
     @Transactional
-    public void updateAnalyzedImageResult(String imagePath, double analyzedImageResult) {
+    public void updateAnalyzedImageResult(String imagePath, double analyzedImageResult, boolean analyzedSucceed) {
         SpeedTestWebSiteDAO speedTestWebSiteDAO = speedTestWebSiteRepository.findByS3FileAddress(imagePath.replaceAll(testsDir, ""));
         speedTestWebSiteRepository.updateAnalyzedImageResultById(speedTestWebSiteDAO.getId(), analyzedImageResult);
-        speedTestWebSiteRepository.updateAnalyzedState(speedTestWebSiteDAO.getId(), AnalyzedState.SUCCESS);
+        AnalyzedState analyzedState = analyzedSucceed ? AnalyzedState.SUCCESS : AnalyzedState.FAILURE;
+
+        speedTestWebSiteRepository.updateAnalyzedState(speedTestWebSiteDAO.getId(), analyzedState);
+
         log.info(String.format("Successfully update speedTestWebSiteDAO: %s with result: %s", speedTestWebSiteDAO.getS3FileAddress(), analyzedImageResult));
     }
 }
