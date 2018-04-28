@@ -44,6 +44,9 @@ public class TestDAO {
     @Column(name = "client_version")
     private String clientVersion;
 
+    @Column(name = "isp")
+    private String isp;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "test_id")
     private List<ComparisonInfoDAO> comparisonInfoDAOTests;
@@ -51,6 +54,7 @@ public class TestDAO {
     private TestDAO(TestBuilder testBuilder) {
         this.testID = testBuilder.testID;
         this.user = testBuilder.user;
+        this.isp = testBuilder.isp;
         this.startTime = testBuilder.startTime;
         this.endTime = testBuilder.endTime;
         this.systemInfo = testBuilder.systemInfo;
@@ -64,6 +68,7 @@ public class TestDAO {
         private String testID;
         private String user;
         private String clientVersion;
+        private String isp;
         private Long startTime;
         private Long endTime;
         private SystemInfoDAO systemInfo;
@@ -109,8 +114,14 @@ public class TestDAO {
             return this;
         }
 
+        public TestBuilder addISP(String isp) {
+            this.isp = isp;
+            return this;
+        }
+
         public TestDAO build() {
             return new TestDAO(this);
         }
+
     }
 }

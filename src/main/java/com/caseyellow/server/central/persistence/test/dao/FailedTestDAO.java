@@ -27,6 +27,9 @@ public class FailedTestDAO {
     @Column(name = "user_name")
     private String user;
 
+    @Column(name = "identifier")
+    private String identifier;
+
     @Column(name = "timestamp")
     private Long timestamp;
 }
