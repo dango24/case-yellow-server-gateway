@@ -17,6 +17,9 @@ public class FailedTestDAO {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "identifier")
+    private String identifier;
+
     private String ip;
     private String path;
     private String errorMessage;
@@ -26,9 +29,6 @@ public class FailedTestDAO {
 
     @Column(name = "user_name")
     private String user;
-
-    @Column(name = "identifier")
-    private String identifier;
 
     @Column(name = "timestamp")
     private Long timestamp;
