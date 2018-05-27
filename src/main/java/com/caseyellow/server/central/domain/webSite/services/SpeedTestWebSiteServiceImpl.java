@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by dango on 9/19/17.
@@ -30,7 +30,7 @@ public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
     @Override
     public SpeedTestMetaData getNextSpeedTestWebSite() {
         List<String> speedTestIdentifiers = new ArrayList<>(urlMapper.getSpeedTestIdentifiers());
-        int random = new Random().nextInt(speedTestIdentifiers.size());
+        int random = ThreadLocalRandom.current().nextInt(speedTestIdentifiers.size());
 
         return speedTestWebSiteFactory.getSpeedTestWebSiteFromIdentifier(speedTestIdentifiers.get(random));
     }

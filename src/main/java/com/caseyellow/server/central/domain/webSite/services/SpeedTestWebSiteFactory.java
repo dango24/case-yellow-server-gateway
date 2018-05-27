@@ -2,6 +2,8 @@ package com.caseyellow.server.central.domain.webSite.services;
 
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import org.apache.commons.io.IOUtils;
@@ -36,19 +38,10 @@ public class SpeedTestWebSiteFactory {
         return speedTestMetaDataMap.get(identifier);
     }
 
+    @Data
+    @NoArgsConstructor
     private static class SpeedTestMetaDataWrapper {
 
         private List<SpeedTestMetaData> speedTestMetaData;
-
-        public SpeedTestMetaDataWrapper() {
-        }
-
-        public List<SpeedTestMetaData> getSpeedTestMetaData() {
-            return speedTestMetaData;
-        }
-
-        public void setSpeedTestMetaData(List<SpeedTestMetaData> speedTestMetaData) {
-            this.speedTestMetaData = speedTestMetaData;
-        }
     }
 }
