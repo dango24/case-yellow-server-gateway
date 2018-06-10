@@ -4,7 +4,11 @@ import com.caseyellow.server.central.configuration.UrlConfig;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestNonFlashMetaData;
 import com.caseyellow.server.central.domain.webSite.model.WordIdentifier;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,11 +16,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static java.util.Objects.nonNull;
+
 /**
  * Created by dango on 9/19/17.
  */
 @Service
+@ConfigurationProperties(prefix = "speedTest")
 public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
+
+    @Value("${run.extra.identifiers}")
+    private boolean runExtraIdentifiers;
+
+    @Getter @Setter
+    private List<String> extraIdentifiers;
 
     private UrlConfig urlMapper;
     private SpeedTestWebSiteFactory speedTestWebSiteFactory;
@@ -30,6 +43,11 @@ public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
     @Override
     public SpeedTestMetaData getNextSpeedTestWebSite() {
         List<String> speedTestIdentifiers = new ArrayList<>(urlMapper.getSpeedTestIdentifiers());
+
+        if (runExtraIdentifiers && nonNull(extraIdentifiers)) {
+            speedTestIdentifiers.addAll(extraIdentifiers);
+        }
+
         int random = ThreadLocalRandom.current().nextInt(speedTestIdentifiers.size());
 
         return speedTestWebSiteFactory.getSpeedTestWebSiteFromIdentifier(speedTestIdentifiers.get(random));

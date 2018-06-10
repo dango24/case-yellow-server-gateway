@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import static com.caseyellow.server.central.domain.mail.EmailServiceImpl.DATE_FORMAT;
@@ -74,11 +76,29 @@ public class StatisticController {
         statisticAnalyzer.notifyLastTests();
     }
 
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PostMapping(value = "/start-test",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void startTest(@RequestBody StartTestDetails startTestDetails) {
+        log.info(String.format("Received startTest POST request with startTestDetails: %s", startTestDetails));
+    }
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     private static class UserLastTest {
 
         private String last_test;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class StartTestDetails {
+
+        private String user;
+        private String identifier;
+        private List<String> urls;
     }
 }
