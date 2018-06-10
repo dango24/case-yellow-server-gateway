@@ -4,6 +4,7 @@ import com.caseyellow.server.central.common.Converter;
 import com.caseyellow.server.central.common.Validator;
 import com.caseyellow.server.central.configuration.ConnectionConfig;
 import com.caseyellow.server.central.domain.counter.CounterService;
+import com.caseyellow.server.central.domain.metrics.MetricsService;
 import com.caseyellow.server.central.domain.test.model.*;
 import com.caseyellow.server.central.persistence.test.dao.FailedTestDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
@@ -41,6 +42,7 @@ public class TestServiceImpl implements TestService {
     private ConnectionConfig connectionConfig;
     private CounterService counterService;
     private FileStorageService fileStorageService;
+    private MetricsService metricsService;
     private TestRepository testRepository;
     private FailedTestRepository failedTestRepository;
     private UserDetailsRepository userDetailsRepository;
@@ -49,6 +51,7 @@ public class TestServiceImpl implements TestService {
     public TestServiceImpl(ConnectionConfig connectionConfig,
                            CounterService counterService,
                            FileStorageService fileStorageService,
+                           MetricsService metricsService,
                            TestRepository testRepository,
                            FailedTestRepository failedTestRepository,
                            UserDetailsRepository userDetailsRepository) {
@@ -57,6 +60,7 @@ public class TestServiceImpl implements TestService {
         this.counterService = counterService;
         this.connectionConfig = connectionConfig;
         this.fileStorageService = fileStorageService;
+        this.metricsService = metricsService;
         this.failedTestRepository = failedTestRepository;
         this.userDetailsRepository = userDetailsRepository;
     }
@@ -160,6 +164,7 @@ public class TestServiceImpl implements TestService {
                          .thenApply(this::removeUnsuccessfulTests)
                          .thenApply(this::increaseComparisonInfoCounters)
                          .thenApply(Converter::convertTestModelToDAO)
+                         .thenApply(this::addMetrics)
                          .exceptionally(this::handleSaveTestException)
                          .thenAccept(this::save);
     }
@@ -200,16 +205,6 @@ public class TestServiceImpl implements TestService {
         return test;
     }
 
-    private TestDAO decreaseComparisonInfoCounters(TestDAO test) {
-
-        test.getComparisonInfoDAOTests()
-            .stream()
-            .map(ComparisonInfoIdentifiers::new)
-            .forEach(identifiers -> counterService.decreaseComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
-
-        return test;
-    }
-
     private TestDAO handleSaveTestException(Throwable throwable) {
         logger.error("Failed To save test, " + throwable.getMessage(), throwable);
         return null;
@@ -220,4 +215,10 @@ public class TestServiceImpl implements TestService {
         systemInfo.setInfrastructure(userDetails.getInfrastructure());
         systemInfo.setSpeed(userDetails.getSpeed());
     }
+
+    private TestDAO addMetrics(TestDAO test) {
+        metricsService.addMetrics(test);
+        return test;
+    }
+
 }

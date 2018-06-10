@@ -1,5 +1,7 @@
 package com.caseyellow.server.central.domain.analyzer.services;
 
+import com.caseyellow.server.central.domain.metrics.MetricsService;
+import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
@@ -18,10 +20,12 @@ public class ImageAnalyzerImpl implements ImageAnalyzer {
     @Value("${successful_tests_dir}")
     private String testsDir;
 
+    private MetricsService metricsService;
     private SpeedTestWebSiteRepository speedTestWebSiteRepository;
 
     @Autowired
-    public ImageAnalyzerImpl(SpeedTestWebSiteRepository speedTestWebSiteRepository) {
+    public ImageAnalyzerImpl(MetricsService metricsService, SpeedTestWebSiteRepository speedTestWebSiteRepository) {
+        this.metricsService = metricsService;
         this.speedTestWebSiteRepository = speedTestWebSiteRepository;
     }
 
@@ -33,7 +37,10 @@ public class ImageAnalyzerImpl implements ImageAnalyzer {
         AnalyzedState analyzedState = analyzedSucceed ? AnalyzedState.SUCCESS : AnalyzedState.FAILURE;
 
         speedTestWebSiteRepository.updateAnalyzedState(speedTestWebSiteDAO.getId(), analyzedState);
-
         log.info(String.format("Successfully update speedTestWebSiteDAO: %s with result: %s", speedTestWebSiteDAO.getS3FileAddress(), analyzedImageResult));
+
+        if (analyzedSucceed) {
+            metricsService.executeSubTestsSpeedTestMetrics(speedTestWebSiteRepository.findOne(speedTestWebSiteDAO.getId()));
+        }
     }
 }

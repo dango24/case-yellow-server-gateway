@@ -52,6 +52,13 @@
 			<version>1.0.4</version>
 		</dependency>
 
+		<!--Statsd Client-->
+		<dependency>
+			<groupId>com.timgroup</groupId>
+			<artifactId>java-statsd-client</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
 		<!--AWS Ses-->
 		<dependency>
 			<groupId>com.amazonaws</groupId>
