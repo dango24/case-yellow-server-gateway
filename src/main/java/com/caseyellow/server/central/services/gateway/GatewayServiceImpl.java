@@ -5,11 +5,13 @@ import com.caseyellow.server.central.services.infrastrucre.RequestHandler;
 import com.caseyellow.server.central.services.infrastrucre.RetrofitBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import retrofit2.Retrofit;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 
+@Service
 public class GatewayServiceImpl implements GatewayService {
 
     @Value("${gateway.host}")
