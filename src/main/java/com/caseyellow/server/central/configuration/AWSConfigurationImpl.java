@@ -2,7 +2,7 @@ package com.caseyellow.server.central.configuration;
 
 import com.caseyellow.server.central.exceptions.ConfigurationException;
 import com.caseyellow.server.central.exceptions.IORuntimeException;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -15,12 +15,11 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@Slf4j
 @Configuration
 @Profile("prod")
 @PropertySource("aws_access.yml")
 public class AWSConfigurationImpl implements AWSConfiguration {
-
-    private Logger logger = Logger.getLogger(AWSConfigurationImpl.class);
 
     @Value("${S3_bucket_name}")
     private String bucketName;
@@ -74,7 +73,7 @@ public class AWSConfigurationImpl implements AWSConfiguration {
             return true;
 
         } catch (ConfigurationException e) {
-            logger.error("Failed to build credentials, " + e.getMessage(), e);
+            log.error("Failed to build credentials, " + e.getMessage(), e);
             return false;
         }
     }

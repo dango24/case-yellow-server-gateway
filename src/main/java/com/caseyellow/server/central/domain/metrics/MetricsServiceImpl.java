@@ -1,8 +1,8 @@
 package com.caseyellow.server.central.domain.metrics;
 
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
-import com.caseyellow.server.central.persistence.metrics.AverageMetric;
-import com.caseyellow.server.central.persistence.metrics.AverageMetricRepository;
+import com.caseyellow.server.central.persistence.metrics.MetricAverage;
+import com.caseyellow.server.central.persistence.metrics.MetricAverageRepository;
 import com.caseyellow.server.central.persistence.test.dao.ComparisonInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
@@ -10,19 +10,21 @@ import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO
 import com.timgroup.statsd.StatsDClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
 
 @Slf4j
 @Service
+@Profile("prod")
 public class MetricsServiceImpl implements MetricsService {
 
     private StatsDClient statsDClient;
-    private AverageMetricRepository averageMetricRepository;
+    private MetricAverageRepository averageMetricRepository;
 
     @Autowired
-    public MetricsServiceImpl(StatsDClient statsDClient, AverageMetricRepository averageMetricRepository) {
+    public MetricsServiceImpl(StatsDClient statsDClient, MetricAverageRepository averageMetricRepository) {
         this.statsDClient = statsDClient;
         this.averageMetricRepository = averageMetricRepository;
     }
@@ -46,7 +48,7 @@ public class MetricsServiceImpl implements MetricsService {
         String testBucket = String.format("end-test.%s.%s", user, test.getSpeedTestWebsiteIdentifier());
         long avg = test.getEndTime() - test.getStartTime();
 
-        AverageMetric averageMetric = averageMetricRepository.updateAverageMetric(testBucket, avg);
+        MetricAverage averageMetric = averageMetricRepository.updateAverageMetric(testBucket, avg);
         statsDClient.increment(testBucket);
         statsDClient.recordExecutionTime(String.format("%s.%s", testBucket, "time"), avg);
         statsDClient.recordGaugeValue(String.format("%s.%s", testBucket, "time.average"), averageMetric.getAvg());
@@ -64,7 +66,7 @@ public class MetricsServiceImpl implements MetricsService {
         if (speedTestWebSite.getAnalyzedState() == AnalyzedState.SUCCESS) {
 
             double downloadRateInKB = calculateDownloadRateFromMbpsToKBps(speedTestWebSite.getDownloadRateInMbps());
-            AverageMetric averageMetric = averageMetricRepository.updateAverageMetric(testBucket, downloadRateInKB);
+            MetricAverage averageMetric = averageMetricRepository.updateAverageMetric(testBucket, downloadRateInKB);
 
             statsDClient.increment(testBucket);
             statsDClient.recordGaugeValue(String.format("%s.%s", testBucket, "download.rate"), downloadRateInKB);
@@ -78,7 +80,7 @@ public class MetricsServiceImpl implements MetricsService {
         if (downloadRateInKB > 0) {
 
             testBucket = String.format("%s.%s", testBucket, fileDownloadInfoDAO.getFileName());
-            AverageMetric averageMetric = averageMetricRepository.updateAverageMetric(testBucket, downloadRateInKB);
+            MetricAverage averageMetric = averageMetricRepository.updateAverageMetric(testBucket, downloadRateInKB);
 
             statsDClient.increment(testBucket);
             statsDClient.recordGaugeValue(String.format("%s.%s", testBucket, "download.rate"), downloadRateInKB);
@@ -90,7 +92,7 @@ public class MetricsServiceImpl implements MetricsService {
         testBucket = String.format("%s.%s", testBucket, "ratio");
         double ratio = getRatio(comparisonInfo);
 
-        AverageMetric averageMetric = averageMetricRepository.updateAverageMetric(testBucket, ratio);
+        MetricAverage averageMetric = averageMetricRepository.updateAverageMetric(testBucket, ratio);
 
         statsDClient.recordGaugeValue(testBucket, ratio);
         statsDClient.recordGaugeValue(String.format("%s.%s", testBucket, "average"), averageMetric.getAvg());

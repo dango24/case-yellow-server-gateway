@@ -10,12 +10,12 @@ import java.text.DecimalFormat;
 
 import static java.util.Objects.isNull;
 
-public interface AverageMetricRepository extends JpaRepository<AverageMetric, Long> {
+public interface MetricAverageRepository extends JpaRepository<MetricAverage, Long> {
 
     DecimalFormat AVERAGE_DECIMAL_FORMAT = new DecimalFormat("#.##");
 
-    String UPDATE_COUNTER_QUERY = "UPDATE AverageMetric a set a.count = a.count+1 where a.id = :id";
-    String UPDATE_AVERAGE_QUERY = "UPDATE AverageMetric a set a.avg = :avg where a.id = :id";
+    String UPDATE_COUNTER_QUERY = "UPDATE MetricAverage a set a.count = a.count+1 where a.id = :id";
+    String UPDATE_AVERAGE_QUERY = "UPDATE MetricAverage a set a.avg = :avg where a.id = :id";
 
     @Modifying
     @Transactional
@@ -27,13 +27,13 @@ public interface AverageMetricRepository extends JpaRepository<AverageMetric, Lo
     @Query(UPDATE_AVERAGE_QUERY)
     void updateAverage(@Param("id")long id, @Param("avg")double avg);
 
-    AverageMetric findByBucket(String bucketName);
+    MetricAverage findByBucket(String bucketName);
 
-    default AverageMetric updateAverageMetric(String bucketName, double testAvgTime) {
-        AverageMetric averageMetric = findByBucket(bucketName);
+    default MetricAverage updateAverageMetric(String bucketName, double testAvgTime) {
+        MetricAverage averageMetric = findByBucket(bucketName);
 
         if (isNull(averageMetric)) {
-            averageMetric = new AverageMetric(bucketName, testAvgTime, 1);
+            averageMetric = new MetricAverage(bucketName, testAvgTime, 1);
             save(averageMetric);
 
             return averageMetric;
@@ -47,6 +47,6 @@ public interface AverageMetricRepository extends JpaRepository<AverageMetric, Lo
         updateAverage(averageMetric.getId(), newAvg);
         updateCounter(averageMetric.getId());
 
-        return new AverageMetric(bucketName, newAvg);
+        return new MetricAverage(bucketName, newAvg);
     }
 }
