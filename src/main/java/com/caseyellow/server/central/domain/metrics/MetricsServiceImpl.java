@@ -10,14 +10,12 @@ import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO
 import com.timgroup.statsd.StatsDClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
 
 @Slf4j
 @Service
-@Profile("prod")
 public class MetricsServiceImpl implements MetricsService {
 
     private StatsDClient statsDClient;
@@ -31,8 +29,13 @@ public class MetricsServiceImpl implements MetricsService {
 
     @Override
     public void addMetrics(TestDAO test) {
-        executeTestMetrics(test, test.getUser());
-        test.getComparisonInfoDAOTests().forEach(comparisonInfo -> executeSubTestsMetrics(comparisonInfo, test.getUser(), test.getSpeedTestWebsiteIdentifier()));
+        try {
+            executeTestMetrics(test, test.getUser());
+            test.getComparisonInfoDAOTests().forEach(comparisonInfo -> executeSubTestsMetrics(comparisonInfo, test.getUser(), test.getSpeedTestWebsiteIdentifier()));
+
+        } catch (Exception e) {
+            log.error(String.format("Failed to add metrics, %s", e.getMessage()), e);
+        }
     }
 
     @Override

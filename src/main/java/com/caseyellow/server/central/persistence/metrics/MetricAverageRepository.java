@@ -30,22 +30,22 @@ public interface MetricAverageRepository extends JpaRepository<MetricAverage, Lo
     MetricAverage findByBucket(String bucketName);
 
     default MetricAverage updateAverageMetric(String bucketName, double testAvgTime) {
-        MetricAverage averageMetric = findByBucket(bucketName);
+        MetricAverage metricAverage = findByBucket(bucketName);
 
-        if (isNull(averageMetric)) {
-            averageMetric = new MetricAverage(bucketName, testAvgTime, 1);
-            save(averageMetric);
+        if (isNull(metricAverage)) {
+            metricAverage = new MetricAverage(bucketName, testAvgTime, 1);
+            save(metricAverage);
 
-            return averageMetric;
+            return metricAverage;
         }
 
-        double currentAvg = averageMetric.getAvg();
-        int currentCount = averageMetric.getCount();
-        double newAvg = (currentAvg + testAvgTime) / (currentCount+1);
+        double currentAvg = metricAverage.getAvg();
+        int currentCount = metricAverage.getCount();
+        double newAvg = (currentAvg*currentCount + testAvgTime) / (currentCount+1);
         newAvg = Double.valueOf(AVERAGE_DECIMAL_FORMAT.format(newAvg));
 
-        updateAverage(averageMetric.getId(), newAvg);
-        updateCounter(averageMetric.getId());
+        updateAverage(metricAverage.getId(), newAvg);
+        updateCounter(metricAverage.getId());
 
         return new MetricAverage(bucketName, newAvg);
     }
