@@ -27,8 +27,8 @@ public class AWSConfigurationImpl implements AWSConfiguration {
     @Value("${credentials_path}")
     private String credentialsPath;
 
-    @Value("${healthy_path}")
-    private String healthyPath;
+    @Value("${health_path}")
+    private String healthPath;
 
     @Value("${encryption_key}")
     private String encryptionKey;
@@ -53,7 +53,7 @@ public class AWSConfigurationImpl implements AWSConfiguration {
 
     @Override
     public String healthPath() {
-        return healthyPath;
+        return healthPath;
     }
 
     @Override

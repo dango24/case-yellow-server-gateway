@@ -1,9 +1,10 @@
-S3_bucket_name: case-yellow-snapshot
+#S3_bucket_name: case-yellow-snapshot
+S3_bucket_name: servile-snapshots
 
 credentials_path: /home/ec2-user/case-yellow/resources/a.out
 #credentials_path: /home/dango/Documents/case-yellow/a.out
 #credentials_path: C:\\Users\\Dan\\Documents\\case yellow\\main.exe
 
 encryption_key: nokey
-healthy_path: we_are_one_with_the_light
+health_path: we_are_one_with_the_light
 successful_tests_dir: successful-tests/
