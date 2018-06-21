@@ -42,13 +42,14 @@ public class StatisticController {
     }
 
     @GetMapping("/identifiers-details")
-    public Map<String, IdentifierDetails> identifiersDetails() {
+    public Map<String, IdentifierDetails> identifiersDetails(@RequestParam(value = "filter", required = false)  String filter) {
         log.info("Received identifiersDetails GET request");
-        return statisticAnalyzer.createIdentifiersDetails(null);
+        return identifiersDetailsByUser(null, filter);
     }
 
     @GetMapping("/identifiers-details/{user}")
-    public Map<String, IdentifierDetails> identifiersDetailsByUser(@PathVariable("user")String user) {
+    public Map<String, IdentifierDetails> identifiersDetailsByUser(@PathVariable("user")String user,
+                                                                   @RequestParam(value = "filter", required = false)  String filter) {
         log.info(String.format("Received identifiersDetails GET request for user: %s", user));
         return statisticAnalyzer.createIdentifiersDetails(user);
     }
