@@ -51,7 +51,7 @@ public class StatisticController {
     public Map<String, IdentifierDetails> identifiersDetailsByUser(@PathVariable("user")String user,
                                                                    @RequestParam(value = "filter", required = false)  String filter) {
         log.info(String.format("Received identifiersDetails GET request for user: %s", user));
-        return statisticAnalyzer.createIdentifiersDetails(user);
+        return statisticAnalyzer.createIdentifiersDetails(user, filter);
     }
 
     @GetMapping("/user-last-test")

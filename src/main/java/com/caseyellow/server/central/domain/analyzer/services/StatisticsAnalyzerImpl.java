@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
 import static java.util.Objects.isNull;
@@ -25,13 +26,18 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
     private EmailService emailService;
     private TestService testService;
+    private TestPredicateFactory testPredicateFactory;
     private UserDetailsRepository userDetailsRepository;
 
     @Autowired
-    public StatisticsAnalyzerImpl(TestService testService, UserDetailsRepository userDetailsRepository, EmailService emailService) {
+    public StatisticsAnalyzerImpl(TestService testService,
+                                  UserDetailsRepository userDetailsRepository,
+                                  EmailService emailService,
+                                  TestPredicateFactory testPredicateFactory) {
 
         this.testService = testService;
         this.emailService = emailService;
+        this.testPredicateFactory = testPredicateFactory;
         this.userDetailsRepository = userDetailsRepository;
     }
 
@@ -53,13 +59,14 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
     @Override
     @Cacheable("identifiersDetails")
-    public Map<String, IdentifierDetails> createIdentifiersDetails(String user) {
+    public Map<String, IdentifierDetails> createIdentifiersDetails(String user, String filter) {
+        Map<String, List<ComparisonInfo>> testComparisons = getComparisons(user, filter);
 
-        return getComparisons(user).entrySet()
-                                   .stream()
-                                   .map(entry -> createIdentifierDetails(entry.getKey(), entry.getValue()))
-                                   .filter(this::isValidIdentifierDetails)
-                                   .collect(toMap(IdentifierDetails::getIdentifier, Function.identity()));
+        return testComparisons.entrySet()
+                              .stream()
+                              .map(entry -> createIdentifierDetails(entry.getKey(), entry.getValue()))
+                              .filter(this::isValidIdentifierDetails)
+                              .collect(toMap(IdentifierDetails::getIdentifier, Function.identity()));
     }
 
     @Override
@@ -98,8 +105,9 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         return identifierDetails.getMeanRatio() > 0;
     }
 
-    private Map<String, List<ComparisonInfo>> getComparisons(String user) {
+    private Map<String, List<ComparisonInfo>> getComparisons(String user, String filter) {
         List<Test> tests;
+        Predicate<Test> testPredicate = testPredicateFactory.getTestPredicate(filter);
 
         if (isNull(user)) {
             tests = testService.getAllTests();
@@ -108,6 +116,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         }
 
         return tests.stream()
+                    .filter(testPredicate::test)
                     .flatMap(test -> test.getComparisonInfoTests().stream())
                     .collect(groupingBy(c -> c.getSpeedTestWebSite().getSpeedTestIdentifier()));
     }
