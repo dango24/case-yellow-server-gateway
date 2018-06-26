@@ -2,6 +2,7 @@ package com.caseyellow.server.central.domain.analyzer.services;
 
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.mail.EmailService;
+import com.caseyellow.server.central.domain.mail.User;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.services.TestService;
@@ -90,8 +91,8 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     }
 
     @Override
-    public void notifyLastTests() {
-        emailService.sendNotification();
+    public void notifyLastTests(List<User> users) {
+        emailService.sendNotification(users);
     }
 
     private IdentifierDetails createIdentifierDetails(String identifier, List<ComparisonInfo> comparisonInfos) {

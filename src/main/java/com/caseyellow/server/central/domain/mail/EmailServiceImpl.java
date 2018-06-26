@@ -10,8 +10,6 @@ import com.amazonaws.services.simpleemail.model.*;
 import com.caseyellow.server.central.configuration.AWSConfiguration;
 import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.persistence.test.model.LastUserTest;
-import com.caseyellow.server.central.services.gateway.GatewayService;
-import com.caseyellow.server.central.services.gateway.model.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
@@ -52,13 +51,11 @@ public class EmailServiceImpl implements EmailService {
     private List<String> emails;
 
     private TestService testService;
-    private GatewayService gatewayService;
     private AmazonSimpleEmailService emailService;
 
     @Autowired
-    public EmailServiceImpl(TestService testService, GatewayService gatewayService, AWSConfiguration awsConfiguration) {
+    public EmailServiceImpl(TestService testService, AWSConfiguration awsConfiguration) {
         this.testService = testService;
-        this.gatewayService = gatewayService;
         initSES(awsConfiguration);
     }
 
@@ -74,15 +71,15 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendNotification() {
-        List<LastUserTest> lastUserTests = createLastUserTest();
+    public void sendNotification(List<User> users) {
+        List<LastUserTest> lastUserTests = createLastUserTest(users);
 
         if (!lastUserTests.isEmpty()) {
-            sendNotification(lastUserTests);
+            sendEmails(lastUserTests);
         }
     }
 
-    private void sendNotification(List<LastUserTest> lastUserTests) {
+    private void sendEmails(List<LastUserTest> lastUserTests) {
         String subject = String.format("%s - %s", EMAIL_SUBJECT, DAY_FORMAT.format(new Date()));
         String mailBody = buildMailBody(lastUserTests);
         log.info(String.format("Send email to: %s with body: %s", emails, mailBody));
@@ -90,18 +87,22 @@ public class EmailServiceImpl implements EmailService {
         emails.forEach(email -> sendMessage(email, subject, mailBody));
     }
 
-    private List<LastUserTest> createLastUserTest() {
-        Map<String, Boolean> activeUsers =
-                gatewayService.getUsers()
-                              .stream()
-                              .collect(toMap(User::getUserName, User::isEnabled));
+    private List<LastUserTest> createLastUserTest(List<User> users) {
+        Map<String, User> activeUsers =
+                users.stream()
+                     .collect(toMap(User::getUserName, Function.identity()));
 
-        return testService.lastUserTests()
-                          .stream()
-                          .filter(user -> activeUsers.get(user.getUser()).booleanValue()) // True indicate the user is active
-                          .filter(this::isLastTestOverOneDay)
-                          .sorted(Comparator.comparing(LastUserTest::getTimestamp))
-                          .collect(Collectors.toList());
+        List<LastUserTest> lastUserTests =
+                testService.lastUserTests()
+                           .stream()
+                           .filter(user -> activeUsers.get(user.getUser()).isEnabled()) // True indicate the user is active
+                           .filter(this::isLastTestOverOneDay)
+                           .sorted(Comparator.comparing(LastUserTest::getTimestamp))
+                           .collect(Collectors.toList());
+
+        lastUserTests.forEach(user -> user.setPhone(activeUsers.get(user.getUser()).getPhone()));
+
+        return lastUserTests;
     }
 
     private boolean isLastTestOverOneDay(LastUserTest lastUserTest) {

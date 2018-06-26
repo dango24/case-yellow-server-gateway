@@ -13,9 +13,16 @@ public class LastUserTest {
 
     private String user;
     private long timestamp;
+    private String phone;
+
+    public LastUserTest(String user, long timestamp) {
+        this.user = user;
+        this.timestamp = timestamp;
+    }
 
     @Override
     public String toString() {
-        return String.format("%s last test: %s", user, DATE_FORMAT.format(timestamp));
+        String phoneNumber = String.format("%s-%s", phone.substring(0,3), phone.substring(3));
+        return String.format("%s last test: %s, phone: %s", user, DATE_FORMAT.format(timestamp), phoneNumber);
     }
 }

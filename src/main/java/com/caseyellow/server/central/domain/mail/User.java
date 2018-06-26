@@ -1,4 +1,4 @@
-package com.caseyellow.server.central.services.gateway.model;
+package com.caseyellow.server.central.domain.mail;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -13,4 +13,5 @@ public class User {
 
     private String userName;
     private boolean enabled;
+    private String phone;
 }

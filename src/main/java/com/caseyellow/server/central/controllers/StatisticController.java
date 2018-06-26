@@ -2,6 +2,7 @@ package com.caseyellow.server.central.controllers;
 
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.analyzer.services.StatisticsAnalyzer;
+import com.caseyellow.server.central.domain.mail.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -72,9 +73,9 @@ public class StatisticController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping("/notify-last-tests")
-    public void notifyLastTests() {
+    public void notifyLastTests(@RequestBody List<User> users) {
         log.info(String.format("Received notifyLastTests POST request"));
-        statisticAnalyzer.notifyLastTests();
+        statisticAnalyzer.notifyLastTests(users);
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
