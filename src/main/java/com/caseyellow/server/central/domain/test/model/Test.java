@@ -15,6 +15,7 @@ public class Test {
     private String testID;
     private String user;
     private String clientVersion;
+    private String computerIdentifier;
     private String isp;
     private Long startTime;
     private Long endTime;

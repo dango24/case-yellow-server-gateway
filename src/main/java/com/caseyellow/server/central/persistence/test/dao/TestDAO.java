@@ -44,6 +44,9 @@ public class TestDAO {
     @Column(name = "client_version")
     private String clientVersion;
 
+    @Column(name = "computer_identifier")
+    private String computerIdentifier;
+
     @Column(name = "isp")
     private String isp;
 
@@ -59,6 +62,7 @@ public class TestDAO {
         this.endTime = testBuilder.endTime;
         this.systemInfo = testBuilder.systemInfo;
         this.clientVersion = testBuilder.clientVersion;
+        this.computerIdentifier = testBuilder.computerIdentifier;
         this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsite;
         this.comparisonInfoDAOTests = testBuilder.comparisonInfoDAOTests;
     }
@@ -68,6 +72,7 @@ public class TestDAO {
         private String testID;
         private String user;
         private String clientVersion;
+        private String computerIdentifier;
         private String isp;
         private Long startTime;
         private Long endTime;
@@ -106,6 +111,11 @@ public class TestDAO {
 
         public TestBuilder addStartTime(Long startTime) {
             this.startTime = startTime;
+            return this;
+        }
+
+        public TestBuilder addComputerIdentifier(String computerIdentifier) {
+            this.computerIdentifier = computerIdentifier;
             return this;
         }
 

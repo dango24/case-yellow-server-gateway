@@ -29,6 +29,7 @@ public interface Converter {
 
         TestDAO testDAO = new TestDAO.TestBuilder(test.getTestID())
                                      .addSpeedTestWebsite(test.getSpeedTestWebsiteIdentifier())
+                                     .addComputerIdentifier(test.getComputerIdentifier())
                                      .addUser(test.getUser())
                                      .addISP(test.getIsp())
                                      .addClientVersion(test.getClientVersion())
@@ -37,7 +38,6 @@ public interface Converter {
                                      .addSystemInfo(convertSystemInfoModelToDAO(test.getSystemInfo()))
                                      .addComparisonInfoTests(convertDAOToModel(Converter::convertComparisonInfoModelToDAO, test.getComparisonInfoTests()))
                                      .build();
-
         return testDAO;
     }
 

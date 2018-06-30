@@ -96,7 +96,7 @@ public class EmailServiceImpl implements EmailService {
                 testService.lastUserTests()
                            .stream()
                            .filter(user -> activeUsers.get(user.getUser()).isEnabled()) // True indicate the user is active
-                           .filter(this::isLastTestOverOneDay)
+                           .filter(this::isLastTestOverThreshold)
                            .sorted(Comparator.comparing(LastUserTest::getTimestamp))
                            .collect(Collectors.toList());
 
@@ -105,8 +105,8 @@ public class EmailServiceImpl implements EmailService {
         return lastUserTests;
     }
 
-    private boolean isLastTestOverOneDay(LastUserTest lastUserTest) {
-        return (System.currentTimeMillis() - lastUserTest.getTimestamp()) > TimeUnit.DAYS.toMillis(1);
+    private boolean isLastTestOverThreshold(LastUserTest lastUserTest) {
+        return (System.currentTimeMillis() - lastUserTest.getTimestamp()) > TimeUnit.HOURS.toMillis(12);
     }
 
     private String buildMailBody(List<LastUserTest> lastUserTests) {
