@@ -1,4 +1,3 @@
-#S3_bucket_name: case-yellow-snapshot
 S3_bucket_name: servile-snapshots
 
 credentials_path: /home/ec2-user/case-yellow/resources/a.out

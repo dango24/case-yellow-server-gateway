@@ -3,6 +3,9 @@ package com.caseyellow.server.central.controllers;
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.analyzer.services.StatisticsAnalyzer;
 import com.caseyellow.server.central.domain.mail.User;
+import com.caseyellow.server.central.domain.metrics.UserLastTest;
+import com.caseyellow.server.central.domain.metrics.UsersLastTest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -63,6 +66,20 @@ public class StatisticController {
         return new UserLastTest(DATE_FORMAT.format(new Date(lastTestTimestamp)));
     }
 
+    @PostMapping("/users-last-test")
+    public UsersLastTest usersLastTest(@RequestParam("period") int lastTimeInHours, @RequestBody List<User> users) {
+        log.info(String.format("Received usersLastTest GET request with last time in hours %s", lastTimeInHours));
+        UsersLastTest usersLastTest = statisticAnalyzer.usersLastTest(users, lastTimeInHours);
+
+        return usersLastTest;
+    }
+
+    @GetMapping("/user-mean-rate")
+    public double userMeanRate(@RequestParam("user") String user) {
+        log.info(String.format("Received userMeanRate GET request for user %s", user));
+        return statisticAnalyzer.getUserMeanRate(user);
+    }
+
     @GetMapping("/user-last-failed-test")
     public UserLastTest userLastFailedTest(@RequestParam("user") String user) {
         log.info(String.format("Received userLastFailedTest GET request, for user: %s", user));
@@ -89,14 +106,7 @@ public class StatisticController {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class UserLastTest {
-
-        private String last_test;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private static class StartTestDetails {
 
         private String user;

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -71,42 +72,16 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendNotification(List<User> users) {
-        List<LastUserTest> lastUserTests = createLastUserTest(users);
-
-        if (!lastUserTests.isEmpty()) {
-            sendEmails(lastUserTests);
+    public void sendEmails(List<LastUserTest> lastUserTests) {
+        if (CollectionUtils.isEmpty(lastUserTests)) {
+            return;
         }
-    }
 
-    private void sendEmails(List<LastUserTest> lastUserTests) {
         String subject = String.format("%s - %s", EMAIL_SUBJECT, DAY_FORMAT.format(new Date()));
         String mailBody = buildMailBody(lastUserTests);
         log.info(String.format("Send email to: %s with body: %s", emails, mailBody));
 
         emails.forEach(email -> sendMessage(email, subject, mailBody));
-    }
-
-    private List<LastUserTest> createLastUserTest(List<User> users) {
-        Map<String, User> activeUsers =
-                users.stream()
-                     .collect(toMap(User::getUserName, Function.identity()));
-
-        List<LastUserTest> lastUserTests =
-                testService.lastUserTests()
-                           .stream()
-                           .filter(user -> activeUsers.get(user.getUser()).isEnabled()) // True indicate the user is active
-                           .filter(this::isLastTestOverThreshold)
-                           .sorted(Comparator.comparing(LastUserTest::getTimestamp))
-                           .collect(Collectors.toList());
-
-        lastUserTests.forEach(user -> user.setPhone(activeUsers.get(user.getUser()).getPhone()));
-
-        return lastUserTests;
-    }
-
-    private boolean isLastTestOverThreshold(LastUserTest lastUserTest) {
-        return (System.currentTimeMillis() - lastUserTest.getTimestamp()) > TimeUnit.HOURS.toMillis(12);
     }
 
     private String buildMailBody(List<LastUserTest> lastUserTests) {

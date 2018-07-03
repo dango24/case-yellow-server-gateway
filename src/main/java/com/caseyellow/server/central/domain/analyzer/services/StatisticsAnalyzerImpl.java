@@ -1,21 +1,28 @@
 package com.caseyellow.server.central.domain.analyzer.services;
 
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
+import com.caseyellow.server.central.domain.file.model.FileDownloadInfo;
 import com.caseyellow.server.central.domain.mail.EmailService;
 import com.caseyellow.server.central.domain.mail.User;
+import com.caseyellow.server.central.domain.metrics.UsersLastTest;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.exceptions.AnalyzerException;
+import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
 import static java.util.Objects.isNull;
@@ -92,7 +99,70 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
     @Override
     public void notifyLastTests(List<User> users) {
-        emailService.sendNotification(users);
+        List<LastUserTest> allUsersTests = testService.lastUserTests();
+        List<LastUserTest> lastUserTests = createLastUserTest(users, allUsersTests, 12);
+
+        if (!lastUserTests.isEmpty()) {
+            emailService.sendEmails(lastUserTests);
+        }
+    }
+
+    @Override
+    public UsersLastTest usersLastTest(List<User> users, int lastTimeInHours) {
+        List<LastUserTest> allUsersTests = testService.lastUserTests();
+        List<LastUserTest> missingUsers = createLastUserTest(users, allUsersTests, lastTimeInHours);
+
+        List<LastUserTest> lastUserTestsByLastTime =
+                CollectionUtils.subtract(allUsersTests, missingUsers)
+                               .stream()
+                               .collect(toList());
+
+        UsersLastTest usersLastTest = new UsersLastTest();
+        usersLastTest.setUsersLastTests(lastUserTestsByLastTime);
+        usersLastTest.setUsersCount(lastUserTestsByLastTime.size());
+        usersLastTest.setMissingUsers(missingUsers);
+        usersLastTest.setUsersCount(missingUsers.size());
+
+        return usersLastTest;
+    }
+
+    @Override
+    public double getUserMeanRate(String user) {
+        List<Test> tests;
+
+        if (user.equals("all")) {
+            tests = testService.getAllTests();
+        } else {
+            tests = testService.getAllTestsByUser(user);
+        }
+
+        return tests.stream()
+                    .flatMap(test -> test.getComparisonInfoTests().stream())
+                    .map(ComparisonInfo::getFileDownloadInfo)
+                    .mapToDouble(FileDownloadInfo::getFileDownloadRateKBPerSec)
+                    .average()
+                    .orElse(-1);
+    }
+
+    private List<LastUserTest> createLastUserTest(List<User> users, List<LastUserTest> allUsersTests, int thresholdInHours) {
+        Map<String, User> activeUsers =
+                users.stream()
+                        .collect(toMap(User::getUserName, Function.identity()));
+
+        List<LastUserTest> lastUserTests =
+                allUsersTests.stream()
+                             .filter(user -> activeUsers.get(user.getUser()).isEnabled()) // True indicate the user is active
+                             .filter(user -> isLastTestOverThreshold(user, thresholdInHours))
+                             .sorted(Comparator.comparing(LastUserTest::getTimestamp))
+                             .collect(Collectors.toList());
+
+        lastUserTests.forEach(user -> user.setPhone(activeUsers.get(user.getUser()).getPhone()));
+
+        return lastUserTests;
+    }
+
+    private boolean isLastTestOverThreshold(LastUserTest lastUserTest, int thresholdInHours) {
+        return (System.currentTimeMillis() - lastUserTest.getTimestamp()) > TimeUnit.HOURS.toMillis(thresholdInHours);
     }
 
     private IdentifierDetails createIdentifierDetails(String identifier, List<ComparisonInfo> comparisonInfos) {

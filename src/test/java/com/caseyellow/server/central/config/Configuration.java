@@ -1,7 +1,7 @@
 package com.caseyellow.server.central.config;
 
 import com.caseyellow.server.central.domain.mail.EmailService;
-import com.caseyellow.server.central.domain.mail.User;
+import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
@@ -15,7 +15,7 @@ public class Configuration {
     public EmailService devEmailService() {
         return new EmailService() {
             @Override
-            public void sendNotification(List<User> users) {
+            public void sendEmails(List<LastUserTest> lastUserTests) {
 
             }
         };
