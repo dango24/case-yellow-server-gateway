@@ -53,6 +53,12 @@ fileDownloadProperties:
   size: 30863288
   md5: 9E735F008AE8D32184AF78D39ABB67B3
 
+ dlink :
+  identifier: dlink
+  url: https://www.bezeq.co.il/media/249421/DWA-160.exe
+  size: 15277856
+  md5: 524CC1D0FBC90949F1849362F65BAAC3
+
  quicktime:
   identifier: quicktime
   url: https://secure-appldnld.apple.com/QuickTime/031-43075-20160107-C0844134-B3CD-11E5-B1C0-43CA8D551951/QuickTimeInstaller.exe
