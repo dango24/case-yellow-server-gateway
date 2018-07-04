@@ -75,7 +75,7 @@ public class StatisticController {
     }
 
     @GetMapping("/user-mean-rate")
-    public double userMeanRate(@RequestParam("user") String user) {
+    public Map<String, String> userMeanRate(@RequestParam("user") String user) {
         log.info(String.format("Received userMeanRate GET request for user %s", user));
         return statisticAnalyzer.getUserMeanRate(user);
     }

@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.domain.analyzer.services;
 
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
+import com.caseyellow.server.central.domain.analyzer.model.UserDownloadRateInfo;
 import com.caseyellow.server.central.domain.file.model.FileDownloadInfo;
 import com.caseyellow.server.central.domain.mail.EmailService;
 import com.caseyellow.server.central.domain.mail.User;
@@ -9,6 +10,7 @@ import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.exceptions.AnalyzerException;
+import com.caseyellow.server.central.persistence.test.dao.UserDetailsDAO;
 import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
 import org.apache.commons.collections4.CollectionUtils;
@@ -24,6 +26,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromKBpsToMbps;
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -127,8 +130,15 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     }
 
     @Override
-    public double getUserMeanRate(String user) {
+    public Map<String, String> getUserMeanRate(String user) {
         List<Test> tests;
+        Map<String, List<Test>> userToDownloadRateTests;
+        Map<String, UserDetailsDAO> userDetails;
+
+        userDetails =
+                userDetailsRepository.findAll()
+                                     .stream()
+                                     .collect(toMap(UserDetailsDAO::getUserName, Function.identity()));
 
         if (user.equals("all")) {
             tests = testService.getAllTests();
@@ -136,6 +146,51 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
             tests = testService.getAllTestsByUser(user);
         }
 
+        userToDownloadRateTests = tests.stream().collect(groupingBy(Test::getUser));
+
+        if (user.equals("all")) { // Add all users test rate
+            addAllUsersTestRate(tests, userToDownloadRateTests, userDetails);
+        }
+
+        return getUserMeanRate(userToDownloadRateTests, userDetails);
+    }
+
+    private void addAllUsersTestRate(List<Test> tests, Map<String, List<Test>> userToDownloadRateTests, Map<String, UserDetailsDAO> userDetails) {
+        userToDownloadRateTests.put("all", tests);
+        UserDetailsDAO userDetailsDAO = new UserDetailsDAO("all");
+
+        double meanAllUserRate =
+                userDetails.values()
+                           .stream()
+                           .mapToInt(UserDetailsDAO::getSpeed)
+                           .average()
+                           .orElse(-1);
+
+        userDetailsDAO.setSpeed((int)meanAllUserRate);
+
+        userDetails.put("all", userDetailsDAO);
+    }
+
+    private Map<String, String> getUserMeanRate(Map<String, List<Test>> userToDownloadRateTests, Map<String, UserDetailsDAO> userDetails) {
+        Map<String, Double> userToDownloadRate;
+
+        userToDownloadRate =
+                userToDownloadRateTests.entrySet()
+                                       .stream()
+                                       .collect(toMap(Map.Entry::getKey, entry -> getMeanRateInMbps(entry.getValue())));
+
+        return userToDownloadRate.entrySet()
+                                 .stream()
+                                 .map(entry -> new UserDownloadRateInfo(entry.getKey(), entry.getValue(), userDetails.get(entry.getKey()).getSpeed()))
+                                 .collect(toMap(UserDownloadRateInfo::getUser, UserDownloadRateInfo::toString));
+    }
+
+    private double getMeanRateInMbps(List<Test> tests) {
+        double meanDownloadRateInKBps = getDownloadRateFromTests(tests);
+        return calculateDownloadRateFromKBpsToMbps(meanDownloadRateInKBps);
+    }
+
+    private double getDownloadRateFromTests(List<Test> tests) {
         return tests.stream()
                     .flatMap(test -> test.getComparisonInfoTests().stream())
                     .map(ComparisonInfo::getFileDownloadInfo)

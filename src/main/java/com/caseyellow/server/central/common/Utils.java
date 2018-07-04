@@ -34,14 +34,10 @@ public interface Utils {
         return MBPerSec * Math.pow(2, 10); // Transform to KB
     }
 
-    static void deleteFile(File file) {
-        try {
-            if (nonNull(file) && file.exists()) {
-                Files.deleteIfExists(file.toPath());
-            }
-        } catch (IOException e) {
-            log.error(String.format("Failed to delete file: %s", e.getMessage()));
-        }
+    static double calculateDownloadRateFromKBpsToMbps(double downloadRateInKBps) {
+        double MPBerSec = downloadRateInKBps * 8.0;
+
+        return MPBerSec / Math.pow(2, 10); // Transform to Mbps
     }
 
     static void putMDC(String data) {

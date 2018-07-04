@@ -23,4 +23,8 @@ public class UserDetailsDAO {
     private int speed;
     private String isp;
     private String infrastructure;
+
+    public UserDetailsDAO(String name) {
+        this.userName = name;
+    }
 }

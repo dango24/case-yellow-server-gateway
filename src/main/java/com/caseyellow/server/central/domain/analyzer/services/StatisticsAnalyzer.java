@@ -15,5 +15,5 @@ public interface StatisticsAnalyzer {
     long userLastFailedTest(String user);
     void notifyLastTests(List<User> users);
     UsersLastTest usersLastTest(List<User> users, int lastTimeInHours);
-    double getUserMeanRate(String user);
+    Map<String, String> getUserMeanRate(String user);
 }
