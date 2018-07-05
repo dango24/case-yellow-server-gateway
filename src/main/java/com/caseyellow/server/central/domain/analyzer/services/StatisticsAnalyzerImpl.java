@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.domain.analyzer.services;
 
+import com.caseyellow.server.central.common.Utils;
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.analyzer.model.UserDownloadRateInfo;
 import com.caseyellow.server.central.domain.file.model.FileDownloadInfo;
@@ -10,6 +11,8 @@ import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.exceptions.AnalyzerException;
+import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
+import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
 import com.caseyellow.server.central.persistence.test.dao.UserDetailsDAO;
 import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
@@ -19,6 +22,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
 
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromKBpsToMbps;
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
+import static com.caseyellow.server.central.persistence.metrics.MetricAverageRepository.AVERAGE_DECIMAL_FORMAT;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.*;
@@ -38,16 +43,19 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     private EmailService emailService;
     private TestService testService;
     private TestPredicateFactory testPredicateFactory;
+    private FileDownloadInfoRepository fileDownloadInfoRepository;
     private UserDetailsRepository userDetailsRepository;
 
     @Autowired
     public StatisticsAnalyzerImpl(TestService testService,
                                   UserDetailsRepository userDetailsRepository,
                                   EmailService emailService,
+                                  FileDownloadInfoRepository fileDownloadInfoRepository,
                                   TestPredicateFactory testPredicateFactory) {
 
         this.testService = testService;
         this.emailService = emailService;
+        this.fileDownloadInfoRepository = fileDownloadInfoRepository;
         this.testPredicateFactory = testPredicateFactory;
         this.userDetailsRepository = userDetailsRepository;
     }
@@ -88,6 +96,19 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         } else {
             throw new AnalyzerException(String.format("User: %s not exist", user));
         }
+    }
+
+    @Override
+    public Map<String, String> meanFileDownloadRate() {
+
+        Map<String, List<FileDownloadInfoDAO>> fileDownloadInfo =
+                fileDownloadInfoRepository.findAll()
+                                          .stream()
+                                          .collect(groupingBy(FileDownloadInfoDAO::getFileName));
+
+        return fileDownloadInfo.entrySet()
+                               .stream()
+                               .collect(toMap(Map.Entry::getKey, entry -> AVERAGE_DECIMAL_FORMAT.format(calcFileDownloadInfoMean(entry.getValue())) + " Mbps") );
     }
 
     @Override
@@ -179,10 +200,11 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                                        .stream()
                                        .collect(toMap(Map.Entry::getKey, entry -> getMeanRateInMbps(entry.getValue())));
 
-        return userToDownloadRate.entrySet()
-                                 .stream()
-                                 .map(entry -> new UserDownloadRateInfo(entry.getKey(), entry.getValue(), userDetails.get(entry.getKey()).getSpeed()))
-                                 .collect(toMap(UserDownloadRateInfo::getUser, UserDownloadRateInfo::toString));
+      return userToDownloadRate.entrySet()
+                               .stream()
+                               .map(entry -> new UserDownloadRateInfo(entry.getKey(), entry.getValue(), userDetails.get(entry.getKey()).getSpeed(), userDetails.get(entry.getKey()).getInfrastructure()))
+                               .sorted(Comparator.comparing(UserDownloadRateInfo::getActualRate))
+                               .collect(toMap(UserDownloadRateInfo::getUser, UserDownloadRateInfo::toString, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
     private double getMeanRateInMbps(List<Test> tests) {
@@ -275,6 +297,15 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         double ratio = downloadRate / speedTestRate;
 
         return ratio;
+    }
+
+    private double calcFileDownloadInfoMean(List<FileDownloadInfoDAO> fileDownloadInfo) {
+
+        return fileDownloadInfo.stream()
+                               .mapToDouble(FileDownloadInfoDAO::getFileDownloadRateKBPerSec)
+                               .map(Utils::calculateDownloadRateFromKBpsToMbps)
+                               .average()
+                               .orElse(-1);
     }
 
     private boolean isNotOutlier(double ratio) {

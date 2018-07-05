@@ -58,6 +58,12 @@ public class StatisticController {
         return statisticAnalyzer.createIdentifiersDetails(user, filter);
     }
 
+    @GetMapping("/file-download-rate-mean")
+    public Map<String, String> fileDownloadRateMean() {
+        log.info("Received fileDownloadRateMean GET request");
+        return statisticAnalyzer.meanFileDownloadRate();
+    }
+
     @GetMapping("/user-last-test")
     public UserLastTest userLastTest(@RequestParam("user") String user) {
         log.info(String.format("Received userLastTest GET request, for user: %s", user));

@@ -11,6 +11,7 @@ public interface StatisticsAnalyzer {
     Map<String, Long> countIPs();
     Map<String, Long> countUserTests();
     Map<String, IdentifierDetails> createIdentifiersDetails(String user, String filter);
+    Map<String, String> meanFileDownloadRate();
     long userLastTest(String user);
     long userLastFailedTest(String user);
     void notifyLastTests(List<User> users);
