@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface EmailService {
     void sendEmails(List<LastUserTest> lastUserTests);
+    void sendImageSanity(String imageSanityPath);
 }

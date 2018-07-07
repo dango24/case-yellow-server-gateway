@@ -6,6 +6,7 @@ import java.io.File;
 
 public interface FileStorageService {
     File getFile(String identifier);
+    String uploadFile(String path, File fileToUpload);
     PreSignedUrl generatePreSignedUrl(String fileKey);
     boolean isObjectExist(String path);
 }

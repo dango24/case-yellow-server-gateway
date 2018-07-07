@@ -104,6 +104,13 @@ public class CentralController {
         return testService.generatePreSignedUrl(fileKey);
     }
 
+    @PostMapping("/investigate-test-ratio")
+    public void investigateSuspiciousTestRatio(@RequestParam("outliar_ratio")String outliarRatio,
+                                               @RequestParam("hours")String hours) {
+        logger.info(String.format("Received investigate-test-ratio POST request with ratioOutliar: %s, hours: %s", outliarRatio, hours));
+        speedTestWebSiteService.investigateSuspiciousTestRatio(outliarRatio, hours);
+    }
+
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/failed-test",
                 consumes = MediaType.APPLICATION_JSON_VALUE,

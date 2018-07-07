@@ -1,25 +1,35 @@
 package com.caseyellow.server.central.common;
 
+import com.caseyellow.server.central.exceptions.IORuntimeException;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.nonNull;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public interface Utils {
 
     Logger log = Logger.getLogger(Utils.class);
+
+    static String convertToMD5(String str) {
+        return DigestUtils.md5Hex(str).toUpperCase();
+    }
 
     static byte[] createImageBase64Encode(String imgPath) throws IOException {
         File imageFile = new File(imgPath);
@@ -48,4 +58,110 @@ public interface Utils {
         MDC.remove("correlation-id");
     }
 
+
+    static String createTempFilename(String fileName) {
+        String md5 = convertToMD5(fileName);
+        String extension = FilenameUtils.getExtension(fileName);
+
+        if (isNotEmpty(extension)) {
+            return md5 + "." + FilenameUtils.getExtension(fileName);
+        }
+
+        return md5;
+    }
+
+    static String readFileAsString(String filePath) throws IOException {
+        return IOUtils.toString(Utils.class.getResourceAsStream(filePath), Charset.forName("UTF-8"));
+    }
+
+    static String executeCommand(String command) {
+        try {
+            Process process = Runtime.getRuntime().exec(command);
+
+            return executeInnerCommand(process);
+
+        } catch (IOException e) {
+            String errorMessage = String.format("Failed to execute command, cause: ", e.getMessage());
+            log.error(errorMessage, e);
+
+            throw new IORuntimeException(errorMessage, e);
+        }
+    }
+
+    static String executeInnerCommand(Process process) {
+        try (InputStream inputStream = process.getInputStream()) {
+
+            return IOUtils.toString(inputStream, UTF_8);
+
+        } catch (Exception e) {
+            String errorMessage = String.format("Failed to read input data from inception service, cause: ", e.getMessage());
+            log.error(errorMessage, e);
+
+            throw new IORuntimeException(errorMessage, e);
+        }
+    }
+
+    static File getTmpDir() {
+        File rootTmpFile = new File(System.getProperty("java.io.tmpdir"), "case-yellow-tmp-dir");
+
+        if (!rootTmpFile.exists()) {
+            rootTmpFile.mkdir();
+        } else {
+            cleanDirectory(rootTmpFile);
+        }
+
+        return rootTmpFile;
+    }
+
+    static void archiveDir(String path, String destination) throws ZipException {
+        // Initiate ZipFile object with the path/name of the zip file.
+        ZipFile zipFile = new ZipFile(destination);
+
+        // Folder to add
+        String folderToAdd = path;
+
+        // Initiate Zip Parameters which define various properties such
+        // as compression method, etc.
+        ZipParameters parameters = new ZipParameters();
+
+        // set compression method to store compression
+        parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+
+        // Set the compression level
+        parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+
+        // Add folder to the zip file
+        zipFile.addFolder(folderToAdd, parameters);
+
+    }
+
+    static void cleanDirectory(File file) {
+        try {
+            org.apache.commons.io.FileUtils.cleanDirectory(file);
+        } catch (IOException e) {
+            String errorMessage = String.format("Failed to clean case yellow tmp dir, cause: %s", e.getMessage());
+            log.error(errorMessage);
+        }
+    }
+
+    static void deleteFile(String path) {
+        if (nonNull(path)) {
+            deleteFile(new File(path));
+        }
+    }
+
+    static void deleteFile(File file) {
+        try {
+            if (nonNull(file) && file.exists()) {
+
+                if (file.isDirectory()) {
+                    org.apache.commons.io.FileUtils.deleteDirectory(file);
+                } else {
+                    Files.deleteIfExists(file.toPath());
+                }
+            }
+        } catch (IOException e) {
+            log.error(String.format("Failed to delete file: %s", e.getMessage()));
+        }
+    }
 }

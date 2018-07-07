@@ -16,7 +16,15 @@ sqs.central.queue: cy-central-queue
 email.username: caseyellow22@gmail.com
 
 emails:
-  - dangolan24@gmail.com
-  - koriatoren@gmail.com
-  - oriamitay82@gmail.com
-  - romamit@gmail.com
+  - name: dan
+    email: dangolan24@gmail.com
+    role: admin
+  - name: oren
+    email: koriatoren@gmail.com
+    role: admin
+  - name: ori
+    email: oriamitay82@gmail.com
+    role: lawyer
+  - name: rom
+    email: romamit@gmail.com
+    role: preacher

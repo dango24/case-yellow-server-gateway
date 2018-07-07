@@ -18,14 +18,29 @@ public class UserDownloadRateInfo {
     private double actualRate;
     private int expectedRate;
     private String infra;
+    private int testCount;
+
+    private String generateTestCountStr() {
+        String subTestCountStr = String.valueOf(testCount * 3);
+
+        if (subTestCountStr.length() <= 3 ) {
+            return subTestCountStr;
+        }
+
+        String reverse = new StringBuilder(subTestCountStr).reverse().toString();
+        String reverseResult = reverse.substring(0, 3) + "," + reverse.substring(3);
+
+        return new StringBuilder(reverseResult).reverse().toString();
+    }
 
     @Override
     public String toString() {
         String infaStr = nonNull(infra) ? infra : "UNKNOWN";
 
-        return String.format("{actualRate = %s Mbps, expectedRate = %s Mbps, infra: %s}",
+        return String.format("{actualRate = %s Mbps, expectedRate = %s Mbps, infra: %s, total number of sub-tests: %s}",
                              AVERAGE_DECIMAL_FORMAT.format(actualRate),
                              expectedRate,
-                             infaStr);
+                             infaStr,
+                             generateTestCountStr());
     }
 }

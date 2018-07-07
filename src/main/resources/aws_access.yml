@@ -6,4 +6,3 @@ credentials_path: /home/ec2-user/case-yellow/resources/a.out
 
 encryption_key: nokey
 health_path: we_are_one_with_the_light
-successful_tests_dir: successful-tests/

@@ -18,6 +18,11 @@ public class Configuration {
             public void sendEmails(List<LastUserTest> lastUserTests) {
 
             }
+
+            @Override
+            public void sendImageSanity(String imageSanityPath) {
+
+            }
         };
     }
 }

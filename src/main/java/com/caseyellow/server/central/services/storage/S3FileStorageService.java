@@ -6,10 +6,9 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
 import com.caseyellow.server.central.configuration.AWSConfiguration;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
 import com.caseyellow.server.central.exceptions.IORuntimeException;
@@ -26,6 +25,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import static com.caseyellow.server.central.common.Utils.createTempFilename;
 
 @Service
 @Profile("prod")
@@ -56,9 +57,16 @@ public class S3FileStorageService implements FileStorageService {
     }
 
     @Override
+    public String uploadFile(String path, File fileToUpload) {
+        s3Client.putObject(new PutObjectRequest(awsConfiguration.bucketName(), path, fileToUpload));
+        return ((AmazonS3Client) s3Client).getResourceUrl(awsConfiguration.bucketName(), path);
+    }
+
+    @Override
     public File getFile(String identifier) {
         logger.info("Fetch file from s3: " + identifier);
-        File newFile = new File(System.getProperty("java.io.tmpdir"), identifier.substring(identifier.lastIndexOf("_") +1));
+        String tempFilename = createTempFilename(identifier);
+        File newFile = new File(System.getProperty("java.io.tmpdir"), tempFilename);
         S3Object object = s3Client.getObject(new GetObjectRequest(awsConfiguration.bucketName(), identifier));
 
         try (InputStream objectData = object.getObjectContent()) {

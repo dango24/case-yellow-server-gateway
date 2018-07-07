@@ -11,8 +11,8 @@ num_of_comparison_per_test: 3
 flyway.baseline-on-migrate: true
 
 # misc
-snapshot_dir: successful-tests/
-run.extra.identifiers: true
+successful_tests_dir: successful-tests/
+run.extra.identifiers: false
 gateway.host: http://localhost:8008/
 
 # Files Download Properties
@@ -88,7 +88,7 @@ speedTestUrls:
 speedTest:
   extraIdentifiers:
     - hot
-#    - bezeq
+    - ookla
 
 connection-details:
   speed:

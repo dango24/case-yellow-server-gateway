@@ -15,4 +15,5 @@ public interface SpeedTestWebSiteService {
     SpeedTestMetaData getNextSpeedTestWebSite();
     Set<WordIdentifier> getTextIdentifiers(String identifier, boolean startTest);
     SpeedTestNonFlashMetaData getSpeedTestNonFlashMetaData(String identifier);
+    void investigateSuspiciousTestRatio(String outliarRatio, String hours);
 }

@@ -21,10 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -136,16 +133,25 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         List<LastUserTest> allUsersTests = testService.lastUserTests();
         List<LastUserTest> missingUsers = createLastUserTest(users, allUsersTests, lastTimeInHours);
 
+        Map<String, User> activeUsers =
+                users.stream()
+                        .collect(toMap(User::getUserName, Function.identity()));
+
         List<LastUserTest> lastUserTestsByLastTime =
                 CollectionUtils.subtract(allUsersTests, missingUsers)
                                .stream()
+                               .filter(user -> nonNull(activeUsers.get(user.getUser()))) // True indicate the user is active
+                               .filter(user -> activeUsers.get(user.getUser()).isEnabled())
+                               .sorted(Comparator.comparing(LastUserTest::getTimestamp))
                                .collect(toList());
+
+        Collections.sort(missingUsers, Comparator.comparing(LastUserTest::getTimestamp));
 
         UsersLastTest usersLastTest = new UsersLastTest();
         usersLastTest.setUsersLastTests(lastUserTestsByLastTime);
         usersLastTest.setUsersCount(lastUserTestsByLastTime.size());
         usersLastTest.setMissingUsers(missingUsers);
-        usersLastTest.setUsersCount(missingUsers.size());
+        usersLastTest.setMissingUsersCount(missingUsers.size());
 
         return usersLastTest;
     }
@@ -202,7 +208,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
       return userToDownloadRate.entrySet()
                                .stream()
-                               .map(entry -> new UserDownloadRateInfo(entry.getKey(), entry.getValue(), userDetails.get(entry.getKey()).getSpeed(), userDetails.get(entry.getKey()).getInfrastructure()))
+                               .map(entry -> new UserDownloadRateInfo(entry.getKey(), entry.getValue(), userDetails.get(entry.getKey()).getSpeed(), userDetails.get(entry.getKey()).getInfrastructure(), userToDownloadRateTests.get(entry.getKey()).size()))
                                .sorted(Comparator.comparing(UserDownloadRateInfo::getActualRate))
                                .collect(toMap(UserDownloadRateInfo::getUser, UserDownloadRateInfo::toString, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
@@ -228,6 +234,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
         List<LastUserTest> lastUserTests =
                 allUsersTests.stream()
+                             .filter(user -> nonNull(activeUsers.get(user.getUser()))) // True indicate the user is active
                              .filter(user -> activeUsers.get(user.getUser()).isEnabled()) // True indicate the user is active
                              .filter(user -> isLastTestOverThreshold(user, thresholdInHours))
                              .sorted(Comparator.comparing(LastUserTest::getTimestamp))
@@ -239,6 +246,10 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     }
 
     private boolean isLastTestOverThreshold(LastUserTest lastUserTest, int thresholdInHours) {
+        if (isNull(lastUserTest)) {
+            return false;
+        }
+
         return (System.currentTimeMillis() - lastUserTest.getTimestamp()) > TimeUnit.HOURS.toMillis(thresholdInHours);
     }
 
