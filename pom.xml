@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.8.RELEASE</version>
+		<version>1.5.9.RELEASE</version>
 	</parent>
 
 	<properties>
@@ -59,14 +59,7 @@
 			<version>4.1</version>
 		</dependency>
 
-		<!--Apache Commons IO-->
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.5</version>
-		</dependency>
-
-		<!--SQS Messaging-->
+		<!--AWS SQS Messaging-->
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>amazon-sqs-java-messaging-lib</artifactId>
@@ -80,7 +73,7 @@
 			<version>3.1.0</version>
 		</dependency>
 
-		<!--AWS Ses-->
+		<!--AWS SES-->
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-ses</artifactId>
