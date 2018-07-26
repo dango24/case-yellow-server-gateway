@@ -267,6 +267,8 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                 allUsersTests.stream()
                              .filter(user -> nonNull(activeUsers.get(user.getUser()))) // True indicate the user is active
                              .filter(user -> activeUsers.get(user.getUser()).isEnabled()) // True indicate the user is active
+                             .filter(user -> nonNull(activeUsers.get(user.getUser()).getHasComputer()))
+                             .filter(user -> activeUsers.get(user.getUser()).getHasComputer().booleanValue())
                              .filter(user -> isLastTestOverThreshold(user, thresholdInHours))
                              .sorted(Comparator.comparing(LastUserTest::getTimestamp))
                              .collect(Collectors.toList());
