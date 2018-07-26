@@ -19,4 +19,5 @@ public interface StatisticsAnalyzer {
     Map<String, String> getUserMeanRate(String user);
     void usersStatistics(List<User> users);
     Map<String,IdentifierDetails> getIdentifiersDetails(String user);
+    void buildAllTests();
 }

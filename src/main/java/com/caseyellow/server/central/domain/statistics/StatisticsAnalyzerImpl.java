@@ -18,6 +18,7 @@ import com.caseyellow.server.central.persistence.statistics.repository.UserStati
 import com.caseyellow.server.central.persistence.test.dao.UserDetailsDAO;
 import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.exception.JDBCConnectionException;
@@ -26,6 +27,7 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +39,7 @@ import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFr
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
 import static com.caseyellow.server.central.common.Utils.log;
 import static com.caseyellow.server.central.persistence.metrics.MetricAverageRepository.AVERAGE_DECIMAL_FORMAT;
+import static com.sun.jmx.snmp.defaults.DefaultPaths.getTmpDir;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.*;
@@ -211,6 +214,28 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     @Override
     public Map<String, IdentifierDetails> getIdentifiersDetails(String user) {
         return userStatisticsRepository.getLastUserStatistics(user);
+    }
+
+    @Override
+    public void buildAllTests() {
+        File tmpFile = null;
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            List<Test> tests = //testService.getAllTests();
+            long timeStamp = System.currentTimeMillis();
+            String s3Path = String.format("all_tests_%s.json", timeStamp);
+            tmpFile = new File(getTmpDir(), s3Path);
+
+            mapper.writeValue(tmpFile, tests);
+
+            System.out.println("dango");
+
+        } catch (IOException e) {
+            log.error(String.format("Failed to build all test file: %s", e.getMessage(), e));
+        } finally {
+            Utils.deleteFile(tmpFile);
+        }
     }
 
     private void addAllUsersTestRate(List<Test> tests, Map<String, List<Test>> userToDownloadRateTests, Map<String, UserDetailsDAO> userDetails) {

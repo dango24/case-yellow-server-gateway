@@ -93,6 +93,12 @@ public class StatisticController {
         statisticAnalyzer.usersStatistics(users);
     }
 
+    @PostMapping("/build-all-tests")
+    public void buildAllTests() {
+        log.info(String.format("Received buildAllTests POST request with users"));
+        statisticAnalyzer.buildAllTests();
+    }
+
     @GetMapping("/user-mean-rate")
     public Map<String, String> userMeanRate(@RequestParam("user") String user) {
         log.info(String.format("Received userMeanRate GET request for user %s", user));
