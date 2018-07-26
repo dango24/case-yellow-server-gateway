@@ -1,14 +1,13 @@
 package com.caseyellow.server.central.domain.analyzer.services;
 
 import com.caseyellow.server.central.domain.test.model.Test;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static java.util.Objects.isNull;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Component
 public class TestPredicateFactory {
@@ -19,13 +18,14 @@ public class TestPredicateFactory {
     public Predicate<Test> getTestPredicate(String filter) {
         String[] filterArgs;
 
-        if (isNull(filter) || StringUtils.isEmpty(filter)) {
+        if (isEmpty(filter)) {
             return test -> true;
         }
 
         filterArgs = filter.split("-");
 
         switch (filterArgs[0]) {
+
             case LAN_CONNECTION:
                 return test -> test.getSystemInfo().getConnection().equals(LAN_CONNECTION);
 
@@ -34,6 +34,7 @@ public class TestPredicateFactory {
 
             case "exclude":
                 return test -> !getUsers(filterArgs[1]).contains(test.getUser());
+
             default:
                 return test -> true;
         }

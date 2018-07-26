@@ -1,7 +1,7 @@
 package com.caseyellow.server.central.controllers;
 
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
-import com.caseyellow.server.central.domain.analyzer.services.StatisticsAnalyzer;
+import com.caseyellow.server.central.domain.statistics.StatisticsAnalyzer;
 import com.caseyellow.server.central.domain.mail.User;
 import com.caseyellow.server.central.domain.metrics.UserLastTest;
 import com.caseyellow.server.central.domain.metrics.UsersLastTest;
@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.caseyellow.server.central.domain.mail.EmailServiceImpl.DATE_FORMAT;
 
@@ -48,14 +50,19 @@ public class StatisticController {
     @GetMapping("/identifiers-details")
     public Map<String, IdentifierDetails> identifiersDetails(@RequestParam(value = "filter", required = false)  String filter) {
         log.info("Received identifiersDetails GET request");
-        return identifiersDetailsByUser(null, filter);
+        return identifiersDetailsByUser("all", filter);
     }
 
     @GetMapping("/identifiers-details/{user}")
     public Map<String, IdentifierDetails> identifiersDetailsByUser(@PathVariable("user")String user,
                                                                    @RequestParam(value = "filter", required = false)  String filter) {
         log.info(String.format("Received identifiersDetails GET request for user: %s", user));
-        return statisticAnalyzer.createIdentifiersDetails(user, filter);
+
+        if (StringUtils.isNotEmpty(filter)) {
+            return statisticAnalyzer.createIdentifiersDetails(user, filter);
+        } else {
+            return statisticAnalyzer.getIdentifiersDetails(user);
+        }
     }
 
     @GetMapping("/file-download-rate-mean")
@@ -78,6 +85,12 @@ public class StatisticController {
         UsersLastTest usersLastTest = statisticAnalyzer.usersLastTest(users, lastTimeInHours);
 
         return usersLastTest;
+    }
+
+    @PostMapping("/users-statistics")
+    public void usersStatistics(@RequestBody List<User> users) {
+        log.info(String.format("Received usersStatistics POST request with users %s", users.stream().map(User::getUserName).collect(Collectors.joining(", "))));
+        statisticAnalyzer.usersStatistics(users);
     }
 
     @GetMapping("/user-mean-rate")

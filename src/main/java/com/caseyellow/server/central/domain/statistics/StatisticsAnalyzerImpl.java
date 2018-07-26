@@ -1,8 +1,9 @@
-package com.caseyellow.server.central.domain.analyzer.services;
+package com.caseyellow.server.central.domain.statistics;
 
 import com.caseyellow.server.central.common.Utils;
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.analyzer.model.UserDownloadRateInfo;
+import com.caseyellow.server.central.domain.analyzer.services.TestPredicateFactory;
 import com.caseyellow.server.central.domain.file.model.FileDownloadInfo;
 import com.caseyellow.server.central.domain.mail.EmailService;
 import com.caseyellow.server.central.domain.mail.User;
@@ -13,14 +14,19 @@ import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.exceptions.AnalyzerException;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
+import com.caseyellow.server.central.persistence.statistics.repository.UserStatisticsRepository;
 import com.caseyellow.server.central.persistence.test.dao.UserDetailsDAO;
 import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -29,10 +35,12 @@ import java.util.stream.Collectors;
 
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromKBpsToMbps;
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
+import static com.caseyellow.server.central.common.Utils.log;
 import static com.caseyellow.server.central.persistence.metrics.MetricAverageRepository.AVERAGE_DECIMAL_FORMAT;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.*;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
 public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
@@ -42,12 +50,14 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     private TestPredicateFactory testPredicateFactory;
     private FileDownloadInfoRepository fileDownloadInfoRepository;
     private UserDetailsRepository userDetailsRepository;
+    private UserStatisticsRepository userStatisticsRepository;
 
     @Autowired
     public StatisticsAnalyzerImpl(TestService testService,
                                   UserDetailsRepository userDetailsRepository,
                                   EmailService emailService,
                                   FileDownloadInfoRepository fileDownloadInfoRepository,
+                                  UserStatisticsRepository userStatisticsRepository,
                                   TestPredicateFactory testPredicateFactory) {
 
         this.testService = testService;
@@ -55,17 +65,16 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         this.fileDownloadInfoRepository = fileDownloadInfoRepository;
         this.testPredicateFactory = testPredicateFactory;
         this.userDetailsRepository = userDetailsRepository;
+        this.userStatisticsRepository = userStatisticsRepository;
     }
 
     @Override
-    @Cacheable("countIPs")
     public Map<String, Long> countIPs(){
 
         return testService.getAllTests()
                           .stream()
                           .map(s -> s.getSystemInfo().getPublicIP())
                           .collect(groupingBy(Function.identity(), counting()));
-
     }
 
     @Override
@@ -74,8 +83,10 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     }
 
     @Override
-    @Cacheable("identifiersDetails")
+    @Retryable(value =  {IOException.class, JDBCConnectionException.class} , maxAttempts = 5, backoff = @Backoff(delay = 3000))
     public Map<String, IdentifierDetails> createIdentifiersDetails(String user, String filter) {
+        log.info(String.format("create identifiers details for user: %s", user));
+
         Map<String, List<ComparisonInfo>> testComparisons = getComparisons(user, filter);
 
         return testComparisons.entrySet()
@@ -83,6 +94,10 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                               .map(entry -> createIdentifierDetails(entry.getKey(), entry.getValue()))
                               .filter(this::isValidIdentifierDetails)
                               .collect(toMap(IdentifierDetails::getIdentifier, Function.identity()));
+    }
+
+    private Map<String, IdentifierDetails> createIdentifiersDetails(String user) {
+        return createIdentifiersDetails(user, null);
     }
 
     @Override
@@ -182,6 +197,22 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         return getUserMeanRate(userToDownloadRateTests, userDetails);
     }
 
+    @Override
+    public void usersStatistics(List<User> users) {
+        users.add(new User("all", true));
+
+        users.stream()
+             .filter(User::isEnabled)
+             .map(User::getUserName)
+             .map(userName -> Pair.of(userName, createIdentifiersDetails(userName)))
+             .forEach(userPair -> userStatisticsRepository.saveUserStatistics(userPair.getKey(), userPair.getValue()));
+    }
+
+    @Override
+    public Map<String, IdentifierDetails> getIdentifiersDetails(String user) {
+        return userStatisticsRepository.getLastUserStatistics(user);
+    }
+
     private void addAllUsersTestRate(List<Test> tests, Map<String, List<Test>> userToDownloadRateTests, Map<String, UserDetailsDAO> userDetails) {
         userToDownloadRateTests.put("all", tests);
         UserDetailsDAO userDetailsDAO = new UserDetailsDAO("all");
@@ -268,7 +299,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         List<Test> tests;
         Predicate<Test> testPredicate = testPredicateFactory.getTestPredicate(filter);
 
-        if (isNull(user)) {
+        if (isEmpty(user) || user.equals("all")) {
             tests = testService.getAllTests();
         } else {
             tests = testService.getAllTestsByUser(user);

@@ -1,18 +1,24 @@
-#Postgres source
+# Postgres
 spring.datasource.driverClassName: org.postgresql.Driver
 spring.datasource.url: jdbc:postgresql://caseyellow.cgqzew4kdsmr.eu-central-1.rds.amazonaws.com:5432/caseyellow
 spring.datasource.username: dango
 spring.datasource.password: ${DATASOURCE_PASSWORD}
 
+# JPA
 spring.jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect
-#spring.jpa.generate-ddl: true
 spring.jpa.hibernate.ddl-auto: update
+spring.jpa.properties.javax.persistence.query.timeout: 600000
 
 # SQS
 sqs.queue.endpoint: https://sqs.eu-central-1.amazonaws.com
 sqs.central.queue: cy-central-queue
 
-# mail service
+# DynamoDB
+dynamo.endpoint: https://dynamodb.eu-central-1.amazonaws.com
+dynamo.region: eu-central-1
+dynamo.user.statistics.table.name: cy_user_statistics
+
+# Email service
 email.username: caseyellow22@gmail.com
 
 emails:

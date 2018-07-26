@@ -1,4 +1,4 @@
-package com.caseyellow.server.central.domain.analyzer.services;
+package com.caseyellow.server.central.domain.statistics;
 
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.mail.User;
@@ -17,4 +17,6 @@ public interface StatisticsAnalyzer {
     void notifyLastTests(List<User> users);
     UsersLastTest usersLastTest(List<User> users, int lastTimeInHours);
     Map<String, String> getUserMeanRate(String user);
+    void usersStatistics(List<User> users);
+    Map<String,IdentifierDetails> getIdentifiersDetails(String user);
 }

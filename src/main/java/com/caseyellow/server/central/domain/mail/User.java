@@ -14,4 +14,8 @@ public class User {
     private String userName;
     private boolean enabled;
     private String phone;
+
+    public User(String user, boolean enabled) {
+        this(user, enabled, null);
+    }
 }

@@ -44,6 +44,7 @@ public class SQSConsumer {
     }
 
     private void processMessage(QueueMessage message) throws Exception {
+
         switch (message.getMessageType()) {
 
             case SNAPSHOT_ANALYZED:

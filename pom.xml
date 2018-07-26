@@ -5,7 +5,7 @@
 
 	<groupId>com.icarusrises</groupId>
 	<artifactId>case-yellow-central</artifactId>
-	<version>1.6.5-SNAPSHOT</version>
+	<version>1.6.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>case-yellow-central</name>
@@ -45,6 +45,11 @@
 			<artifactId>spring-jms</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.retry</groupId>
+			<artifactId>spring-retry</artifactId>
+		</dependency>
+
 		<!--Zip4j-->
 		<dependency>
 			<groupId>net.lingala.zip4j</groupId>
@@ -78,6 +83,13 @@
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-ses</artifactId>
 			<version>1.11.305</version>
+		</dependency>
+
+		<!--AWS Dynamodb sdk-->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-dynamodb</artifactId>
+			<version>1.11.308</version>
 		</dependency>
 
 		<!--Google Gson-->
