@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.controllers;
 
 import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
+import com.caseyellow.server.central.domain.statistics.StatisticsAnalyzer;
 import com.caseyellow.server.central.domain.test.model.FailedTest;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
 import com.caseyellow.server.central.domain.test.model.Test;
@@ -39,13 +40,17 @@ public class CentralController {
 
     private TestService testService;
     private FileDownloadService fileDownloadService;
+    private StatisticsAnalyzer statisticsAnalyzer;
     private SpeedTestWebSiteService speedTestWebSiteService;
 
     @Autowired
     public CentralController(TestService testService,
                              FileDownloadService fileDownloadService,
+                             StatisticsAnalyzer statisticsAnalyzer,
                              SpeedTestWebSiteService speedTestWebSiteService) {
+
         this.testService = testService;
+        this.statisticsAnalyzer = statisticsAnalyzer;
         this.fileDownloadService = fileDownloadService;
         this.speedTestWebSiteService = speedTestWebSiteService;
     }
@@ -92,7 +97,7 @@ public class CentralController {
                 produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Test> getAllTests() {
         logger.info("Received getAllTests GET request");
-        return testService.getAllTests();
+        return statisticsAnalyzer.getAllTests();
     }
 
     @ResponseStatus(HttpStatus.OK)

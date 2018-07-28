@@ -3,6 +3,7 @@ package com.caseyellow.server.central.domain.statistics;
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
 import com.caseyellow.server.central.domain.mail.User;
 import com.caseyellow.server.central.domain.metrics.UsersLastTest;
+import com.caseyellow.server.central.domain.test.model.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,5 @@ public interface StatisticsAnalyzer {
     void usersStatistics(List<User> users);
     Map<String,IdentifierDetails> getIdentifiersDetails(String user);
     void buildAllTests();
+    List<Test> getAllTests();
 }

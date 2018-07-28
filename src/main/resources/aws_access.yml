@@ -1,7 +1,8 @@
 S3_bucket_name: servile-snapshots
+all_test_dir: all-tests
 
-#credentials_path: /home/ec2-user/case-yellow/resources/a.out
-credentials_path: /Users/dangolan/my_projects/resources/a.out
+credentials_path: /home/ec2-user/case-yellow/resources/a.out
+#credentials_path: /Users/dangolan/my_projects/resources/a.out
 #credentials_path: C:\\Users\\Dan\\Documents\\case yellow\\main.exe
 
 encryption_key: nokey

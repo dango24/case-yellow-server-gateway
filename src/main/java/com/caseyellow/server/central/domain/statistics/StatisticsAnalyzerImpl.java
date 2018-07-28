@@ -14,15 +14,19 @@ import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.exceptions.AnalyzerException;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
-import com.caseyellow.server.central.persistence.statistics.repository.UserStatisticsRepository;
+import com.caseyellow.server.central.persistence.statistics.repository.UserInfoRepository;
 import com.caseyellow.server.central.persistence.test.dao.UserDetailsDAO;
 import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
+import com.caseyellow.server.central.services.storage.FileStorageService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -39,36 +43,42 @@ import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFr
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
 import static com.caseyellow.server.central.common.Utils.log;
 import static com.caseyellow.server.central.persistence.metrics.MetricAverageRepository.AVERAGE_DECIMAL_FORMAT;
-import static com.sun.jmx.snmp.defaults.DefaultPaths.getTmpDir;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
+@Profile("prod")
 public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
+
+    @Value("${all_test_dir}")
+    private String allTestsDir;
 
     private EmailService emailService;
     private TestService testService;
+    private FileStorageService fileStorageService;
     private TestPredicateFactory testPredicateFactory;
     private FileDownloadInfoRepository fileDownloadInfoRepository;
     private UserDetailsRepository userDetailsRepository;
-    private UserStatisticsRepository userStatisticsRepository;
+    private UserInfoRepository userInfoRepository;
 
     @Autowired
     public StatisticsAnalyzerImpl(TestService testService,
                                   UserDetailsRepository userDetailsRepository,
                                   EmailService emailService,
+                                  FileStorageService fileStorageService,
                                   FileDownloadInfoRepository fileDownloadInfoRepository,
-                                  UserStatisticsRepository userStatisticsRepository,
+                                  UserInfoRepository userInfoRepository,
                                   TestPredicateFactory testPredicateFactory) {
 
         this.testService = testService;
         this.emailService = emailService;
+        this.fileStorageService = fileStorageService;
         this.fileDownloadInfoRepository = fileDownloadInfoRepository;
         this.testPredicateFactory = testPredicateFactory;
         this.userDetailsRepository = userDetailsRepository;
-        this.userStatisticsRepository = userStatisticsRepository;
+        this.userInfoRepository = userInfoRepository;
     }
 
     @Override
@@ -208,12 +218,12 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
              .filter(User::isEnabled)
              .map(User::getUserName)
              .map(userName -> Pair.of(userName, createIdentifiersDetails(userName)))
-             .forEach(userPair -> userStatisticsRepository.saveUserStatistics(userPair.getKey(), userPair.getValue()));
+             .forEach(userPair -> userInfoRepository.saveUserStatistics(userPair.getKey(), userPair.getValue()));
     }
 
     @Override
     public Map<String, IdentifierDetails> getIdentifiersDetails(String user) {
-        return userStatisticsRepository.getLastUserStatistics(user);
+        return userInfoRepository.getLastUserStatistics(user);
     }
 
     @Override
@@ -222,19 +232,35 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            List<Test> tests = //testService.getAllTests();
+            List<Test> tests = testService.getAllTests();
             long timeStamp = System.currentTimeMillis();
-            String s3Path = String.format("all_tests_%s.json", timeStamp);
-            tmpFile = new File(getTmpDir(), s3Path);
+            String tmpFilePath = String.format("all_tests_%s.json", timeStamp);
+            String s3path = String.format("%s/%s", allTestsDir, tmpFilePath);
+            tmpFile = new File(Utils.getTmpDir(), tmpFilePath);
 
             mapper.writeValue(tmpFile, tests);
-
-            System.out.println("dango");
+            fileStorageService.uploadFile(s3path, tmpFile);
+            userInfoRepository.saveUserPath("all-tests", s3path);
 
         } catch (IOException e) {
             log.error(String.format("Failed to build all test file: %s", e.getMessage(), e));
         } finally {
             Utils.deleteFile(tmpFile);
+        }
+    }
+
+    @Override
+    public List<Test> getAllTests(){
+        try {
+            String path = userInfoRepository.getLastUserPath("all-tests");
+            File allTestsFile = fileStorageService.getFile(path);
+            List<Test> tests = new ObjectMapper().readValue(allTestsFile, new TypeReference<List<Test>>() {});
+
+            return tests;
+
+        } catch (Exception e) {
+            log.error(String.format("failed to get all tests: %s", e.getMessage(), e));
+            return Collections.emptyList();
         }
     }
 

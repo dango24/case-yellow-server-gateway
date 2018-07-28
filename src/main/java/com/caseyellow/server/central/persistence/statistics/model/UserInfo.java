@@ -15,7 +15,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamoDBTable(tableName = "cy_user_statistics")
-public class UserStatistics {
+public class UserInfo {
 
     @DynamoDBHashKey(attributeName = "user_name")
     private String user;
@@ -26,4 +26,14 @@ public class UserStatistics {
     @DynamoDBAttribute(attributeName = "identifier_details")
     private Map<String, IdentifierDetails> identifierDetails;
 
+    @DynamoDBAttribute(attributeName = "path")
+    private String path;
+
+    public UserInfo(String user, long timestamp, Map<String, IdentifierDetails> identifierDetails) {
+        this(user, timestamp, identifierDetails, null);
+    }
+
+    public UserInfo(String user, long timestamp, String path) {
+        this(user, timestamp, null, path);
+    }
 }
