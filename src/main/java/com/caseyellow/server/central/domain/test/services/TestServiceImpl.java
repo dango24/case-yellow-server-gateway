@@ -19,10 +19,13 @@ import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -65,14 +68,38 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Test> getAllTests() {
-        List<TestDAO> tests = testRepository.findAll();
+        int page = 0;
+        int size = 1000;
+        Page<TestDAO> testsPage = null;
+        List<TestDAO> tests = new ArrayList<>();
+
+        do {
+            testsPage = testRepository.findAll(new PageRequest(page, size));
+            tests.addAll(testsPage.getContent());
+            page++;
+
+        } while (nonNull(testsPage) && testsPage.hasNext());
+
         return convertToTestModel(tests);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Test> getAllTestsByUser(String user) {
-        List<TestDAO> userTests = testRepository.findByUser(user);
+        int page = 0;
+        int size = 500;
+        Page<TestDAO> testsPage = null;
+        List<TestDAO> userTests = new ArrayList<>();
+
+        do {
+            testsPage = testRepository.findByUser(user, new PageRequest(page, size));
+            userTests.addAll(testsPage.getContent());
+            page++;
+
+        } while (nonNull(testsPage) && testsPage.hasNext());
+
         return convertToTestModel(userTests);
     }
 

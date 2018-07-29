@@ -3,6 +3,8 @@ package com.caseyellow.server.central.persistence.test.repository;
 import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import com.caseyellow.server.central.persistence.test.model.UserTestCount;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,4 +32,6 @@ public interface TestRepository extends JpaRepository<TestDAO, Long> {
     TestDAO findByTestID(String testId);
 
     List<TestDAO> findByUser(String user);
+
+    Page<TestDAO> findByUser(String user, Pageable pageRequest);
 }

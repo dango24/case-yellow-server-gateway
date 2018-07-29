@@ -13,6 +13,7 @@ flyway.baseline-on-migrate: true
 # misc
 successful_tests_dir: successful-tests/
 run.extra.identifiers: false
+add_extra_file_download: true
 gateway.host: http://localhost:8008/
 
 # Files Download Properties
@@ -47,11 +48,11 @@ fileDownloadProperties:
   size: 73850656
   md5: FA5C710C461CD9509F1F15DC77FFFFEA
 
- vlc:
-  identifier: vlc
-  url: http://mirror.library.ucy.ac.cy/videolan/vlc/2.2.8/win32/vlc-2.2.8-win32.exe
-  size: 30863288
-  md5: 9E735F008AE8D32184AF78D39ABB67B3
+# vlc:
+#  identifier: vlc
+#  url: http://mirror.library.ucy.ac.cy/videolan/vlc/2.2.8/win32/vlc-2.2.8-win32.exe
+#  size: 30863288
+#  md5: 9E735F008AE8D32184AF78D39ABB67B3
 
  dlink :
   identifier: dlink
@@ -89,6 +90,11 @@ speedTest:
   extraIdentifiers:
     - hot
     - ookla
+
+fileDownload:
+  extraIdentifiers:
+    -  amazon-workSpaces
+    -  amazon-workSpaces
 
 connection-details:
   speed:

@@ -110,7 +110,12 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     }
 
     private Map<String, IdentifierDetails> createIdentifiersDetails(String user) {
-        return createIdentifiersDetails(user, null);
+        try {
+            return createIdentifiersDetails(user, null);
+        } catch (Exception e) {
+            log.error(String.format("Failed to create identifiers details: %s", e.getMessage(), e));
+            return Collections.emptyMap();
+        }
     }
 
     @Override
@@ -212,6 +217,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
     @Override
     public void usersStatistics(List<User> users) {
+        log.info("Start build all users statistics");
         users.add(new User("all", true));
 
         users.stream()
@@ -219,6 +225,8 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
              .map(User::getUserName)
              .map(userName -> Pair.of(userName, createIdentifiersDetails(userName)))
              .forEach(userPair -> userInfoRepository.saveUserStatistics(userPair.getKey(), userPair.getValue()));
+
+        log.info("Successfully build all users statistics");
     }
 
     @Override
@@ -231,16 +239,19 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         File tmpFile = null;
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
+            log.info("Fetching all tests");
             List<Test> tests = testService.getAllTests();
-            long timeStamp = System.currentTimeMillis();
-            String tmpFilePath = String.format("all_tests_%s.json", timeStamp);
+            log.info("Successfully fetched all tests");
+
+            String tmpFilePath = String.format("all_tests_%s.json", System.currentTimeMillis());
             String s3path = String.format("%s/%s", allTestsDir, tmpFilePath);
             tmpFile = new File(Utils.getTmpDir(), tmpFilePath);
 
-            mapper.writeValue(tmpFile, tests);
+            new ObjectMapper().writeValue(tmpFile, tests);
             fileStorageService.uploadFile(s3path, tmpFile);
             userInfoRepository.saveUserPath("all-tests", s3path);
+
+            log.info("Successfully build all tests");
 
         } catch (IOException e) {
             log.error(String.format("Failed to build all test file: %s", e.getMessage(), e));
