@@ -189,7 +189,6 @@ public class TestServiceImpl implements TestService {
                          .thenApply(this::removeUnsuccessfulTests)
                          .thenApply(this::increaseComparisonInfoCounters)
                          .thenApply(Converter::convertTestModelToDAO)
-                         .thenApply(this::addMetrics)
                          .exceptionally(this::handleSaveTestException)
                          .thenAccept(this::save);
     }

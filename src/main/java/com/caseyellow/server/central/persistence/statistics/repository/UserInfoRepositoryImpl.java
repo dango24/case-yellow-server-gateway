@@ -51,24 +51,38 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
             return;
         }
 
-        UserInfo userInfo =
-                new UserInfo(user, System.currentTimeMillis(), identifierDetails);
+        try {
+            UserInfo userInfo =
+                    new UserInfo(user, System.currentTimeMillis(), identifierDetails);
 
-        dynamoMapper.save(userInfo);
-        log.info(String.format("Successfully save new user statistics for user: %s, with timestamp: %s", userInfo.getUser(), userInfo.getTimestamp()));
+            dynamoMapper.save(userInfo);
+
+            log.info(String.format("Successfully save new user statistics for user: %s, with timestamp: %s", userInfo.getUser(), userInfo.getTimestamp()));
+
+        } catch (Exception e) {
+            log.error(String.format("Failed to save user statistics: %s", e.getMessage()), e);
+        }
     }
 
     @Override
     public void saveUserPath(String user, String path) {
-        UserInfo userInfo = new UserInfo(user, System.currentTimeMillis(), path);
+
+        UserInfo userInfo =
+                new UserInfo(user, System.currentTimeMillis(), path);
+
         dynamoMapper.save(userInfo);
+
         log.info(String.format("Successfully save new user path for user: %s, with timestamp: %s, with path: %s", userInfo.getUser(), userInfo.getTimestamp(), path));
     }
 
     @Override
     public Map<String, IdentifierDetails> getLastUserStatistics(String user) {
+        if (StringUtils.isEmpty(user)) {
+            return Collections.emptyMap();
+        }
+
         Map<String, IdentifierDetails> userDetails =
-                (Map<String, IdentifierDetails>)getLastAttributeFromItem(user, "identifier_details");
+                (Map<String, IdentifierDetails>) getLastSortAttributeFromItem(user, "identifier_details");
 
         if (isNull(userDetails)) {
             return Collections.emptyMap();
@@ -79,19 +93,25 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
 
     @Override
     public String getLastUserPath(String user) {
-        return String.valueOf(getLastAttributeFromItem(user, "path"));
+        String lastUserPath = String.valueOf(getLastSortAttributeFromItem(user, "path"));
+
+        if (StringUtils.isEmpty(lastUserPath)) {
+            return null;
+        }
+
+        return lastUserPath;
     }
 
-    private Object getLastAttributeFromItem(String key, String attribute) {
+    private Object getLastSortAttributeFromItem(String key, String attribute) {
         Item mostRecentlyItem;
         List<Item> items;
 
         try {
             QuerySpec querySpec =
                     new QuerySpec().withKeyConditionExpression("user_name = :_user")
-                            .withValueMap(new ValueMap().withString(":_user", key))
-                            .withMaxResultSize(1) // Return only the most updated user identifier details
-                            .withScanIndexForward(false);
+                                   .withValueMap(new ValueMap().withString(":_user", key))
+                                   .withMaxResultSize(1) // Return only the most updated user identifier details
+                                   .withScanIndexForward(false);
 
             items = IteratorUtils.toList(userStatisticsTable.query(querySpec).iterator());
 
