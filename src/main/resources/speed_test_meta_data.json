@@ -1,30 +1,23 @@
 { "speedTestMetaData" :
 [
   {
-    "webSiteUrl": "http://www.hot.net.il/heb/Internet/speed/",
+    "webSiteUrl": "http://hot.speedtestcustom.com/",
     "identifier": "hot",
-    "centralized": 250,
-    "flashAble": true,
+    "centralized": 0,
+    "flashAble": false,
     "haveStartButton": true,
-    "speedTestNonFlashMetaData": null,
-    "speedTestFlashMetaData" : {
-      "maxAttempts": 5,
-      "buttonIds": [{
-        "identifier": "התחל",
-        "count": 1
-      }, {
-        "identifier": "בדיקה",
-        "count": 1
-      }],
-      "finishIdentifier": "resultHandler",
-      "finishIdentifiers": [{
-        "identifier": "Mbps",
-        "count": 2
-      }, {
-        "identifier": "גרף קישוריות",
-        "count": -1
-      }]
-    }
+    "speedTestNonFlashMetaData": {
+      "buttonId": "class=button__wrapper",
+      "finishIdentifierMbps": [
+        "Your download result is \\S+ Mbps"
+      ],
+      "finishIdentifierKbps": [
+        "Your download result is \\S+ Kbps"
+      ],
+      "retrieveResultFromPayloadFloat": "result-tile result-tile-download.+?<span>(\\d+\\.\\d+)</",
+      "retrieveResultFromPayloadInteger": "result-tile result-tile-download.+?<span>(\\d+)</"
+    },
+    "speedTestFlashMetaData" : null
   },
   {
     "webSiteUrl": "http://www.bezeq.co.il/internetandphone/internet/speedtest/",
