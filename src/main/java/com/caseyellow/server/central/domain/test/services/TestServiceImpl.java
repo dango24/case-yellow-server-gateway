@@ -16,6 +16,7 @@ import com.caseyellow.server.central.persistence.test.repository.TestRepository;
 import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
 import com.caseyellow.server.central.services.storage.FileStorageService;
 import com.google.gson.Gson;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -173,6 +174,10 @@ public class TestServiceImpl implements TestService {
     public void saveFailedTest(FailedTest failedTestDetails) {
         FailedTestDAO failedTest = Converter.convertFailedTestModelToDAO(failedTestDetails);
         failedTest.setTimestamp(System.currentTimeMillis());
+
+        if (StringUtils.isNotEmpty(failedTest.getErrorMessage()) && failedTest.getErrorMessage().length() >= 250) {
+            failedTest.setErrorMessage(failedTest.getErrorMessage().substring(0, 250));
+        }
 
         failedTestRepository.save(failedTest);
     }
