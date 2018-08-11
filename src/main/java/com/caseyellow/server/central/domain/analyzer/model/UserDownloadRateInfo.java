@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.domain.analyzer.model;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +12,7 @@ import static java.util.Objects.nonNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamoDBDocument
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDownloadRateInfo {
 

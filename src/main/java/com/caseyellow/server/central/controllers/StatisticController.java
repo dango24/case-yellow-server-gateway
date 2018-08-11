@@ -60,7 +60,7 @@ public class StatisticController {
         log.info(String.format("Received identifiersDetails GET request for user: %s", user));
 
         if (StringUtils.isNotEmpty(filter)) {
-            return statisticAnalyzer.createIdentifiersDetails(user, filter);
+            return statisticAnalyzer.createIdentifiersDetails(user, filter, null);
         } else {
             return statisticAnalyzer.getIdentifiersDetails(user);
         }
@@ -90,8 +90,8 @@ public class StatisticController {
 
     @PostMapping("/users-statistics")
     public void usersStatistics(@RequestBody List<User> users) {
-        log.info(String.format("Received usersStatistics POST request with users %s", users.stream().map(User::getUserName).collect(Collectors.joining(", "))));
-        CompletableFuture.runAsync( () -> statisticAnalyzer.usersStatistics(users) );
+        log.info(String.format("Received buildUsersStatistics POST request with users %s", users.stream().map(User::getUserName).collect(Collectors.joining(", "))));
+        CompletableFuture.runAsync( () -> statisticAnalyzer.buildUsersStatistics(users) );
     }
 
     @PostMapping("/build-all-tests")

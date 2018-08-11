@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -217,10 +219,13 @@ public class TestServiceImpl implements TestService {
         return test;
     }
 
+    @Retryable(value =  Exception.class , maxAttempts = 5, backoff = @Backoff(delay = 3000))
     private void save(TestDAO testDAO) {
         if (nonNull(testDAO)) {
+            logger.info(String.format("Saving test: %s, for user: %s", testDAO.getTestID(), testDAO.getUser()));
             testDAO.setTimestamp(System.currentTimeMillis());
             testRepository.save(testDAO);
+            logger.info(String.format("Successfully save test: %s, for user: %s", testDAO.getTestID(), testDAO.getUser()));
         }
     }
 

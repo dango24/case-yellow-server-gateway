@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static java.util.Objects.isNull;
+
 @Service
 @Slf4j
 @Profile("prod")
@@ -33,6 +35,12 @@ public class ImageAnalyzerImpl implements ImageAnalyzer {
     @Transactional
     public void updateAnalyzedImageResult(String imagePath, double analyzedImageResult, boolean analyzedSucceed) {
         SpeedTestWebSiteDAO speedTestWebSiteDAO = speedTestWebSiteRepository.findByS3FileAddress(imagePath.replaceAll(testsDir, ""));
+
+        if (isNull(speedTestWebSiteDAO)) {
+            log.error(String.format("Failed to find speedTestWebSite record for s3 path: %s", imagePath.replaceAll(testsDir, "")));
+            return;
+        }
+
         speedTestWebSiteRepository.updateAnalyzedImageResultById(speedTestWebSiteDAO.getId(), analyzedImageResult);
         AnalyzedState analyzedState = analyzedSucceed ? AnalyzedState.SUCCESS : AnalyzedState.FAILURE;
 

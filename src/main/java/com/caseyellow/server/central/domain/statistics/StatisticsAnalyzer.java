@@ -11,14 +11,14 @@ import java.util.Map;
 public interface StatisticsAnalyzer {
     Map<String, Long> countIPs();
     Map<String, Long> countUserTests();
-    Map<String, IdentifierDetails> createIdentifiersDetails(String user, String filter);
+    Map<String, IdentifierDetails> createIdentifiersDetails(String user, String filter, List<Test> allTests);
     Map<String, String> meanFileDownloadRate();
     long userLastTest(String user);
     long userLastFailedTest(String user);
     void notifyLastTests(List<User> users);
+    void buildUsersStatistics(List<User> users);
     UsersLastTest usersLastTest(List<User> users, int lastTimeInHours);
     Map<String, String> getUserMeanRate(String user);
-    void usersStatistics(List<User> users);
     Map<String,IdentifierDetails> getIdentifiersDetails(String user);
     void buildAllTests();
     List<Test> getAllTests();

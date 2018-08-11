@@ -22,6 +22,7 @@ import com.caseyellow.server.central.services.storage.FileStorageService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,6 @@ import static com.caseyellow.server.central.persistence.metrics.MetricAverageRep
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.*;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
 @Profile("prod")
@@ -97,10 +97,9 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
     @Override
     @Retryable(value =  {IOException.class, JDBCConnectionException.class} , maxAttempts = 5, backoff = @Backoff(delay = 3000))
-    public Map<String, IdentifierDetails> createIdentifiersDetails(String user, String filter) {
+    public Map<String, IdentifierDetails> createIdentifiersDetails(String user, String filter, List<Test> allTests) {
         log.info(String.format("create identifiers details for user: %s", user));
-
-        Map<String, List<ComparisonInfo>> testComparisons = getComparisons(user, filter);
+        Map<String, List<ComparisonInfo>> testComparisons = getComparisons(user, filter, allTests);
 
         return testComparisons.entrySet()
                               .stream()
@@ -109,11 +108,11 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                               .collect(toMap(IdentifierDetails::getIdentifier, Function.identity()));
     }
 
-    private Map<String, IdentifierDetails> createIdentifiersDetails(String user) {
+    private Map<String, IdentifierDetails> createIdentifiersDetails(String user, List<Test> allTests) {
         try {
-            return createIdentifiersDetails(user, null);
+            return createIdentifiersDetails(user, null, allTests);
         } catch (Exception e) {
-            log.error(String.format("Failed to create identifiers details: %s", e.getMessage(), e));
+            log.error(String.format("Failed to create identifiers details, for user: %s, cause: %s", user, e.getMessage(), e));
             return Collections.emptyMap();
         }
     }
@@ -191,6 +190,16 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
     @Override
     public Map<String, String> getUserMeanRate(String user) {
+        Map<String, UserDownloadRateInfo> userDownloadRateInfo = userInfoRepository.getMeanRate(user);
+
+        return userDownloadRateInfo.entrySet()
+                                   .stream()
+                                   .map(Map.Entry::getValue)
+                                   .sorted(Comparator.comparing(UserDownloadRateInfo::getActualRate))
+                                   .collect(toMap(UserDownloadRateInfo::getUser, UserDownloadRateInfo::toString, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+    }
+
+    public Map<String, UserDownloadRateInfo> buildUserMeanRate(String user, List<Test> allTests) {
         List<Test> tests;
         Map<String, List<Test>> userToDownloadRateTests;
         Map<String, UserDetailsDAO> userDetails;
@@ -201,9 +210,9 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                                      .collect(toMap(UserDetailsDAO::getUserName, Function.identity()));
 
         if (user.equals("all")) {
-            tests = testService.getAllTests();
+            tests = allTests;
         } else {
-            tests = testService.getAllTestsByUser(user);
+            tests = getAllUserTests(allTests, user);
         }
 
         userToDownloadRateTests = tests.stream().collect(groupingBy(Test::getUser));
@@ -212,19 +221,29 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
             addAllUsersTestRate(tests, userToDownloadRateTests, userDetails);
         }
 
-        return getUserMeanRate(userToDownloadRateTests, userDetails);
+        return buildUserMeanRate(userToDownloadRateTests, userDetails);
     }
 
     @Override
-    public void usersStatistics(List<User> users) {
+    public void buildUsersStatistics(List<User> users) {
         log.info("Start build all users statistics");
+
+        List<Test> allTests = getAllTests();
         users.add(new User("all", true));
 
         users.stream()
              .filter(User::isEnabled)
              .map(User::getUserName)
-             .map(userName -> Pair.of(userName, createIdentifiersDetails(userName)))
-             .forEach(userPair -> userInfoRepository.saveUserStatistics(userPair.getKey(), userPair.getValue()));
+             .map(userName -> Pair.of(userName, createIdentifiersDetails(userName, allTests)))
+             .forEach(userPair -> userInfoRepository.saveIdentifiersDetails(userPair.getKey(), userPair.getValue()));
+
+        log.info("Successfully build all users identifiers details");
+
+        users.stream()
+             .filter(User::isEnabled)
+             .map(User::getUserName)
+             .map(userName -> Pair.of(userName, buildUserMeanRate(userName, allTests)))
+             .forEach(userPair -> userInfoRepository.saveUserMeanRate(userPair.getKey(), userPair.getValue()));
 
         log.info("Successfully build all users statistics");
     }
@@ -262,9 +281,11 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
     @Override
     public List<Test> getAllTests(){
+        File allTestsFile = null;
+
         try {
             String path = userInfoRepository.getLastUserPath("all-tests");
-            File allTestsFile = fileStorageService.getFile(path);
+            allTestsFile = fileStorageService.getFile(path);
             List<Test> tests = new ObjectMapper().readValue(allTestsFile, new TypeReference<List<Test>>() {});
 
             return tests;
@@ -272,6 +293,9 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         } catch (Exception e) {
             log.error(String.format("failed to get all tests: %s", e.getMessage(), e));
             return Collections.emptyList();
+
+        } finally {
+            Utils.deleteFile(allTestsFile);
         }
     }
 
@@ -291,7 +315,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         userDetails.put("all", userDetailsDAO);
     }
 
-    private Map<String, String> getUserMeanRate(Map<String, List<Test>> userToDownloadRateTests, Map<String, UserDetailsDAO> userDetails) {
+    private Map<String, UserDownloadRateInfo> buildUserMeanRate(Map<String, List<Test>> userToDownloadRateTests, Map<String, UserDetailsDAO> userDetails) {
         Map<String, Double> userToDownloadRate;
 
         userToDownloadRate =
@@ -299,11 +323,10 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                                        .stream()
                                        .collect(toMap(Map.Entry::getKey, entry -> getMeanRateInMbps(entry.getValue())));
 
-      return userToDownloadRate.entrySet()
-                               .stream()
-                               .map(entry -> new UserDownloadRateInfo(entry.getKey(), entry.getValue(), userDetails.get(entry.getKey()).getSpeed(), userDetails.get(entry.getKey()).getInfrastructure(), userToDownloadRateTests.get(entry.getKey()).size()))
-                               .sorted(Comparator.comparing(UserDownloadRateInfo::getActualRate))
-                               .collect(toMap(UserDownloadRateInfo::getUser, UserDownloadRateInfo::toString, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+        return userToDownloadRate.entrySet()
+                .stream()
+                .map(entry -> new UserDownloadRateInfo(entry.getKey(), entry.getValue(), userDetails.get(entry.getKey()).getSpeed(), userDetails.get(entry.getKey()).getInfrastructure(), userToDownloadRateTests.get(entry.getKey()).size()))
+                .collect(toMap(UserDownloadRateInfo::getUser, Function.identity()));
     }
 
     private double getMeanRateInMbps(List<Test> tests) {
@@ -359,20 +382,31 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         return identifierDetails.getMeanRatio() > 0;
     }
 
-    private Map<String, List<ComparisonInfo>> getComparisons(String user, String filter) {
+    private Map<String, List<ComparisonInfo>> getComparisons(String user, String filter, List<Test> allTests) {
         List<Test> tests;
         Predicate<Test> testPredicate = testPredicateFactory.getTestPredicate(filter);
 
-        if (isEmpty(user) || user.equals("all")) {
-            tests = testService.getAllTests();
+        if (CollectionUtils.isEmpty(allTests)) {
+            tests = getAllTests();
         } else {
-            tests = testService.getAllTestsByUser(user);
+            tests = allTests;
+        }
+
+        if (StringUtils.isNotEmpty(user) && !user.equals("all")) {
+            tests = getAllUserTests(tests, user);
         }
 
         return tests.stream()
                     .filter(testPredicate::test)
                     .flatMap(test -> test.getComparisonInfoTests().stream())
                     .collect(groupingBy(c -> c.getSpeedTestWebSite().getSpeedTestIdentifier()));
+    }
+
+    private  List<Test> getAllUserTests(List<Test> allTests, String user) {
+
+        return allTests.stream()
+                       .filter(test -> test.getUser().equals(user))
+                       .collect(toList());
     }
 
     private double getMeanRatio(List<ComparisonInfo> comparisons){

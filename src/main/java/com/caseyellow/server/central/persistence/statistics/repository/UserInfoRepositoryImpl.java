@@ -6,6 +6,7 @@ import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.caseyellow.server.central.domain.analyzer.model.IdentifierDetails;
+import com.caseyellow.server.central.domain.analyzer.model.UserDownloadRateInfo;
 import com.caseyellow.server.central.persistence.statistics.model.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IteratorUtils;
@@ -46,22 +47,32 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
     }
 
     @Override
-    public void saveUserStatistics(String user, Map<String, IdentifierDetails> identifierDetails) {
+    public void saveIdentifiersDetails(String user, Map<String, IdentifierDetails> identifierDetails) {
         if (StringUtils.isEmpty(user) || isNull(identifierDetails) || identifierDetails.isEmpty()) {
             return;
         }
 
-        try {
-            UserInfo userInfo =
-                    new UserInfo(user, System.currentTimeMillis(), identifierDetails);
+        UserInfo userInfo =
+                new UserInfo(user, System.currentTimeMillis(), identifierDetails);
 
-            dynamoMapper.save(userInfo);
+        save(userInfo);
 
-            log.info(String.format("Successfully save new user statistics for user: %s, with timestamp: %s", userInfo.getUser(), userInfo.getTimestamp()));
+        log.info(String.format("Successfully save new user statistics for user: %s, with timestamp: %s", userInfo.getUser(), userInfo.getTimestamp()));
 
-        } catch (Exception e) {
-            log.error(String.format("Failed to save user statistics: %s", e.getMessage()), e);
-        }
+
+    }
+
+    @Override
+    public void saveUserMeanRate(String user, Map<String, UserDownloadRateInfo> meanRate) {
+
+        UserInfo userInfo =
+                new UserInfo(user + "-mean-rate", System.currentTimeMillis());
+
+        userInfo.setMeanRate(meanRate);
+
+        save(userInfo);
+
+        log.info(String.format("Successfully save new user path for user: %s, with timestamp: %s, with mean rate: %s", userInfo.getUser(), userInfo.getTimestamp(), meanRate));
     }
 
     @Override
@@ -70,9 +81,18 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
         UserInfo userInfo =
                 new UserInfo(user, System.currentTimeMillis(), path);
 
-        dynamoMapper.save(userInfo);
+        save(userInfo);
 
         log.info(String.format("Successfully save new user path for user: %s, with timestamp: %s, with path: %s", userInfo.getUser(), userInfo.getTimestamp(), path));
+    }
+
+    private void save(UserInfo userInfo) {
+        try {
+            dynamoMapper.save(userInfo);
+
+        } catch (Exception e) {
+            log.error(String.format("Failed to save user statistics: %s", e.getMessage()), e);
+        }
     }
 
     @Override
@@ -83,6 +103,22 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
 
         Map<String, IdentifierDetails> userDetails =
                 (Map<String, IdentifierDetails>) getLastSortAttributeFromItem(user, "identifier_details");
+
+        if (isNull(userDetails)) {
+            return Collections.emptyMap();
+        }
+
+        return userDetails;
+    }
+
+    @Override
+    public Map<String, UserDownloadRateInfo> getMeanRate(String user) {
+        if (StringUtils.isEmpty(user)) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, UserDownloadRateInfo> userDetails =
+                (Map<String, UserDownloadRateInfo>) getLastSortAttributeFromItem(user + "-mean-rate", "mean_rate");
 
         if (isNull(userDetails)) {
             return Collections.emptyMap();
