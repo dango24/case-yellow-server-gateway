@@ -102,6 +102,7 @@ connection-details:
     - 40
     - 100
     - 200
+    - 1000
 
   infrastructure:
     - HOT
