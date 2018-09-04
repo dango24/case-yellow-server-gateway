@@ -14,7 +14,6 @@ flyway.baseline-on-migrate: true
 successful_tests_dir: successful-tests/
 run.extra.identifiers: false
 add_extra_file_download: true
-gateway.host: http://localhost:8008/
 
 # Files Download Properties
 fileDownloadProperties:

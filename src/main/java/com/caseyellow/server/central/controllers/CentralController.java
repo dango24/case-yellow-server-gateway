@@ -56,6 +56,12 @@ public class CentralController {
     }
 
     @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/health")
+    public String health() {
+        return "we are all good";
+    }
+
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/next-web-site",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
