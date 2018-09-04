@@ -18,6 +18,9 @@ dynamo.endpoint: https://dynamodb.eu-central-1.amazonaws.com
 dynamo.region: eu-central-1
 dynamo.user.statistics.table.name: cy_user_statistics
 
+#?
+encryption_key: nokey
+
 # Email service
 email.username: caseyellow22@gmail.com
 
