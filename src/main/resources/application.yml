@@ -32,8 +32,8 @@ fileDownloadProperties:
  amazon-workSpaces:
   identifier: amazon-workSpaces
   url: https://d2td7dqidlhjx7.cloudfront.net/prod/global/windows/Amazon+WorkSpaces.msi
-  size: 42684416
-  md5: E1E8F7FBE7A5DD3A2C924A7B36CA2700
+  size: 42749952
+  md5: BC184C28FC53D85035F428E4CA7B0AD2
 
  my-sql:
   identifier: my-sql
