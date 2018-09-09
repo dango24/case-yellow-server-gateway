@@ -13,7 +13,7 @@ flyway.baseline-on-migrate: true
 # misc
 successful_tests_dir: successful-tests/
 run.extra.identifiers: false
-add_extra_file_download: true
+add_extra_file_download: false
 
 # Files Download Properties
 fileDownloadProperties:
