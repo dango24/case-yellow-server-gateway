@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
-@Ignore
 public class FileDownloadInfoRepositoryTest {
 
     private static final String FIREFOX = "firefox";
