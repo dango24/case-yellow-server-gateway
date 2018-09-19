@@ -91,7 +91,7 @@ public class ProductionAppBootTest {
 
         List<String> fileDownloadNotExistInDB = (List<String>)getFileDownloadNotExistInDBMethod.invoke(commonAppBoot);
 
-        assertThat(Arrays.asList(FIREFOX_IDENTIFIER/*, GO_IDENTIFIER*/, JAVA_SDK_IDENTIFIER, POSTGRESQL_IDENTIFIER, KINECT_IDENTIFIER, ITUNES_IDENTIFIER),
+        assertThat(Arrays.asList(FIREFOX_IDENTIFIER, GO_IDENTIFIER, JAVA_SDK_IDENTIFIER, POSTGRESQL_IDENTIFIER, KINECT_IDENTIFIER, ITUNES_IDENTIFIER),
                    containsInAnyOrder(fileDownloadNotExistInDB.toArray()));
     }
 

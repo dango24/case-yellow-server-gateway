@@ -68,7 +68,7 @@ public class FileDownloadServiceImpTest {
 
     @Before
     public void setUp() throws Exception {
-        Map<String, FileDownloadProperties> fileDownloadUrls  =new HashMap<>();
+        Map<String, FileDownloadProperties> fileDownloadUrls = new HashMap<>();
         fileDownloadUrls.put(FIREFOX, new FileDownloadProperties(FIREFOX_URL));
         fileDownloadUrls.put(GO, new FileDownloadProperties(GO_URL));
         fileDownloadUrls.put(JAVA_SDK, new FileDownloadProperties(JAVA_SDK_URL));
