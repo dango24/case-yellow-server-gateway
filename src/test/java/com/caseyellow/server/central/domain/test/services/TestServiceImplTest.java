@@ -32,7 +32,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
-@Ignore
 public class TestServiceImplTest {
 
     private final static int NUM_OF_SUCCEED_TEST = 8;
