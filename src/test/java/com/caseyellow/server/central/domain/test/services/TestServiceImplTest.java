@@ -13,6 +13,7 @@ import com.caseyellow.server.central.persistence.website.repository.SpeedTestWeb
 import com.caseyellow.server.central.persistence.test.repository.TestRepository;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
+@Ignore
 public class TestServiceImplTest {
 
     private final static int NUM_OF_SUCCEED_TEST = 8;

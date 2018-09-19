@@ -10,6 +10,7 @@ import com.caseyellow.server.central.persistence.file.repository.FileDownloadInf
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
+@Ignore
 public class FileDownloadServiceImpTest {
 
     private static final String FIREFOX = "firefox";

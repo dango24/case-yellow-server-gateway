@@ -35,7 +35,7 @@ public class ApplicationBoot {
 
     @PostConstruct
     @Transactional
-    private void init() throws AppBootException {
+    public void init() throws AppBootException {
         addNewIdentifiers();
         disableNonActiveIdentifiers();
         enableActiveIdentifiers();

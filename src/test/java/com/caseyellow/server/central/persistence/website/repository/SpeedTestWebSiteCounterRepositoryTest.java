@@ -3,6 +3,7 @@ package com.caseyellow.server.central.persistence.website.repository;
 import com.caseyellow.server.central.CaseYellowCentral;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteCounter;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
+@Ignore
 public class SpeedTestWebSiteCounterRepositoryTest {
 
     private static final String HOT_IDENTIFIER = "hot";

@@ -12,6 +12,7 @@ import com.caseyellow.server.central.persistence.test.dao.TestDAO;
 import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 @ActiveProfiles("dev")
+@Ignore
 public class ModelConverterTest {
 
     private static final String HOT = "http://www.hot.net.il/heb/Internet/speed/";

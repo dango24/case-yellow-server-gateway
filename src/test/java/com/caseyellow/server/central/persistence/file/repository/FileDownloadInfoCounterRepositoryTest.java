@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
+@Ignore
 public class FileDownloadInfoCounterRepositoryTest {
 
     private static final String GO = "go";
@@ -50,7 +51,6 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
-    @Ignore
     public void deActiveGOFileDownloadInfo() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
@@ -63,7 +63,6 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
-    @Ignore
     public void deActiveOneFileDownloadInfo() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
@@ -71,7 +70,6 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
-    @Ignore
     public void deActiveMultiTimesSameFileDownloadInfo() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
@@ -85,7 +83,6 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
-    @Ignore
     public void deActiveMultiFileDownloadInfo() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
@@ -101,7 +98,6 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
-    @Ignore
     public void getActiveIdentifiers() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
@@ -117,7 +113,6 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
-    @Ignore
     public void deActiveAllFileDownloadInfo() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
@@ -134,7 +129,6 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
-    @Ignore
     public void reActiveOneFileDownloadInfo() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
