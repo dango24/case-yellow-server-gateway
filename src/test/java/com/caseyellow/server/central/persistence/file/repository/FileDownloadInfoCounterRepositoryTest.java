@@ -68,6 +68,7 @@ public class FileDownloadInfoCounterRepositoryTest {
 
     @Test
     public void deActiveMultiTimesSameFileDownloadInfo() throws Exception {
+        System.out.println(fileDownloadInfoCounterRepository.getActiveIdentifiers());
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
 
