@@ -50,6 +50,7 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void deActiveGOFileDownloadInfo() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
@@ -62,6 +63,7 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void deActiveOneFileDownloadInfo() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
@@ -69,8 +71,8 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void deActiveMultiTimesSameFileDownloadInfo() throws Exception {
-        log.info("Bla BlA: " + fileDownloadInfoCounterRepository.getActiveIdentifiers());
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
 
@@ -83,6 +85,7 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void deActiveMultiFileDownloadInfo() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
@@ -98,6 +101,7 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void getActiveIdentifiers() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
@@ -130,6 +134,7 @@ public class FileDownloadInfoCounterRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void reActiveOneFileDownloadInfo() throws Exception {
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
