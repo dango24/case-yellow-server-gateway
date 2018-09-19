@@ -22,7 +22,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
-@Ignore
 public class FileDownloadInfoCounterRepositoryTest {
 
     private static final String GO = "go";
