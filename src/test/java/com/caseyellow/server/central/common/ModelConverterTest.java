@@ -20,7 +20,6 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 @ActiveProfiles("dev")
-@Ignore
 public class ModelConverterTest {
 
     private static final String HOT = "http://www.hot.net.il/heb/Internet/speed/";
