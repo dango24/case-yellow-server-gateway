@@ -2,6 +2,7 @@ package com.caseyellow.server.central.persistence.file.repository;
 
 import com.caseyellow.server.central.CaseYellowCentral;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadCounter;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -17,6 +18,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
@@ -68,7 +70,7 @@ public class FileDownloadInfoCounterRepositoryTest {
 
     @Test
     public void deActiveMultiTimesSameFileDownloadInfo() throws Exception {
-        System.out.println(fileDownloadInfoCounterRepository.getActiveIdentifiers());
+        log.info("Bla BlA: " + fileDownloadInfoCounterRepository.getActiveIdentifiers());
         assertEquals(4, getActivateIdentifiers());
         fileDownloadInfoCounterRepository.deActiveFileDownloadInfo(GO);
 
