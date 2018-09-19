@@ -1,0 +1,27 @@
+version: 0.1
+
+phases:
+  install:
+    commands:
+      - echo Nothing to do in the install phase...
+  pre_build:
+    commands:
+      - echo Nothing to do in the pre_build phase...
+  build:
+    commands:
+      - echo Build started on `date`
+      - mvn clean install
+      - echo Build completed on `date`
+  post_build:
+    commands:
+      - echo Archive cy-central
+      - zip -r cy-central-archive.zip target/case-yellow-central.jar appspec.yml scripts/*
+      - echo Uplaod cy-central-archive to S3
+      - aws s3 cp cy-central-archive.zip s3://cy-codebuild/cy-central-build-artifact/
+      - echo Successfully uplaoded cy-central-archive to S3
+
+artifacts:
+  files:
+    - target/case-yellow-central.jar
+    - appspec.yml
+    - scripts/*

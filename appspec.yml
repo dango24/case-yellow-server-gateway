@@ -1,0 +1,22 @@
+version: 0.0
+os: linux
+
+files:
+  - source: target/case-yellow-central.jar
+    destination: /home/ec2-user/case-yellow
+
+hooks:
+  BeforeInstall:
+    - location: scripts/delete_app_binary.sh
+      timeout: 60
+      runas: ec2-user
+
+  AfterInstall:
+    - location: scripts/stop_app_process.sh
+      timeout: 60
+      runas: root
+
+  ApplicationStart:
+    - location: scripts/start_app_process.sh
+      timeout: 120
+      runas: ec2-user
