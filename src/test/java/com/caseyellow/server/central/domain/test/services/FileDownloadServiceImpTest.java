@@ -33,6 +33,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
+@Ignore
 public class FileDownloadServiceImpTest {
 
     private static final String FIREFOX = "firefox";
