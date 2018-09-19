@@ -18,7 +18,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
-@Ignore
 public class SpeedTestWebSiteCounterRepositoryTest {
 
     private static final String HOT_IDENTIFIER = "hot";
