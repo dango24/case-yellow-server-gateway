@@ -32,7 +32,6 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CaseYellowCentral.class)
 @ActiveProfiles("dev")
-@Ignore
 public class ProductionAppBootTest {
 
     private static final String HOT_IDENTIFIER = "HOT";
