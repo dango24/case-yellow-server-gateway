@@ -58,7 +58,7 @@ public class CentralController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/health")
     public Payload health() {
-        return new Payload("we are all good over here");
+        return new Payload("For fame & glory");
     }
 
     @ResponseStatus(HttpStatus.OK)
