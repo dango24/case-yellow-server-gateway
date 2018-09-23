@@ -65,20 +65,7 @@ fileDownloadProperties:
   size: 41896256
   md5: 1A762049BEF7FC3A53014833757DE2D2
 
-# bitcoin:
-#  identifier: bitcoin
-#  url: https://bitcoin.org/bin/bitcoin-core-0.15.1/bitcoin-0.15.1-x86_64-linux-gnu.tar.gz
-#  size: 25470246
-#  md5: 84125F4C8C010A400EE36F020C6C4BCD
-
-# safari: http://support.apple.com/downloads/DL1569/en_US/Safari5.1.10SnowLeopardManual.dmg
-# java-sdk: https://sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip
-# postgres: https://get.enterprisedb.com/postgresql/postgresql-10.0-1-windows-x64.exe
-# kinect: https://download.microsoft.com/download/F/2/D/F2D1012E-3BC6-49C5-B8B3-5ACFF58AF7B8/KinectSDK-v2.0_1409-Setup.exe
-# itunes: https://secure-appldnld.apple.com/itunes12/031-69284-20160802-7E7B2D20-552B-11E6-B2B9-696CECD541CE/iTunes64Setup.exe
-
 speedTestUrls:
-# atnt: http://speedtest.att.com/speedtest/
  bezeq: http://www.bezeq.co.il/internetandphone/internet/speedtest/
  fast: https://www.fast.com/
  hot: http://www.hot.net.il/heb/Internet/speed/

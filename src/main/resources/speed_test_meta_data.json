@@ -6,6 +6,14 @@
     "centralized": 0,
     "flashAble": false,
     "haveStartButton": true,
+    "preStartButtonRoles" : [
+      {
+        "identifier": "xpath=//button[contains(.,'Retry')]",
+        "command": "CLICK",
+        "mono": true,
+        "deprecated": true
+      }
+    ],
     "speedTestNonFlashMetaData": {
       "buttonId": "class=button__wrapper",
       "finishIdentifierMbps": [
@@ -30,7 +38,8 @@
       {
         "identifier": "cssSelector=img[data-role='close-button']",
         "command": "CLICK",
-        "mono": true
+        "mono": true,
+        "deprecated": true
       }
     ],
     "speedTestFlashMetaData" : {
@@ -74,7 +83,8 @@
       {
         "identifier": "id=view39",
         "command": "CLICK",
-        "mono": true
+        "mono": true,
+        "deprecated": false
       }
     ],
     "speedTestNonFlashMetaData": {
