@@ -33,7 +33,7 @@ fileDownloadProperties:
   identifier: amazon-workSpaces
   url: https://d2td7dqidlhjx7.cloudfront.net/prod/global/windows/Amazon+WorkSpaces.msi
   size: 42749952
-  md5: BC184C28FC53D85035F428E4CA7B0AD2
+  md5: EE601495E31BBC9199ABD18396AE62F6
 
  my-sql:
   identifier: my-sql
@@ -46,12 +46,6 @@ fileDownloadProperties:
   url: https://download.microsoft.com/download/D/0/F/D0F9F1BD-9BE6-49E4-8729-4AAAFCAC20F9/gfwlivesetup.exe
   size: 73850656
   md5: FA5C710C461CD9509F1F15DC77FFFFEA
-
-# vlc:
-#  identifier: vlc
-#  url: http://mirror.library.ucy.ac.cy/videolan/vlc/2.2.8/win32/vlc-2.2.8-win32.exe
-#  size: 30863288
-#  md5: 9E735F008AE8D32184AF78D39ABB67B3
 
  dlink :
   identifier: dlink
