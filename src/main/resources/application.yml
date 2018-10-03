@@ -70,6 +70,10 @@ speedTest:
   extraIdentifiers:
     - hot
     - ookla
+  chromeOptionsArguments:
+    - "--allow-outdated-plugins"
+    - "--disable-features=EnableEphemeralFlashPermission"
+    - "disable-infobars"
 
 fileDownload:
   extraIdentifiers:

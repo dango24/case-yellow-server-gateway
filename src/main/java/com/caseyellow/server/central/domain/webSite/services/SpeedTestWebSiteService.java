@@ -5,6 +5,7 @@ import com.caseyellow.server.central.domain.webSite.model.SpeedTestMetaData;
 import com.caseyellow.server.central.domain.webSite.model.SpeedTestNonFlashMetaData;
 import com.caseyellow.server.central.domain.webSite.model.WordIdentifier;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -16,4 +17,5 @@ public interface SpeedTestWebSiteService {
     Set<WordIdentifier> getTextIdentifiers(String identifier, boolean startTest);
     SpeedTestNonFlashMetaData getSpeedTestNonFlashMetaData(String identifier);
     void investigateSuspiciousTestRatio(String outliarRatio, String hours);
+    List<String> getChromeOptionsArguments(String user);
 }

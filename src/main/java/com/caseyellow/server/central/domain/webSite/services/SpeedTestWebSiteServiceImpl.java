@@ -45,6 +45,9 @@ public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
     @Getter @Setter
     private List<String> extraIdentifiers;
 
+    @Getter @Setter
+    private List<String> chromeOptionsArguments;
+
     private File speedTestImagesDirPath;
     private UrlConfig urlMapper;
     private FileStorageService fileStorageService;
@@ -119,6 +122,11 @@ public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
             deleteFile(tmpZipFile);
             cleanDirectory(speedTestImagesDirPath);
         }
+    }
+
+    @Override
+    public List<String> getChromeOptionsArguments(String user) {
+        return chromeOptionsArguments;
     }
 
     private void addImageToTempDir(SuspiciousTestRatioDetails suspiciousTestRatioDetails, File dirPath) {
