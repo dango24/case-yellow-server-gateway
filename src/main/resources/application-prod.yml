@@ -12,6 +12,7 @@ spring.jpa.properties.javax.persistence.query.timeout: 600000
 # SQS
 sqs.queue.endpoint: https://sqs.eu-central-1.amazonaws.com
 sqs.central.queue: cy-central-queue
+sqs.image_analyze.queue: cy-image-analysis
 
 # DynamoDB
 dynamo.endpoint: https://dynamodb.eu-central-1.amazonaws.com

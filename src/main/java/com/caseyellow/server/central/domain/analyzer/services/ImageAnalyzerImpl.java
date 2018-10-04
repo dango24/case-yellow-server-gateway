@@ -1,16 +1,22 @@
 package com.caseyellow.server.central.domain.analyzer.services;
 
-import com.caseyellow.server.central.domain.metrics.MetricsService;
-import com.caseyellow.server.central.domain.test.services.TestService;
+import com.caseyellow.server.central.domain.analyzer.model.ImageDetails;
+import com.caseyellow.server.central.exceptions.AnalyzerException;
 import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 import com.caseyellow.server.central.persistence.website.repository.SpeedTestWebSiteRepository;
+import com.caseyellow.server.central.queues.MessageProducerService;
+import com.caseyellow.server.central.queues.MessageType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -22,12 +28,12 @@ public class ImageAnalyzerImpl implements ImageAnalyzer {
     @Value("${successful_tests_dir}")
     private String testsDir;
 
-    private MetricsService metricsService;
+    private MessageProducerService messageProducerService;
     private SpeedTestWebSiteRepository speedTestWebSiteRepository;
 
     @Autowired
-    public ImageAnalyzerImpl(MetricsService metricsService, SpeedTestWebSiteRepository speedTestWebSiteRepository) {
-        this.metricsService = metricsService;
+    public ImageAnalyzerImpl(MessageProducerService messageProducerService, SpeedTestWebSiteRepository speedTestWebSiteRepository) {
+        this.messageProducerService = messageProducerService;
         this.speedTestWebSiteRepository = speedTestWebSiteRepository;
     }
 
@@ -46,9 +52,46 @@ public class ImageAnalyzerImpl implements ImageAnalyzer {
 
         speedTestWebSiteRepository.updateAnalyzedState(speedTestWebSiteDAO.getId(), analyzedState);
         log.info(String.format("Successfully update speedTestWebSiteDAO: %s with result: %s", speedTestWebSiteDAO.getS3FileAddress(), analyzedImageResult));
+    }
 
-        if (analyzedSucceed) {
-            metricsService.executeSubTestsSpeedTestMetrics(speedTestWebSiteRepository.findOne(speedTestWebSiteDAO.getId()));
+    @Override
+    public void checkUnAnalyzedTests() {
+        List<SpeedTestWebSiteDAO> unAnalyzedSpeedTests =
+                speedTestWebSiteRepository.findByAnalyzedState(AnalyzedState.NOT_STARTED)
+                        .stream()
+                        .filter(this::testNotAnalyzedOverOneDay)
+                        .collect(Collectors.toList());
+
+        unAnalyzedSpeedTests.stream()
+                .map(SpeedTestWebSiteDAO::getS3FileAddress)
+                .map(this::buildImagePathDetails)
+                .forEach(imageDetails -> messageProducerService.send(MessageType.IMAGE_ANALYSIS, imageDetails));
+    }
+
+    private boolean testNotAnalyzedOverOneDay(SpeedTestWebSiteDAO speedTestWebSite) {
+        return TimeUnit.MILLISECONDS.toHours(System.currentTimeMillis() - speedTestWebSite.getStartMeasuringTimestamp()) > 24;
+    }
+
+    private ImageDetails buildImagePathDetails(String path) {
+        String[] pathArgs = path.split("-");
+
+        if (pathArgs.length != 4) { // Total numbers of valid arguments
+            String errorMessage = String.format("Failed to generate ImageDetails, path args is not in length 4 for path: %s", path);
+            log.error(errorMessage);
+            throw new AnalyzerException(errorMessage);
         }
+
+        String user = pathArgs[0];
+        String md5 = pathArgs[2];
+        String identifier = getIdentifierFromPathArgs(pathArgs);
+
+        return new ImageDetails(path, user, identifier, md5);
+    }
+
+    private String getIdentifierFromPathArgs(String[] pathArgs) {
+        String identifier = pathArgs[pathArgs.length -1];
+
+        return identifier.replaceAll(".png", "")
+                .replaceAll(".PNG", "");
     }
 }

@@ -1,5 +1,6 @@
 package com.caseyellow.server.central.controllers;
 
+import com.caseyellow.server.central.domain.analyzer.services.ImageAnalyzer;
 import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
 import com.caseyellow.server.central.domain.statistics.StatisticsAnalyzer;
 import com.caseyellow.server.central.domain.test.model.FailedTest;
@@ -33,6 +34,7 @@ public class CentralController {
     private Logger logger = Logger.getLogger(CentralController.class);
 
     private TestService testService;
+    private ImageAnalyzer imageAnalyzer;
     private FileDownloadService fileDownloadService;
     private StatisticsAnalyzer statisticsAnalyzer;
     private SpeedTestWebSiteService speedTestWebSiteService;
@@ -41,11 +43,13 @@ public class CentralController {
     public CentralController(TestService testService,
                              FileDownloadService fileDownloadService,
                              StatisticsAnalyzer statisticsAnalyzer,
+                             ImageAnalyzer imageAnalyzer,
                              SpeedTestWebSiteService speedTestWebSiteService) {
 
         this.testService = testService;
         this.statisticsAnalyzer = statisticsAnalyzer;
         this.fileDownloadService = fileDownloadService;
+        this.imageAnalyzer =imageAnalyzer;
         this.speedTestWebSiteService = speedTestWebSiteService;
     }
 
@@ -183,5 +187,14 @@ public class CentralController {
     public SpeedTestNonFlashMetaData getSpeedTestNonFlashMetaData(@RequestParam("identifier")String identifier) {
         logger.info(String.format("Received getSpeedTestNonFlashMetaData GET request with identifier: %s", identifier));
         return speedTestWebSiteService.getSpeedTestNonFlashMetaData(identifier);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(value = "/unanalyzed-tests",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void unAnalyzedTests() {
+        logger.info("Received unAnalyzedTests POST request");
+        imageAnalyzer.checkUnAnalyzedTests();
     }
 }
