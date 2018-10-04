@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Created by writeToFile on 6/25/17.
@@ -195,6 +196,6 @@ public class CentralController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void unAnalyzedTests() {
         logger.info("Received unAnalyzedTests POST request");
-        imageAnalyzer.checkUnAnalyzedTests();
+        CompletableFuture.runAsync( () -> imageAnalyzer.checkUnAnalyzedTests() );
     }
 }
