@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.config;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.caseyellow.server.central.domain.analyzer.services.ImageAnalyzer;
 import com.caseyellow.server.central.domain.mail.EmailService;
 import com.caseyellow.server.central.domain.statistics.StatisticsAnalyzer;
 import com.caseyellow.server.central.persistence.statistics.repository.UserInfoRepository;
@@ -38,6 +39,13 @@ public class Configuration {
     @Profile("dev")
     public StatisticsAnalyzer statisticsAnalyzer() {
         StatisticsAnalyzer statisticsAnalyzer = mock(StatisticsAnalyzer.class);
+        return statisticsAnalyzer;
+    }
+
+    @Bean
+    @Profile("dev")
+    public ImageAnalyzer imageAnalyzer() {
+        ImageAnalyzer statisticsAnalyzer = mock(ImageAnalyzer.class);
         return statisticsAnalyzer;
     }
 }
