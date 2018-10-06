@@ -26,4 +26,6 @@ public interface TestService {
     Map<String, List<String>> getConnectionDetails();
     Map<String,Long> countUserTests();
     List<LastUserTest> lastUserTests();
+    int getTestLifeCycle(String userName);
+    void updateTestLifeCycle(String userName);
 }

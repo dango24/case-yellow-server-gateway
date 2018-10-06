@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -56,26 +57,11 @@ public class AWSConfigurationImpl implements AWSConfiguration {
         return healthPath;
     }
 
-    @Override
-    public AWSConfiguration buildCredentials() throws IOException {
-        while(!buildCredentialsFromEncryptedCredentials());
-
-        return this;
-    }
-
-    private boolean buildCredentialsFromEncryptedCredentials() throws IOException {
-        try {
-            String key = encryptSHA512(encryptionKey);
-            String decryptedCredentials = decryptCredentials(key);
-
-            parseDecryptedCredentials(decryptedCredentials);
-
-            return true;
-
-        } catch (ConfigurationException e) {
-            log.error("Failed to build credentials, " + e.getMessage(), e);
-            return false;
-        }
+    @PostConstruct
+    private void buildCredentialsFromEncryptedCredentials() throws IOException {
+        String key = encryptSHA512(encryptionKey);
+        String decryptedCredentials = decryptCredentials(key);
+        parseDecryptedCredentials(decryptedCredentials);
     }
 
     private String encryptSHA512(String target) {

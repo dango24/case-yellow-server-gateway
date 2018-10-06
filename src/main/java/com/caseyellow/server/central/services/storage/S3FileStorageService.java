@@ -44,7 +44,6 @@ public class S3FileStorageService implements FileStorageService {
     @PostConstruct
     public void init() throws IOException {
         do {
-            awsConfiguration.buildCredentials();
             AWSCredentials credentials = new BasicAWSCredentials(awsConfiguration.accessKeyID(),
                                                                  awsConfiguration.secretAccessKey());
             s3Client = AmazonS3ClientBuilder.standard()

@@ -78,6 +78,22 @@ public class CentralController {
         return testService.isUserExist(userName);
     }
 
+    @GetMapping(value = "/test-life-cycle",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public int getTestLifeCycle(@RequestParam("user_name") String userName) {
+        logger.info("Received getTestLifeCycle GET request for user: " + userName);
+        return testService.getTestLifeCycle(userName);
+    }
+
+    @PostMapping(value = "/update-test-life-cycle",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void updateTestLifeCycle(@RequestParam("user_name") String userName) {
+        logger.info("Received updateTestLifeCycle GET request for user: " + userName);
+        testService.updateTestLifeCycle(userName);
+    }
+
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/next-urls",
                 consumes = MediaType.APPLICATION_JSON_VALUE,

@@ -152,6 +152,16 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    public int getTestLifeCycle(String userName) {
+        return counterService.getUserTestLifeCycle(userName);
+    }
+
+    @Override
+    public void updateTestLifeCycle(String userName) {
+        counterService.updateTestLifeCycle(userName);
+    }
+
+    @Override
     public PreSignedUrl generatePreSignedUrl(String fileKey) {
         return fileStorageService.generatePreSignedUrl(fileKey);
     }
