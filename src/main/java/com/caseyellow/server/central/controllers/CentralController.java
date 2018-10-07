@@ -2,6 +2,8 @@ package com.caseyellow.server.central.controllers;
 
 import com.caseyellow.server.central.domain.analyzer.services.ImageAnalyzer;
 import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
+import com.caseyellow.server.central.domain.logger.LogData;
+import com.caseyellow.server.central.domain.logger.LoggerService;
 import com.caseyellow.server.central.domain.statistics.StatisticsAnalyzer;
 import com.caseyellow.server.central.domain.test.model.FailedTest;
 import com.caseyellow.server.central.domain.test.model.PreSignedUrl;
@@ -36,6 +38,7 @@ public class CentralController {
 
     private TestService testService;
     private ImageAnalyzer imageAnalyzer;
+    private LoggerService loggerService;
     private FileDownloadService fileDownloadService;
     private StatisticsAnalyzer statisticsAnalyzer;
     private SpeedTestWebSiteService speedTestWebSiteService;
@@ -45,12 +48,14 @@ public class CentralController {
                              FileDownloadService fileDownloadService,
                              StatisticsAnalyzer statisticsAnalyzer,
                              ImageAnalyzer imageAnalyzer,
+                             LoggerService loggerService,
                              SpeedTestWebSiteService speedTestWebSiteService) {
 
         this.testService = testService;
         this.statisticsAnalyzer = statisticsAnalyzer;
         this.fileDownloadService = fileDownloadService;
         this.imageAnalyzer =imageAnalyzer;
+        this.loggerService = loggerService;
         this.speedTestWebSiteService = speedTestWebSiteService;
     }
 
@@ -188,6 +193,12 @@ public class CentralController {
     public List<FailedTest> getAllUserFailedTests(@RequestParam("user") String user) {
         logger.info(String.format("Received getAllUserFailedTests GET request for user: %s", user));
         return testService.getAllUserFailedTests(user);
+    }
+
+    @PostMapping("/upload-log-data")
+    public void uploadLogData(@RequestParam("user")String user, @RequestBody LogData logData) {
+        logger.info(String.format("Received uploadLogData POST request for user: %s, with logData: %s", user, logData));
+        loggerService.uploadLogData(user, logData);
     }
 
     @GetMapping(value = "/text-identifiers",
