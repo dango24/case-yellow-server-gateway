@@ -19,6 +19,9 @@ dynamo.endpoint: https://dynamodb.eu-central-1.amazonaws.com
 dynamo.region: eu-central-1
 dynamo.user.statistics.table.name: cy_user_statistics
 
+# Elasticsearch
+aes_endpoint: https://search-cy-elasticseach-ws7rjq7uhd7zzk2mxyyuy6csyu.eu-central-1.es.amazonaws.com
+
 #?
 encryption_key: nokey
 
