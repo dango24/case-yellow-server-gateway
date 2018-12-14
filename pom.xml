@@ -50,6 +50,19 @@
 			<artifactId>spring-retry</artifactId>
 		</dependency>
 
+		<!--Elasticsearch Client-->
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>elasticsearch-rest-high-level-client</artifactId>
+			<version>6.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>6.2.2</version>
+		</dependency>
+
 		<!--Zip4j-->
 		<dependency>
 			<groupId>net.lingala.zip4j</groupId>
