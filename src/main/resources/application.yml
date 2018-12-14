@@ -32,8 +32,8 @@ fileDownloadProperties:
  amazon-workSpaces:
   identifier: amazon-workSpaces
   url: https://d2td7dqidlhjx7.cloudfront.net/prod/global/windows/Amazon+WorkSpaces.msi
-  size: 42749952
-  md5: EE601495E31BBC9199ABD18396AE62F6
+  size: 42946560
+  md5: 2A8A8C34F9BF06D4051C2A586FD30169
 
  my-sql:
   identifier: my-sql
@@ -41,11 +41,11 @@ fileDownloadProperties:
   size: 19443712
   md5: D5316E440206EB0FD9F32CFFF37CD132
 
- windows-games:
-  identifier: windows-games
-  url: https://download.microsoft.com/download/D/0/F/D0F9F1BD-9BE6-49E4-8729-4AAAFCAC20F9/gfwlivesetup.exe
-  size: 73850656
-  md5: FA5C710C461CD9509F1F15DC77FFFFEA
+ windows-games-studio:
+  identifier: windows-games-studio
+  url: https://download.microsoft.com/download/0/1/4/01483A18-289E-4779-BB5A-0A28DFE18BC5/XNAGS40_setup.exe
+  size: 51182360
+  md5: D8CEBEDDA6BF24CE43B0F2B7A1475C96
 
  dlink :
   identifier: dlink

@@ -55,11 +55,17 @@ public class ImageAnalyzerImpl implements ImageAnalyzer {
     }
 
     @Override
-    public void checkUnAnalyzedTests() {
+    public void checkUnAnalyzedTests(int periodInDays) {
+        if (periodInDays <= 0) {
+            periodInDays = 1;
+        }
+
+        int periodInHours = Math.toIntExact(TimeUnit.DAYS.toHours(periodInDays));
+
         List<SpeedTestWebSiteDAO> unAnalyzedSpeedTests =
                 speedTestWebSiteRepository.findByAnalyzedState(AnalyzedState.NOT_STARTED)
                         .stream()
-                        .filter(this::testNotAnalyzedOverOneDay)
+                        .filter(speedTest -> testNotAnalyzedOverThreshold(speedTest, periodInHours))
                         .collect(Collectors.toList());
 
         unAnalyzedSpeedTests.stream()
@@ -68,8 +74,8 @@ public class ImageAnalyzerImpl implements ImageAnalyzer {
                 .forEach(imageDetails -> messageProducerService.send(MessageType.IMAGE_ANALYSIS, imageDetails));
     }
 
-    private boolean testNotAnalyzedOverOneDay(SpeedTestWebSiteDAO speedTestWebSite) {
-        return TimeUnit.MILLISECONDS.toHours(System.currentTimeMillis() - speedTestWebSite.getStartMeasuringTimestamp()) > 24;
+    private boolean testNotAnalyzedOverThreshold(SpeedTestWebSiteDAO speedTestWebSite, int periodInHours) {
+        return TimeUnit.MILLISECONDS.toHours(System.currentTimeMillis() - speedTestWebSite.getStartMeasuringTimestamp()) > periodInHours;
     }
 
     private ImageDetails buildImagePathDetails(String path) {

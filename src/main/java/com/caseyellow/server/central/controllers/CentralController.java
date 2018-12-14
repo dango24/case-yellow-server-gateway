@@ -221,8 +221,8 @@ public class CentralController {
     @PostMapping(value = "/unanalyzed-tests",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void unAnalyzedTests() {
+    public void unAnalyzedTests(@RequestParam("period_in_hours")int periodInDays) {
         logger.info("Received unAnalyzedTests POST request");
-        CompletableFuture.runAsync( () -> imageAnalyzer.checkUnAnalyzedTests() );
+        CompletableFuture.runAsync( () -> imageAnalyzer.checkUnAnalyzedTests(periodInDays) );
     }
 }
