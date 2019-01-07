@@ -10,6 +10,9 @@ num_of_comparison_per_test: 3
 # Flyway
 flyway.baseline-on-migrate: true
 
+# Elastic Search
+es_enable: false
+
 # misc
 successful_tests_dir: successful-tests/
 run.extra.identifiers: false

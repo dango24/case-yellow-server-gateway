@@ -33,6 +33,9 @@ public class LoggerServiceImpl implements LoggerService {
     @Value("${aes_endpoint}")
     private String aesEndpoint;
 
+    @Value("${es_enable}")
+    private boolean ESEnable;
+
     private RestHighLevelClient esClient;
 
     @Autowired
@@ -52,11 +55,13 @@ public class LoggerServiceImpl implements LoggerService {
     public void uploadLogData(String user, LogData logData) {
         try {
 
-            IndexRequest request = new IndexRequest(index, type).source(buildDocument(logData));
-            IndexResponse response = esClient.index(request);
+            if (ESEnable) {
+                IndexRequest request = new IndexRequest(index, type).source(buildDocument(logData));
+                IndexResponse response = esClient.index(request);
 
-            log.info(response.toString());
+                log.info(response.toString());
 
+            }
         } catch (IOException e) {
             log.error(String.format("Failed to upload log: %s", e.getMessage()), e);
         }
