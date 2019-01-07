@@ -15,9 +15,9 @@ public interface StatisticsAnalyzer {
     Map<String, String> meanFileDownloadRate();
     long userLastTest(String user);
     long userLastFailedTest(String user);
-    void notifyLastTests(List<User> users);
+    void notifyLastTests();
     void buildUsersStatistics(List<User> users);
-    UsersLastTest usersLastTest(List<User> users, int lastTimeInHours);
+    UsersLastTest usersLastTest(int lastTimeInHours);
     Map<String, String> getUserMeanRate(String user);
     Map<String,IdentifierDetails> getIdentifiersDetails(String user);
     void buildAllTests();

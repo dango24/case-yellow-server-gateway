@@ -11,6 +11,7 @@ import com.caseyellow.server.central.domain.metrics.UsersLastTest;
 import com.caseyellow.server.central.domain.test.model.ComparisonInfo;
 import com.caseyellow.server.central.domain.test.model.Test;
 import com.caseyellow.server.central.domain.test.services.TestService;
+import com.caseyellow.server.central.domain.users.UserService;
 import com.caseyellow.server.central.exceptions.AnalyzerException;
 import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoRepository;
@@ -18,6 +19,7 @@ import com.caseyellow.server.central.persistence.statistics.repository.UserInfoR
 import com.caseyellow.server.central.persistence.test.dao.UserDetailsDAO;
 import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import com.caseyellow.server.central.persistence.test.repository.UserDetailsRepository;
+import com.caseyellow.server.central.persistence.user.model.UserDAO;
 import com.caseyellow.server.central.services.storage.FileStorageService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,6 +64,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     private FileDownloadInfoRepository fileDownloadInfoRepository;
     private UserDetailsRepository userDetailsRepository;
     private UserInfoRepository userInfoRepository;
+    private UserService userService;
 
     @Autowired
     public StatisticsAnalyzerImpl(TestService testService,
@@ -70,6 +73,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                                   FileStorageService fileStorageService,
                                   FileDownloadInfoRepository fileDownloadInfoRepository,
                                   UserInfoRepository userInfoRepository,
+                                  UserService userService,
                                   TestPredicateFactory testPredicateFactory) {
 
         this.testService = testService;
@@ -79,6 +83,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         this.testPredicateFactory = testPredicateFactory;
         this.userDetailsRepository = userDetailsRepository;
         this.userInfoRepository = userInfoRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -151,7 +156,15 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     }
 
     @Override
-    public void notifyLastTests(List<User> users) {
+    public void notifyLastTests() {
+
+        List<UserDAO> users =
+                userService.getAllUsers()
+                        .stream()
+                        .filter(UserDAO::isEnabled)
+                        .collect(Collectors.toList());
+
+
         List<LastUserTest> allUsersTests = testService.lastUserTests();
         List<LastUserTest> lastUserTests = createLastUserTest(users, allUsersTests, 12);
 
@@ -161,13 +174,19 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     }
 
     @Override
-    public UsersLastTest usersLastTest(List<User> users, int lastTimeInHours) {
+    public UsersLastTest usersLastTest(int lastTimeInHours) {
+        List<UserDAO> users =
+                userService.getAllUsers()
+                        .stream()
+                        .filter(UserDAO::isEnabled)
+                        .collect(Collectors.toList());
+
         List<LastUserTest> allUsersTests = testService.lastUserTests();
         List<LastUserTest> missingUsers = createLastUserTest(users, allUsersTests, lastTimeInHours);
 
-        Map<String, User> activeUsers =
+        Map<String, UserDAO> activeUsers =
                 users.stream()
-                        .collect(toMap(User::getUserName, Function.identity()));
+                        .collect(toMap(UserDAO::getUserName, Function.identity()));
 
         List<LastUserTest> lastUserTestsByLastTime =
                 CollectionUtils.subtract(allUsersTests, missingUsers)
@@ -343,10 +362,10 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                     .orElse(-1);
     }
 
-    private List<LastUserTest> createLastUserTest(List<User> users, List<LastUserTest> allUsersTests, int thresholdInHours) {
-        Map<String, User> activeUsers =
+    private List<LastUserTest> createLastUserTest(List<UserDAO> users, List<LastUserTest> allUsersTests, int thresholdInHours) {
+        Map<String, UserDAO> activeUsers =
                 users.stream()
-                        .collect(toMap(User::getUserName, Function.identity()));
+                        .collect(toMap(UserDAO::getUserName, Function.identity()));
 
         List<LastUserTest> lastUserTests =
                 allUsersTests.stream()

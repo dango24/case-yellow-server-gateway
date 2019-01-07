@@ -55,15 +55,17 @@ public class ImageAnalyzerImpl implements ImageAnalyzer {
     }
 
     @Override
-    public void checkUnAnalyzedTests(int periodInDays) {
+    public void checkUnAnalyzedTests(int periodInDays, int analyzedStateCode) {
         if (periodInDays <= 0) {
             periodInDays = 1;
         }
 
+        AnalyzedState analyzedState = analyzedStateCode == 1 ? AnalyzedState.FAILURE : AnalyzedState.NOT_STARTED;
+
         int periodInHours = Math.toIntExact(TimeUnit.DAYS.toHours(periodInDays));
 
         List<SpeedTestWebSiteDAO> unAnalyzedSpeedTests =
-                speedTestWebSiteRepository.findByAnalyzedState(AnalyzedState.NOT_STARTED)
+                speedTestWebSiteRepository.findByAnalyzedState(analyzedState)
                         .stream()
                         .filter(speedTest -> testNotAnalyzedOverThreshold(speedTest, periodInHours))
                         .collect(Collectors.toList());

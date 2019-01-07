@@ -81,9 +81,9 @@ public class StatisticController {
     }
 
     @PostMapping("/users-last-test")
-    public UsersLastTest usersLastTest(@RequestParam("period") int lastTimeInHours, @RequestBody List<User> users) {
+    public UsersLastTest usersLastTest(@RequestParam("period") int lastTimeInHours) {
         log.info(String.format("Received usersLastTest GET request with last time in hours %s", lastTimeInHours));
-        UsersLastTest usersLastTest = statisticAnalyzer.usersLastTest(users, lastTimeInHours);
+        UsersLastTest usersLastTest = statisticAnalyzer.usersLastTest(lastTimeInHours);
 
         return usersLastTest;
     }
@@ -116,9 +116,9 @@ public class StatisticController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping("/notify-last-tests")
-    public void notifyLastTests(@RequestBody List<User> users) {
+    public void notifyLastTests() {
         log.info(String.format("Received notifyLastTests POST request"));
-        statisticAnalyzer.notifyLastTests(users);
+        statisticAnalyzer.notifyLastTests();
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
