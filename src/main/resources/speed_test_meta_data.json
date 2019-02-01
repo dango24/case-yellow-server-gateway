@@ -6,6 +6,14 @@
     "centralized": 0,
     "flashAble": false,
     "haveStartButton": true,
+    "roles" : [
+      {
+        "identifier": "id=ZA_CANVAS_645670_CLOSE_IMG2_4_IMG",
+        "command": "CLICK",
+        "mono": true,
+        "deprecated": true
+      }
+    ],
     "preStartButtonRoles" : [
       {
         "identifier": "xpath=//button[contains(.,'Retry')]",
