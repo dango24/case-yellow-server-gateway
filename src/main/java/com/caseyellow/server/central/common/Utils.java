@@ -70,10 +70,6 @@ public interface Utils {
         return md5;
     }
 
-    static String readFileAsString(String filePath) throws IOException {
-        return IOUtils.toString(Utils.class.getResourceAsStream(filePath), Charset.forName("UTF-8"));
-    }
-
     static String executeCommand(String command) {
         try {
             Process process = Runtime.getRuntime().exec(command);

@@ -225,4 +225,13 @@ public class CentralController {
         logger.info("Received unAnalyzedTests POST request");
         CompletableFuture.runAsync( () -> imageAnalyzer.checkUnAnalyzedTests(periodInDays, analyzedStateCode) );
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(value = "/change-image-analyze-state",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void changeImageAnalyzeState(@RequestParam("s3_path")String s3Path, @RequestParam("analyze_state")int analyzeState) {
+        logger.info("Received changeImageAnalyzeState POST request");
+        CompletableFuture.runAsync( () -> imageAnalyzer.changeImageAnalyzeState(s3Path, analyzeState) );
+    }
 }
