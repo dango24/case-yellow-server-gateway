@@ -24,8 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toMap;
-
 @Slf4j
 @Service
 @Profile("prod")
@@ -83,7 +81,9 @@ public class EmailServiceImpl implements EmailService {
         String mailBody = buildMailBody(lastUserTests);
         log.info(String.format("Send email to: %s with body: %s", emails, mailBody));
 
-        emails.forEach(email -> sendMessage(email.getEmail(), subject, mailBody));
+        emails.stream()
+              .filter(user -> user.getRole().equals("admin"))
+              .forEach(email -> sendMessage(email.getEmail(), subject, mailBody));
     }
 
     @Override
