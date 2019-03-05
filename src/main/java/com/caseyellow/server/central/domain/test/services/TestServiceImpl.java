@@ -162,6 +162,11 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    public long userConnectionCount(String user, String connection) {
+        return testRepository.userConnectionCount(user, connection);
+    }
+
+    @Override
     public PreSignedUrl generatePreSignedUrl(String fileKey) {
         return fileStorageService.generatePreSignedUrl(fileKey);
     }

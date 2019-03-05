@@ -8,6 +8,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.amazonaws.services.simpleemail.model.*;
 import com.caseyellow.server.central.configuration.AWSConfiguration;
+import com.caseyellow.server.central.domain.statistics.UserTestsStats;
 import com.caseyellow.server.central.domain.test.services.TestService;
 import com.caseyellow.server.central.persistence.test.model.LastUserTest;
 import lombok.Getter;
@@ -23,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -78,7 +80,7 @@ public class EmailServiceImpl implements EmailService {
         }
 
         String subject = String.format("%s - %s", MISSING_IN_ACTION_EMAIL_SUBJECT, DAY_FORMAT.format(new Date()));
-        String mailBody = buildMailBody(lastUserTests);
+        String mailBody = buildLastUserTestsMailBody(lastUserTests);
         log.info(String.format("Send email to: %s with body: %s", emails, mailBody));
 
         emails.stream()
@@ -95,12 +97,61 @@ public class EmailServiceImpl implements EmailService {
               .forEach(user -> sendMessage(user.getEmail(), subject, imageSanityPath));
     }
 
-    private String buildMailBody(List<LastUserTest> lastUserTests) {
+    @Override
+    public void sendUsersDoneTests(List<UserTestsStats> doneUsers, List<UserTestsStats> activeRunningUsers) {
+        String mailBody;
+        String subject = String.format("%s - %s", "Users Tests Status", DAY_FORMAT.format(new Date()));
+
+        String phase2Header = "Phase II - Coming soon ...";
+        String phase1Header = "Phase I:";
+        String activeUsersMessage = buildActiveRunningUsersMailBody(activeRunningUsers);
+        String doneUsersMessage = buildDoneUsersMailBody(doneUsers);
+
+        activeUsersMessage = addTabPrefix(activeUsersMessage);
+        doneUsersMessage = addTabPrefix(doneUsersMessage);
+
+        String message = phase2Header + "\n\n";
+        message += phase1Header + "\n\n";
+        message += activeUsersMessage + "\n\n";
+        message += doneUsersMessage;
+
+        mailBody = message;
+
+        emails.stream()
+              .forEach(email -> sendMessage(email.getEmail(), subject, mailBody));
+    }
+
+    private String buildLastUserTestsMailBody(List<LastUserTest> lastUserTests) {
 
         return lastUserTests.stream()
                             .map(LastUserTest::toString)
                             .collect(Collectors.joining("\n\n"));
     }
+
+    private String buildActiveRunningUsersMailBody(List<UserTestsStats> activeRunningUsers) {
+        StringBuilder stringBuilder = new StringBuilder("Active running users: \n\n");
+
+        stringBuilder.append(String.format("\tTotal count of active users: %d\n\n", activeRunningUsers.size()));
+        activeRunningUsers.stream()
+                      .map(this::ActiveRunningUserMessage)
+                      .forEach(stringBuilder::append);
+
+        return stringBuilder.toString();
+    }
+
+    private String buildDoneUsersMailBody(List<UserTestsStats> doneUsers) {
+        StringBuilder stringBuilder = new StringBuilder("Done users: \n\n");
+
+        stringBuilder.append(String.format("\tTotal count of done users: %d\n\n\t", doneUsers.size()));
+
+        stringBuilder.append(
+            doneUsers.stream()
+                     .map(UserTestsStats::getName)
+                     .collect(Collectors.joining("\n\t")));
+
+        return stringBuilder.toString();
+    }
+
 
     private void sendMessage(String to, String subject, String text) {
 
@@ -114,5 +165,15 @@ public class EmailServiceImpl implements EmailService {
                                       .withSource(emailUser);
 
         emailService.sendEmail(request);
+    }
+
+    private String ActiveRunningUserMessage(UserTestsStats userTestsStats) {
+        return String.format("\t%s: LAN: %d, Wifi: %d\n", userTestsStats.getName(), userTestsStats.getLanCount(), userTestsStats.getWifiCount());
+    }
+
+    private String addTabPrefix(String str) {
+        return Stream.of(str.split("\n"))
+                     .map(messageLine -> "\t" + messageLine)
+                     .collect(Collectors.joining("\n"));
     }
 }

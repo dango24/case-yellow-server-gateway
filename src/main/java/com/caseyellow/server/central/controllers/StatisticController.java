@@ -116,9 +116,9 @@ public class StatisticController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping("/notify-last-tests")
-    public void notifyLastTests() {
-        log.info(String.format("Received notifyLastTests POST request"));
-        statisticAnalyzer.notifyLastTests();
+    public void sendReports() {
+        log.info(String.format("Received sendReports POST request"));
+        CompletableFuture.runAsync( () -> statisticAnalyzer.sendReports() );
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)

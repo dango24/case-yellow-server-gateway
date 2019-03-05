@@ -28,4 +28,5 @@ public interface TestService {
     List<LastUserTest> lastUserTests();
     int getTestLifeCycle(String userName);
     void updateTestLifeCycle(String userName);
+    long userConnectionCount(String user, String connection);
 }

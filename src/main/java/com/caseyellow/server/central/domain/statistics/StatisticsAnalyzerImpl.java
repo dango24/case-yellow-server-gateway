@@ -156,7 +156,12 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
     }
 
     @Override
-    public void notifyLastTests() {
+    public void sendReports() {
+        finishUsersTestReport();
+        notifyLastTests();
+    }
+
+    private void notifyLastTests() {
 
         List<UserDAO> users =
                 userService.getAllUsers()
@@ -241,6 +246,33 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         }
 
         return buildUserMeanRate(userToDownloadRateTests, userDetails);
+    }
+
+    public void finishUsersTestReport() {
+
+        List<UserTestsStats> users =
+                userService.getAllUsers()
+                           .stream()
+                           .map(userDAO -> UserTestsStats.createUserTestsCountBuilder(userDAO.getUserName(), userDAO.isEnabled()))
+                           .map(userTestBuilder -> userTestBuilder.addLanCount(testService.userConnectionCount(userTestBuilder.getName(), "LAN")))
+                           .map(userTestBuilder -> userTestBuilder.addWifiCount(testService.userConnectionCount(userTestBuilder.getName(), "Wifi")))
+                           .map(UserTestsStats.UserTestsCountBuilder::build)
+                           .collect(toList());
+
+        List<UserTestsStats> doneUsers =
+            users.stream()
+                 .filter(user -> user.getLanCount() > 3000)
+                 .filter(user -> user.getWifiCount() > 3000)
+                 .sorted()
+                 .collect(toList());
+
+        List<UserTestsStats> activeRunningUsers =
+            users.stream()
+                 .filter(UserTestsStats::isActive)
+                 .sorted()
+                 .collect(toList());
+
+        emailService.sendUsersDoneTests(doneUsers, activeRunningUsers);
     }
 
     @Override
