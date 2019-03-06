@@ -269,6 +269,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         List<UserTestsStats> activeRunningUsers =
             users.stream()
                  .filter(UserTestsStats::isActive)
+                 .filter(userTests -> userTests.getLanCount() > 0 || userTests.getWifiCount() > 0)
                  .sorted()
                  .collect(toList());
 
