@@ -118,6 +118,7 @@ public class EmailServiceImpl implements EmailService {
         mailBody = message;
 
         emails.stream()
+              .filter(email -> !email.getRole().equals("preacher"))
               .forEach(email -> sendMessage(email.getEmail(), subject, mailBody));
     }
 
