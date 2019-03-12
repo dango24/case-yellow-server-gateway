@@ -132,7 +132,7 @@ public class EmailServiceImpl implements EmailService {
     private String buildActiveRunningUsersMailBody(List<UserTestsStats> activeRunningUsers) {
         StringBuilder stringBuilder = new StringBuilder("Active running users: \n\n");
 
-        stringBuilder.append(String.format("\tTotal count of active users: %d\n\n", activeRunningUsers.size()));
+        stringBuilder.append(String.format("\tActive users: %d\n\n", activeRunningUsers.size()));
         activeRunningUsers.stream()
                       .map(this::ActiveRunningUserMessage)
                       .forEach(stringBuilder::append);
@@ -143,7 +143,7 @@ public class EmailServiceImpl implements EmailService {
     private String buildDoneUsersMailBody(List<UserTestsStats> doneUsers) {
         StringBuilder stringBuilder = new StringBuilder("Done users: \n\n");
 
-        stringBuilder.append(String.format("\tTotal count of done users: %d\n\n\t", doneUsers.size()));
+        stringBuilder.append(String.format("\tDone users: %d\n\n\t", doneUsers.size()));
 
         stringBuilder.append(
             doneUsers.stream()
