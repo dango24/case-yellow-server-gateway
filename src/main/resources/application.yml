@@ -86,6 +86,7 @@ fileDownload:
 connection-details:
   speed:
     - 15
+    - 30
     - 40
     - 100
     - 200
