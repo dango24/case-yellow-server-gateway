@@ -171,7 +171,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
 
         List<LastUserTest> allUsersTests = testService.lastUserTests();
-        List<LastUserTest> lastUserTests = createLastUserTest(users, allUsersTests, 12);
+        List<LastUserTest> lastUserTests = createLastUserTest(users, allUsersTests, 4);
 
         if (!lastUserTests.isEmpty()) {
             emailService.sendEmails(lastUserTests);
