@@ -166,6 +166,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         List<UserDAO> users =
                 userService.getAllUsers()
                         .stream()
+                        .filter(user -> !user.getUserName().equals("dev"))
                         .filter(UserDAO::isEnabled)
                         .collect(Collectors.toList());
 
@@ -253,6 +254,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         List<UserTestsStats> users =
                 userService.getAllUsers()
                            .stream()
+                           .filter(user -> !user.getUserName().equals("dev"))
                            .map(userDAO -> UserTestsStats.createUserTestsCountBuilder(userDAO.getUserName(), userDAO.isEnabled()))
                            .map(userTestBuilder -> userTestBuilder.addLanCount(testService.userConnectionCount(userTestBuilder.getName(), "LAN")))
                            .map(userTestBuilder -> userTestBuilder.addWifiCount(testService.userConnectionCount(userTestBuilder.getName(), "Wifi")))

@@ -13,7 +13,7 @@ import java.util.Set;
  * Created by dango on 9/19/17.
  */
 public interface SpeedTestWebSiteService {
-    SpeedTestMetaData getNextSpeedTestWebSite();
+    SpeedTestMetaData getNextSpeedTestWebSite(String userName);
     Set<WordIdentifier> getTextIdentifiers(String identifier, boolean startTest);
     SpeedTestNonFlashMetaData getSpeedTestNonFlashMetaData(String identifier);
     void investigateSuspiciousTestRatio(String outliarRatio, String hours);

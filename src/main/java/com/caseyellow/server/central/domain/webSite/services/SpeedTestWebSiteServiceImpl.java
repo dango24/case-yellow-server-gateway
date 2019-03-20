@@ -11,6 +11,7 @@ import com.caseyellow.server.central.services.storage.FileStorageService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -68,7 +69,12 @@ public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
     }
 
     @Override
-    public SpeedTestMetaData getNextSpeedTestWebSite() {
+    public SpeedTestMetaData getNextSpeedTestWebSite(String userName) {
+
+        if (StringUtils.isNotEmpty(userName) && userName.equals("dev")) {
+            return speedTestWebSiteFactory.getSpeedTestWebSiteFromIdentifier("bezeq");
+        }
+
         List<String> speedTestIdentifiers = new ArrayList<>(urlMapper.getSpeedTestIdentifiers());
 
         if (runExtraIdentifiers && nonNull(extraIdentifiers)) {

@@ -36,6 +36,8 @@ public class CentralController {
 
     private Logger logger = Logger.getLogger(CentralController.class);
 
+    public static final String USER_HEADER = "Case-Yellow-User";
+
     private TestService testService;
     private ImageAnalyzer imageAnalyzer;
     private LoggerService loggerService;
@@ -69,9 +71,9 @@ public class CentralController {
     @GetMapping(value = "/next-web-site",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public SpeedTestMetaData getNextSpeedTestWebSite() {
+    public SpeedTestMetaData getNextSpeedTestWebSite(@RequestHeader(value = USER_HEADER, required=false) String userName) {
         logger.info("Received getNextSpeedTestWebSite GET request");
-        return speedTestWebSiteService.getNextSpeedTestWebSite();
+        return speedTestWebSiteService.getNextSpeedTestWebSite(userName);
     }
 
     @ResponseStatus(HttpStatus.OK)
