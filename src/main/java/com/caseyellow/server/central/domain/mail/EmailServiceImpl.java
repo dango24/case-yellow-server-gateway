@@ -102,17 +102,14 @@ public class EmailServiceImpl implements EmailService {
         String mailBody;
         String subject = String.format("%s - %s", "Users Tests Status", DAY_FORMAT.format(new Date()));
 
-        String phase2Header = "Phase II - Coming soon ...";
-        String phase1Header = "Phase I:";
+
         String activeUsersMessage = buildActiveRunningUsersMailBody(activeRunningUsers);
         String doneUsersMessage = buildDoneUsersMailBody(doneUsers);
 
         activeUsersMessage = addTabPrefix(activeUsersMessage);
         doneUsersMessage = addTabPrefix(doneUsersMessage);
 
-        String message = phase2Header + "\n\n";
-        message += phase1Header + "\n\n";
-        message += activeUsersMessage + "\n\n";
+        String message = activeUsersMessage + "\n\n";
         message += doneUsersMessage;
 
         mailBody = message;
