@@ -10,13 +10,13 @@ files:
 permissions:
   - object: /home/ec2-user/case-yellow/scripts
     mode: 644
-      acls:
-        - "d:u::rwx"
-        - "d:g::rwx"
-        - "d:o::rwx"
-      owner: ec2-user
-      type:
-        - directory
+    acls:
+      - "d:u::rwx"
+      - "d:g::rwx"
+      - "d:o::rwx"
+    owner: ec2-user
+    type:
+      - directory
 
 hooks:
   BeforeInstall:
