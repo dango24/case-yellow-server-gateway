@@ -1,8 +1,20 @@
 package com.caseyellow.server.central.domain.file.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by Dan on 04/10/2016.
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FileDownloadInfo {
 
     private String fileName;
@@ -11,8 +23,7 @@ public class FileDownloadInfo {
     private double fileDownloadRateKBPerSec;
     private long   fileDownloadedDurationTimeInMs;
     private long   startDownloadingTimestamp;
-
-    public FileDownloadInfo() {}
+    private Map<String, List<String>> headers;
 
     public FileDownloadInfo(String url) {
         fileURL = url;
@@ -25,6 +36,7 @@ public class FileDownloadInfo {
         fileDownloadRateKBPerSec = fileDownloadInfoBuilder.fileDownloadRateKBPerSec;
         fileDownloadedDurationTimeInMs = fileDownloadInfoBuilder.fileDownloadedTimeInMs;
         startDownloadingTimestamp = fileDownloadInfoBuilder.startDownloadingTimestamp;
+        headers = fileDownloadInfoBuilder.headers;
     }
 
     public String getFileURL() {
@@ -69,6 +81,18 @@ public class FileDownloadInfo {
         this.fileDownloadRateKBPerSec = fileDownloadRateKBPerSec;
     }
 
+    public void setFileURL(String fileURL) {
+        this.fileURL = fileURL;
+    }
+
+    public Map<String, List<String>> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Map<String, List<String>> headers) {
+        this.headers = headers;
+    }
+
     @Override
     public String toString() {
         return "FileDownloadInfoDAO{" +
@@ -89,6 +113,7 @@ public class FileDownloadInfo {
         private double fileDownloadRateKBPerSec;
         private long   fileDownloadedTimeInMs;
         private long startDownloadingTimestamp;
+        private Map<String, List<String>> headers;
 
         public FileDownloadInfoBuilder(String fileName) {
             this.fileName = fileName;
@@ -106,6 +131,11 @@ public class FileDownloadInfo {
 
         public FileDownloadInfoBuilder addFileSizeInBytes(long fileSizeInBytes) {
             this.fileSizeInBytes = fileSizeInBytes;
+            return this;
+        }
+
+        public FileDownloadInfoBuilder addHeaders(Map<String, List<String>> headers) {
+            this.headers = headers;
             return this;
         }
 

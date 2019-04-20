@@ -10,6 +10,7 @@ import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -143,6 +144,7 @@ public interface Converter {
                                     .addFileSizeInBytes(fileDownloadInfoDAO.getFileSizeInBytes())
                                     .addFileURL(fileDownloadInfoDAO.getFileURL())
                                     .addStartDownloadingTime(fileDownloadInfoDAO.getStartDownloadingTimestamp())
+                                    .addHeaders(Collections.emptyMap())
                                     .build();
 
         return fileDownloadInfo;
