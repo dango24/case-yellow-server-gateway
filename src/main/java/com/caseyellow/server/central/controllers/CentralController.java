@@ -105,9 +105,9 @@ public class CentralController {
     @GetMapping(value = "/next-urls",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<FileDownloadProperties> getFileDownloadMetaData() {
+    public List<FileDownloadProperties> getFileDownloadMetaData(@RequestHeader(value = USER_HEADER, required=false) String userName) {
         logger.info("Received getFileDownloadMetaData GET request");
-        return fileDownloadService.getNextFileDownloadMetaData();
+        return fileDownloadService.getNextFileDownloadMetaData(userName);
     }
 
     @GetMapping(value = "/chrome-options-arguments",

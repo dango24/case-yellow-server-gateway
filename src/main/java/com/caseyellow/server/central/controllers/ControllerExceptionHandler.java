@@ -41,8 +41,8 @@ public class ControllerExceptionHandler {
         }
 
         return ResponseEntity.status(INTERNAL_ERROR_CODE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(errorResponse);
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(errorResponse);
     }
 
     public static class ErrorResponse {

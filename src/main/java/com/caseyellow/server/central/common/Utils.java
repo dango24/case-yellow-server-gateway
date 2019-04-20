@@ -12,11 +12,15 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -58,6 +62,20 @@ public interface Utils {
         MDC.remove("correlation-id");
     }
 
+    static String convertToMD5(File file)  {
+
+        try (InputStream in = new FileInputStream(file)) {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(IOUtils.toByteArray(in));
+
+            return DatatypeConverter.printHexBinary(md.digest());
+
+        } catch (IOException | NoSuchAlgorithmException e) {
+            log.error(String.format("Failed to convert to MD5, error: %s", e.getMessage(), e));
+            return "UNKNOWN";
+        }
+
+    }
 
     static String createTempFilename(String fileName) {
         String md5 = convertToMD5(fileName);

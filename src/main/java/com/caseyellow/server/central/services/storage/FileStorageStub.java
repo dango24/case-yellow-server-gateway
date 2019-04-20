@@ -22,6 +22,12 @@ public class FileStorageStub implements FileStorageService {
     }
 
     @Override
+    public String uploadFileToBucket(String region, String bucketName, String path, File fileToUpload) {
+        return null;
+    }
+
+
+    @Override
     public PreSignedUrl generatePreSignedUrl(String fileKey) {
         return new PreSignedUrl(null, null);
     }
