@@ -10,10 +10,7 @@ files:
 permissions:
   - object: /home/ec2-user/case-yellow/scripts
     mode: 777
-    acls:
-      - "d:u::rwx"
-      - "d:g::rwx"
-      - "d:o::rwx"
+    group: ec2-user
     owner: ec2-user
     type:
       - directory
