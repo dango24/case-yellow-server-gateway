@@ -72,7 +72,7 @@ public class SpeedTestWebSiteServiceImpl implements SpeedTestWebSiteService {
     public SpeedTestMetaData getNextSpeedTestWebSite(String userName) {
 
         if (StringUtils.isNotEmpty(userName) && userName.equals("dev")) {
-            return speedTestWebSiteFactory.getSpeedTestWebSiteFromIdentifier("bezeq");
+            return speedTestWebSiteFactory.getSpeedTestWebSiteFromIdentifier("ookla");
         }
 
         List<String> speedTestIdentifiers = new ArrayList<>(urlMapper.getSpeedTestIdentifiers());

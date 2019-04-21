@@ -143,7 +143,15 @@
       "retrieveResultFromPayloadInteger": "Your speed test has completed. Your download speed is (\\d+), Your upload speed",
       "resultLocation": "id=chartContainer",
       "resultAttribute": null
-    }
+    },
+    "roles" : [
+      {
+        "identifier": "id=icon-close",
+        "command": "CLICK",
+        "mono": true,
+        "deprecated": false
+      }
+    ]
   },
   {
     "webSiteUrl": "http://www.speedof.me/",
