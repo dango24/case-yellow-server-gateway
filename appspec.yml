@@ -4,8 +4,6 @@ os: linux
 files:
   - source: target/case-yellow-central.jar
     destination: /home/ec2-user/case-yellow
-  - source: scripts/esoteric
-    destination: /home/ec2-user/case-yellow/scripts
 
 hooks:
   BeforeInstall:
