@@ -16,7 +16,6 @@ es_enable: false
 # misc
 successful_tests_dir: successful-tests/
 run.extra.identifiers: false
-add_extra_file_download: false
 
 # Files Download Properties
 fileDownloadProperties:
@@ -77,18 +76,6 @@ speedTest:
     - "--allow-outdated-plugins"
     - "--disable-features=EnableEphemeralFlashPermission"
     - "disable-infobars"
-
-fileDownload:
-  extraIdentifiers:
-    -  amazon-workSpaces
-    -  amazon-workSpaces
-  esotericFilesLocations:
-    - frankfurt
-    - ireland
-    - california
-    - sydney
-    - tokyo
-
 
 aws:
   regions:

@@ -1,6 +1,7 @@
 package com.caseyellow.server.central.domain.file.services;
 
 import com.caseyellow.server.central.common.Utils;
+import com.caseyellow.server.central.configuration.AWSRegions;
 import com.caseyellow.server.central.configuration.UrlConfig;
 import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
 import com.caseyellow.server.central.exceptions.FileDownloadInfoException;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static com.caseyellow.server.central.common.Utils.convertToMD5;
 import static java.lang.Math.min;
@@ -23,23 +25,16 @@ import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 @Service
-@ConfigurationProperties(prefix = "fileDownload")
 public class FileDownloadServiceImp implements FileDownloadService {
 
     private static final int ESOTERIC_FILE_SIZE = 1300000; // The number of iterations to generate a 25MB file size
     private static final String S3_ESOTERIC_FILES_BUCKET_PREFIX = "esoteric-files";
 
-    @Value("${add_extra_file_download}")
-    private boolean addExtraFileDownload;
-
     @Value("${num_of_comparison_per_test:3}")
     private int numOfComparisonPerTest;
 
     @Getter @Setter
-    private List<String> extraIdentifiers;
-
-    @Getter @Setter
-    private List<String> esotericFilesLocations;
+    private Set<String> esotericFilesLocations;
 
     private UrlConfig urlConfig;
     private FileStorageService fileStorageService;
@@ -48,10 +43,13 @@ public class FileDownloadServiceImp implements FileDownloadService {
     @Autowired
     public FileDownloadServiceImp(FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository,
                                   FileStorageService fileStorageService,
-                                  UrlConfig urlConfig) {
+                                  UrlConfig urlConfig,
+                                  AWSRegions regions) {
+
         this.urlConfig = urlConfig;
         this.fileStorageService = fileStorageService;
         this.fileDownloadInfoCounterRepository = fileDownloadInfoCounterRepository;
+        this.esotericFilesLocations = regions.getRegions().keySet();
     }
 
     @Override
@@ -68,10 +66,6 @@ public class FileDownloadServiceImp implements FileDownloadService {
 
         if (nonNull(userName) && userName.equals("dev2")) {
             nextFileDownloadIdentifiers.addAll(esotericFilesLocations);
-        }
-
-        if (addExtraFileDownload) {
-            nextFileDownloadIdentifiers.addAll(extraIdentifiers);
         }
 
         Collections.shuffle(nextFileDownloadIdentifiers);
@@ -104,7 +98,6 @@ public class FileDownloadServiceImp implements FileDownloadService {
             return new FileDownloadProperties(identifier, fileUrl, Math.toIntExact(fileSize), md5);
 
         } catch (Exception e) {
-            Utils.deleteFile(esotericFile);
             throw new FileDownloadInfoException("Failed to generate esoteric file download info: " + e.getMessage(), e);
 
         } finally {
