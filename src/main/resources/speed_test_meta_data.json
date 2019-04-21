@@ -146,7 +146,7 @@
     },
     "roles" : [
       {
-        "identifier": "id=icon-close",
+        "identifier": "class=notification-dismiss close-btn",
         "command": "CLICK",
         "mono": true,
         "deprecated": false
