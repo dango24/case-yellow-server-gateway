@@ -94,9 +94,8 @@ public class FileDownloadServiceImp implements FileDownloadService {
         File esotericFile = null;
 
         try {
-            Utils.executeCommand("cd /tmp");
             String fileSha256 = Utils.executeCommand(String.format("%s/%s", ESOTERIC_SCRIPT_LOCATION, "esoteric"));
-            esotericFile = new File(String.format("%s/%s", "/tmp", fileSha256));
+            esotericFile = new File(System.getProperty("user.dir"), fileSha256);
             long fileSize = esotericFile.length();
             String bucketName = String.format("%s-%s", S3_ESOTERIC_FILES_BUCKET_PREFIX, identifier);
             String filePath = String.format("%s-%s", identifier, fileSha256);
@@ -105,6 +104,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
             return new FileDownloadProperties(identifier, fileUrl, Math.toIntExact(fileSize), convertToMD5(esotericFile));
 
         } catch (Exception e) {
+            Utils.deleteFile(esotericFile);
             throw new FileDownloadInfoException("Failed to generate esoteric file download info: " + e.getMessage(), e);
 
         } finally {
