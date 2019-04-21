@@ -7,21 +7,6 @@ files:
   - source: scripts/esoteric
     destination: /home/ec2-user/case-yellow/scripts
 
-permissions:
-  - object: /home/ec2-user/case-yellow/scripts
-    pattern: "**"
-    mode: 777
-    group: ec2-user
-    owner: ec2-user
-    type:
-      - file
-  - object: /home/ec2-user/case-yellow
-    pattern: "*scripts*"
-    owner: ec2-user
-    mode: 777
-    type:
-      - directory
-
 hooks:
   BeforeInstall:
     - location: scripts/delete_app_binary.sh

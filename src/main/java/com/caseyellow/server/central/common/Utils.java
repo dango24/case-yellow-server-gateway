@@ -13,15 +13,14 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
 import javax.xml.bind.DatatypeConverter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.io.*;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.nonNull;
@@ -177,5 +176,30 @@ public interface Utils {
         } catch (IOException e) {
             log.error(String.format("Failed to delete file: %s", e.getMessage()));
         }
+    }
+
+    static File generateLargeFile(int numberOfIterations) {
+
+        File generatedFile = new File(System.getProperty(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString()));
+
+        try (BufferedWriter writer = Files.newBufferedWriter(generatedFile.toPath())) {
+
+            IntStream.range(0, numberOfIterations)
+                     .mapToLong(index -> ThreadLocalRandom.current().nextLong(0, Long.MAX_VALUE))
+                     .forEach(num -> {
+
+                        try {
+                            writer.append(num + "\n");
+
+                        } catch (IOException e) {
+                            throw new IORuntimeException(String.format("Failed to generate file: %s", e.getMessage(), e));
+                        }
+                     });
+
+        } catch (IOException e) {
+            throw new IORuntimeException(String.format("Failed to generate file: %s", e.getMessage(), e));
+        }
+
+        return generatedFile;
     }
 }

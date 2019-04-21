@@ -26,7 +26,7 @@ import static java.util.stream.Collectors.toList;
 @ConfigurationProperties(prefix = "fileDownload")
 public class FileDownloadServiceImp implements FileDownloadService {
 
-    private static final String ESOTERIC_SCRIPT_LOCATION = "/home/ec2-user/case-yellow/scripts";
+    private static final int ESOTERIC_FILE_SIZE = 1300000; // The number of iterations to generate a 25MB file size
     private static final String S3_ESOTERIC_FILES_BUCKET_PREFIX = "esoteric-files";
 
     @Value("${add_extra_file_download}")
@@ -94,14 +94,14 @@ public class FileDownloadServiceImp implements FileDownloadService {
         File esotericFile = null;
 
         try {
-            String fileSha256 = Utils.executeCommand(String.format("%s/%s", ESOTERIC_SCRIPT_LOCATION, "esoteric"));
-            esotericFile = new File(System.getProperty("user.dir"), fileSha256);
+            esotericFile = Utils.generateLargeFile(ESOTERIC_FILE_SIZE);
             long fileSize = esotericFile.length();
             String bucketName = String.format("%s-%s", S3_ESOTERIC_FILES_BUCKET_PREFIX, identifier);
-            String filePath = String.format("%s-%s", identifier, fileSha256);
+            String md5 = convertToMD5(esotericFile);
+            String filePath = String.format("%s-%s", identifier, md5);
             String fileUrl = fileStorageService.uploadFileToBucket(identifier, bucketName, filePath, esotericFile);
 
-            return new FileDownloadProperties(identifier, fileUrl, Math.toIntExact(fileSize), fileSha256);
+            return new FileDownloadProperties(identifier, fileUrl, Math.toIntExact(fileSize), md5);
 
         } catch (Exception e) {
             Utils.deleteFile(esotericFile);
