@@ -101,7 +101,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
             String filePath = String.format("%s-%s", identifier, fileSha256);
             String fileUrl = fileStorageService.uploadFileToBucket(identifier, bucketName, filePath, esotericFile);
 
-            return new FileDownloadProperties(identifier, fileUrl, Math.toIntExact(fileSize), convertToMD5(esotericFile));
+            return new FileDownloadProperties(identifier, fileUrl, Math.toIntExact(fileSize), fileSha256);
 
         } catch (Exception e) {
             Utils.deleteFile(esotericFile);
