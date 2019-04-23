@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class FileDownloadServiceImp implements FileDownloadService {
 
-    private static final int ESOTERIC_FILE_SIZE = 1300000; // The number of iterations to generate a 25MB file size
+    private static final int ESOTERIC_FILE_SIZE = 1600000; // The number of iterations to generate a 30MB file size
     private static final String S3_ESOTERIC_FILES_BUCKET_PREFIX = "esoteric-files";
 
     @Value("${num_of_comparison_per_test:3}")
