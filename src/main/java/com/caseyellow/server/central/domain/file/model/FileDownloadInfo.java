@@ -23,6 +23,8 @@ public class FileDownloadInfo {
     private double fileDownloadRateKBPerSec;
     private long   fileDownloadedDurationTimeInMs;
     private long   startDownloadingTimestamp;
+    private String traceRouteOutputPreviousDownloadFile;
+    private String traceRouteOutputAfterDownloadFile;
     private Map<String, List<String>> headers;
 
     public FileDownloadInfo(String url) {
@@ -36,6 +38,8 @@ public class FileDownloadInfo {
         fileDownloadRateKBPerSec = fileDownloadInfoBuilder.fileDownloadRateKBPerSec;
         fileDownloadedDurationTimeInMs = fileDownloadInfoBuilder.fileDownloadedTimeInMs;
         startDownloadingTimestamp = fileDownloadInfoBuilder.startDownloadingTimestamp;
+        traceRouteOutputPreviousDownloadFile = fileDownloadInfoBuilder.traceRouteOutputPreviousDownloadFile;
+        traceRouteOutputAfterDownloadFile = fileDownloadInfoBuilder.traceRouteOutputAfterDownloadFile;
         headers = fileDownloadInfoBuilder.headers;
     }
 
@@ -93,14 +97,34 @@ public class FileDownloadInfo {
         this.headers = headers;
     }
 
+    public String getTraceRouteOutputPreviousDownloadFile() {
+        return traceRouteOutputPreviousDownloadFile;
+    }
+
+    public void setTraceRouteOutputPreviousDownloadFile(String traceRouteOutputPreviousDownloadFile) {
+        this.traceRouteOutputPreviousDownloadFile = traceRouteOutputPreviousDownloadFile;
+    }
+
+    public String getTraceRouteOutputAfterDownloadFile() {
+        return traceRouteOutputAfterDownloadFile;
+    }
+
+    public void setTraceRouteOutputAfterDownloadFile(String traceRouteOutputAfterDownloadFile) {
+        this.traceRouteOutputAfterDownloadFile = traceRouteOutputAfterDownloadFile;
+    }
+
     @Override
     public String toString() {
-        return "FileDownloadInfoDAO{" +
-                "fileURL='" + fileURL + '\'' +
-                ", fileName='" + fileName + '\'' +
+        return "FileDownloadInfo{" +
+                "fileName='" + fileName + '\'' +
+                ", fileURL='" + fileURL + '\'' +
                 ", fileSizeInBytes=" + fileSizeInBytes +
-                ", fileDownloadedTimeInMs=" + fileDownloadedDurationTimeInMs +
+                ", fileDownloadRateKBPerSec=" + fileDownloadRateKBPerSec +
+                ", fileDownloadedDurationTimeInMs=" + fileDownloadedDurationTimeInMs +
                 ", startDownloadingTimestamp=" + startDownloadingTimestamp +
+                ", traceRouteOutputPreviousDownloadFile='" + traceRouteOutputPreviousDownloadFile + '\'' +
+                ", traceRouteOutputAfterDownloadFile='" + traceRouteOutputAfterDownloadFile + '\'' +
+                ", headers=" + headers +
                 '}';
     }
 
@@ -113,6 +137,8 @@ public class FileDownloadInfo {
         private double fileDownloadRateKBPerSec;
         private long   fileDownloadedTimeInMs;
         private long startDownloadingTimestamp;
+        private String traceRouteOutputPreviousDownloadFile;
+        private String traceRouteOutputAfterDownloadFile;
         private Map<String, List<String>> headers;
 
         public FileDownloadInfoBuilder(String fileName) {
@@ -136,6 +162,16 @@ public class FileDownloadInfo {
 
         public FileDownloadInfoBuilder addHeaders(Map<String, List<String>> headers) {
             this.headers = headers;
+            return this;
+        }
+
+        public FileDownloadInfoBuilder addTraceRouteOutputPreviousDownloadFile(String traceRouteOutputPreviousDownloadFile) {
+            this.traceRouteOutputPreviousDownloadFile = traceRouteOutputPreviousDownloadFile;
+            return this;
+        }
+
+        public FileDownloadInfoBuilder addTraceRouteOutputAfterDownloadFile(String traceRouteOutputAfterDownloadFile) {
+            this.traceRouteOutputAfterDownloadFile = traceRouteOutputAfterDownloadFile;
             return this;
         }
 
