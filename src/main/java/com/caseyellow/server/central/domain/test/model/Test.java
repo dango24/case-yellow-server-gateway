@@ -19,6 +19,7 @@ public class Test {
     private String isp;
     private Long startTime;
     private Long endTime;
+    private boolean classicTest;
     private SystemInfo systemInfo;
     private String speedTestWebsiteIdentifier;
     private List<ComparisonInfo> comparisonInfoTests;
@@ -32,6 +33,7 @@ public class Test {
         this.isp = testBuilder.isp;
         this.startTime = testBuilder.startTime;
         this.endTime = testBuilder.endTime;
+        this.classicTest = testBuilder.classicTest;
         this.systemInfo = testBuilder.systemInfo;
         this.clientVersion = testBuilder.clientVersion;
         this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsiteIdentifier;
@@ -48,6 +50,7 @@ public class Test {
         private String isp;
         private Long startTime;
         private Long endTime;
+        private boolean classicTest;
         private SystemInfo systemInfo;
         private String speedTestWebsiteIdentifier;
         private List<ComparisonInfo> comparisonInfoTests;
@@ -88,6 +91,11 @@ public class Test {
 
         public TestBuilder addEndTime(Long endTime) {
             this.endTime = endTime;
+            return this;
+        }
+
+        public TestBuilder isClassicTest(boolean classicTest) {
+            this.classicTest = classicTest;
             return this;
         }
 

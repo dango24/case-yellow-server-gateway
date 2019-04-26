@@ -110,6 +110,15 @@ public class CentralController {
         return fileDownloadService.getNextFileDownloadMetaData(userName);
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/run-classic-test",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean runClassicTest(@RequestHeader(value = USER_HEADER, required=false) String userName) {
+        logger.info("Received runClassicTest GET request");
+        return fileDownloadService.runClassicTest(userName);
+    }
+
     @GetMapping(value = "/chrome-options-arguments",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)

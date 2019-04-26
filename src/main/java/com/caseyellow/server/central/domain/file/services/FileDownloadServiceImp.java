@@ -11,12 +11,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import static com.caseyellow.server.central.common.Utils.convertToMD5;
@@ -74,6 +74,13 @@ public class FileDownloadServiceImp implements FileDownloadService {
                                           .stream()
                                           .map(this::generateFileDownloadProperties)
                                           .collect(toList());
+    }
+
+    @Override
+    public boolean runClassicTest(String userName) {
+        int coinToss = new Random().nextInt(2);
+
+        return coinToss % 2 ==0 ;
     }
 
     private FileDownloadProperties generateFileDownloadProperties(String identifier) {
