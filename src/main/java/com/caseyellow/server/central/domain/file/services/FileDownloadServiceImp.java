@@ -84,6 +84,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
     }
 
     private FileDownloadProperties generateFileDownloadProperties(String identifier) {
+
         if (esotericFilesLocations.contains(identifier)) {
             return generateEsotericFileDownloadProperties(identifier);
         } else {
@@ -101,8 +102,9 @@ public class FileDownloadServiceImp implements FileDownloadService {
             String md5 = convertToMD5(esotericFile);
             String filePath = String.format("%s-%s", identifier, md5);
             String fileUrl = fileStorageService.uploadFileToBucket(identifier, bucketName, filePath, esotericFile);
+            int timeoutInMin = 10;
 
-            return new FileDownloadProperties(identifier, fileUrl, Math.toIntExact(fileSize), md5);
+            return new FileDownloadProperties(identifier, fileUrl, Math.toIntExact(fileSize), md5, timeoutInMin);
 
         } catch (Exception e) {
             throw new FileDownloadInfoException("Failed to generate esoteric file download info: " + e.getMessage(), e);
