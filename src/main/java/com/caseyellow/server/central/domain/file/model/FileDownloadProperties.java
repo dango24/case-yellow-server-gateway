@@ -16,4 +16,8 @@ public class FileDownloadProperties {
     private int size;
     private String md5;
     private int timeoutInMin;
+
+    public FileDownloadProperties(String url) {
+        this(null, url, 0, null, 0);
+    }
 }
