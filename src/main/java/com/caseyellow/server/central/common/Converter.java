@@ -36,6 +36,7 @@ public interface Converter {
                                      .addClientVersion(test.getClientVersion())
                                      .addStartTime(test.getStartTime())
                                      .addEndTime(test.getEndTime())
+                                     .addClassicTest(test.isClassicTest())
                                      .addSystemInfo(convertSystemInfoModelToDAO(test.getSystemInfo()))
                                      .addComparisonInfoTests(convertDAOToModel(Converter::convertComparisonInfoModelToDAO, test.getComparisonInfoTests()))
                                      .build();
@@ -52,6 +53,7 @@ public interface Converter {
                             .addClientVersion(testDAO.getClientVersion())
                             .addUser(testDAO.getUser())
                             .addISP(testDAO.getIsp())
+                            .addClassicTest(testDAO.isClassicTest())
                             .addStartTime(testDAO.getStartTime())
                             .addEndTime(testDAO.getEndTime())
                             .addSystemInfo(convertSystemInfoDAOlToModel(testDAO.getSystemInfo()))

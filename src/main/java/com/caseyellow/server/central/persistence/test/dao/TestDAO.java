@@ -35,6 +35,9 @@ public class TestDAO {
     @Column(name = "timestamp")
     private Long timestamp;
 
+    @Column(name = "classic_test")
+    private boolean classicTest;
+
     @Column(name = "start_time")
     private Long startTime;
 
@@ -63,6 +66,7 @@ public class TestDAO {
         this.systemInfo = testBuilder.systemInfo;
         this.clientVersion = testBuilder.clientVersion;
         this.computerIdentifier = testBuilder.computerIdentifier;
+        this.classicTest = testBuilder.classicTest;
         this.speedTestWebsiteIdentifier = testBuilder.speedTestWebsite;
         this.comparisonInfoDAOTests = testBuilder.comparisonInfoDAOTests;
     }
@@ -78,6 +82,7 @@ public class TestDAO {
         private Long endTime;
         private SystemInfoDAO systemInfo;
         private String speedTestWebsite;
+        private boolean classicTest;
         private List<ComparisonInfoDAO> comparisonInfoDAOTests;
 
         public TestBuilder(String testID) {
@@ -96,6 +101,11 @@ public class TestDAO {
 
         public TestBuilder addUser(String user) {
             this.user = user;
+            return this;
+        }
+
+        public TestBuilder addClassicTest(boolean classicTest) {
+            this.classicTest = classicTest;
             return this;
         }
 
