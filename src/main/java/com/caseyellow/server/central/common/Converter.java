@@ -53,7 +53,7 @@ public interface Converter {
                             .addClientVersion(testDAO.getClientVersion())
                             .addUser(testDAO.getUser())
                             .addISP(testDAO.getIsp())
-                            .addClassicTest(testDAO.isClassicTest())
+                            .addClassicTest(isNull(testDAO.getClassicTest()) ? false : testDAO.getClassicTest())
                             .addStartTime(testDAO.getStartTime())
                             .addEndTime(testDAO.getEndTime())
                             .addSystemInfo(convertSystemInfoDAOlToModel(testDAO.getSystemInfo()))
