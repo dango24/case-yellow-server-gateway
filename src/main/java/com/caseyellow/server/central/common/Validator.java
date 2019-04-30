@@ -32,18 +32,18 @@ public interface Validator {
 
         return test.getComparisonInfoTests()
                    .stream()
-                   .allMatch(Validator::validateComparisonInfo);
+                   .allMatch(comparisonInfo -> validateComparisonInfo(comparisonInfo, test.isClassicTest()));
     }
 
-    static boolean validateComparisonInfo(ComparisonInfo comparisonInfo) {
+    static boolean validateComparisonInfo(ComparisonInfo comparisonInfo, boolean isClassicTest) {
         if (isNull(comparisonInfo) ||
-            isNull(comparisonInfo.getSpeedTestWebSite()) ||
+           (isClassicTest && isNull(comparisonInfo.getSpeedTestWebSite())) ||
             isNull(comparisonInfo.getFileDownloadInfo())) {
 
             return false;
         }
 
-        return validateSpeedTest(comparisonInfo.getSpeedTestWebSite()) &&
+        return (!isClassicTest || validateSpeedTest(comparisonInfo.getSpeedTestWebSite())) &&
                validateFileDownloadInfo(comparisonInfo.getFileDownloadInfo());
     }
 
