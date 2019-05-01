@@ -209,7 +209,6 @@ public class TestServiceImpl implements TestService {
 
         CompletableFuture.supplyAsync(() -> test)
                          .thenApply(this::removeUnsuccessfulTests)
-                         .thenApply(this::increaseComparisonInfoCounters)
                          .thenApply(Converter::convertTestModelToDAO)
                          .exceptionally(this::handleSaveTestException)
                          .thenAccept(this::save);
@@ -226,7 +225,7 @@ public class TestServiceImpl implements TestService {
 
         List<ComparisonInfo> comparisonInfoSucceed = test.getComparisonInfoTests()
                                                          .stream()
-                                                         .filter(comparisonInfo -> comparisonInfo.getSpeedTestWebSite().isSucceed())
+                                                         .filter(comparisonInfo -> !test.isClassicTest() || comparisonInfo.getSpeedTestWebSite().isSucceed())
                                                          .collect(toList());
 
         test.setComparisonInfoTests(comparisonInfoSucceed);
@@ -242,16 +241,6 @@ public class TestServiceImpl implements TestService {
             testRepository.save(testDAO);
             logger.info(String.format("Successfully save test: %s, for user: %s", testDAO.getTestID(), testDAO.getUser()));
         }
-    }
-
-    private Test increaseComparisonInfoCounters(Test test) {
-
-        test.getComparisonInfoTests()
-            .stream()
-            .map(ComparisonInfoIdentifiers::new)
-            .forEach(identifiers -> counterService.increaseComparisionInfoDetails(identifiers.getSpeedTestIdentifier(), identifiers.getFileDownloadIdentifier()));
-
-        return test;
     }
 
     private TestDAO handleSaveTestException(Throwable throwable) {

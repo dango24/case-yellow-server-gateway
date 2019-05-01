@@ -35,7 +35,7 @@ public class TestDAO {
     @Column(name = "timestamp")
     private Long timestamp;
 
-    @Column(name = "classic_test")
+    @Column(name = "is_classic_test")
     private Boolean classicTest;
 
     @Column(name = "start_time")

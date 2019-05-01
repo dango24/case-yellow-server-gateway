@@ -20,6 +20,12 @@ public class FileDownloadInfoDAO {
     private long   fileDownloadedTimeInMs;
     private long   startDownloadingTimestamp;
 
+    @Column(name = "trace_pre")
+    private String traceRouteOutputPreviousDownloadFile;
+
+    @Column(name = "trace_post")
+    private String traceRouteOutputAfterDownloadFile;
+
     public FileDownloadInfoDAO() {}
 
     public FileDownloadInfoDAO(String url) {
@@ -38,6 +44,8 @@ public class FileDownloadInfoDAO {
         fileDownloadRateKBPerSec = fileDownloadInfoBuilder.fileDownloadRateKBPerSec;
         fileDownloadedTimeInMs = fileDownloadInfoBuilder.fileDownloadedTimeInMs;
         startDownloadingTimestamp = fileDownloadInfoBuilder.startDownloadingTimestamp;
+        traceRouteOutputPreviousDownloadFile = fileDownloadInfoBuilder.traceRouteOutputPreviousDownloadFile;
+        traceRouteOutputAfterDownloadFile = fileDownloadInfoBuilder.traceRouteOutputAfterDownloadFile;
     }
 
     public String getFileURL() {
@@ -106,6 +114,8 @@ public class FileDownloadInfoDAO {
         private double fileDownloadRateKBPerSec;
         private long   fileDownloadedTimeInMs;
         private long startDownloadingTimestamp;
+        private String traceRouteOutputPreviousDownloadFile;
+        private String traceRouteOutputAfterDownloadFile;
 
         public FileDownloadInfoBuilder(String fileName) {
             this.fileName = fileName;
@@ -138,6 +148,16 @@ public class FileDownloadInfoDAO {
 
         public FileDownloadInfoBuilder addStartDownloadingTime(long startDownloadingTime) {
             this.startDownloadingTimestamp = startDownloadingTime;
+            return this;
+        }
+
+        public FileDownloadInfoBuilder addTraceRouteOutputPreviousDownloadFile(String traceRouteOutputPreviousDownloadFile) {
+            this.traceRouteOutputPreviousDownloadFile = traceRouteOutputPreviousDownloadFile;
+            return this;
+        }
+
+        public FileDownloadInfoBuilder addTraceRouteOutputAfterDownloadFile(String traceRouteOutputAfterDownloadFile) {
+            this.traceRouteOutputAfterDownloadFile = traceRouteOutputAfterDownloadFile;
             return this;
         }
 

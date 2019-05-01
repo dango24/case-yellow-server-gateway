@@ -100,7 +100,10 @@ public interface Converter {
 
         ComparisonInfoDAO comparisonInfoDAO = new ComparisonInfoDAO();
         comparisonInfoDAO.setFileDownloadInfoDAO(convertFileDownloadInfoModelToDAO(comparisonInfo.getFileDownloadInfo()));
-        comparisonInfoDAO.setSpeedTestWebSiteDAO(convertSpeedTestWebSiteModelToDAO(comparisonInfo.getSpeedTestWebSite()));
+
+        if (nonNull(comparisonInfo.getSpeedTestWebSite())) {
+            comparisonInfoDAO.setSpeedTestWebSiteDAO(convertSpeedTestWebSiteModelToDAO(comparisonInfo.getSpeedTestWebSite()));
+        }
 
         return comparisonInfoDAO;
     }
@@ -129,6 +132,8 @@ public interface Converter {
                                        .addFileSizeInBytes(fileDownloadInfo.getFileSizeInBytes())
                                        .addFileURL(fileDownloadInfo.getFileURL())
                                        .addStartDownloadingTime(fileDownloadInfo.getStartDownloadingTimestamp())
+                                       .addTraceRouteOutputPreviousDownloadFile(fileDownloadInfo.getTraceRouteOutputPreviousDownloadFile())
+                                       .addTraceRouteOutputAfterDownloadFile(fileDownloadInfo.getTraceRouteOutputAfterDownloadFile())
                                        .build();
 
         return fileDownloadInfoDAO;
