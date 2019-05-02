@@ -188,8 +188,9 @@ public interface Converter {
 
     static SpeedTestWebSite convertSpeedTestWebSiteDAOlToModel(SpeedTestWebSiteDAO speedTestWebSiteDAO) {
         if (isNull(speedTestWebSiteDAO)) {
-            throw new ConverterException("Failed to convert, speedTestWebSiteDAO is null");
+            return null;
         }
+
         boolean isAnalyzed = speedTestWebSiteDAO.getAnalyzedState() == AnalyzedState.SUCCESS;
         SpeedTestWebSite speedTestWebSite = new SpeedTestWebSite(speedTestWebSiteDAO.getSpeedTestIdentifier());
 
