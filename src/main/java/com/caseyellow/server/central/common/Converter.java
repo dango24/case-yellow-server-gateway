@@ -8,10 +8,13 @@ import com.caseyellow.server.central.persistence.file.dao.FileDownloadInfoDAO;
 import com.caseyellow.server.central.persistence.test.dao.*;
 import com.caseyellow.server.central.persistence.website.dao.AnalyzedState;
 import com.caseyellow.server.central.persistence.website.dao.SpeedTestWebSiteDAO;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
@@ -22,6 +25,9 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.math.NumberUtils.isCreatable;
 
 public interface Converter {
+
+    Gson dataConverter = new Gson();
+    Type headersType = new TypeToken<Map<String, List<String>>>(){}.getType();
 
     static TestDAO convertTestModelToDAO(Test test) {
         if (isNull(test)) {
@@ -121,8 +127,16 @@ public interface Converter {
     }
 
     static FileDownloadInfoDAO convertFileDownloadInfoModelToDAO(FileDownloadInfo fileDownloadInfo) {
+        String headers;
+
         if (isNull(fileDownloadInfo)) {
             throw new ConverterException("Failed to convert, fileDownloadInfo is null");
+        }
+
+        if (nonNull(fileDownloadInfo.getHeaders())) {
+            headers = dataConverter.toJson(fileDownloadInfo.getHeaders());
+        } else {
+            headers = null;
         }
 
         FileDownloadInfoDAO fileDownloadInfoDAO =
@@ -134,14 +148,23 @@ public interface Converter {
                                        .addStartDownloadingTime(fileDownloadInfo.getStartDownloadingTimestamp())
                                        .addTraceRouteOutputPreviousDownloadFile(fileDownloadInfo.getTraceRouteOutputPreviousDownloadFile())
                                        .addTraceRouteOutputAfterDownloadFile(fileDownloadInfo.getTraceRouteOutputAfterDownloadFile())
+                                       .addHeaders(headers)
                                        .build();
 
         return fileDownloadInfoDAO;
     }
 
     static FileDownloadInfo convertFileDownloadInfoDAOToModel(FileDownloadInfoDAO fileDownloadInfoDAO) {
+        Map<String, List<String>> headers;
+
         if (isNull(fileDownloadInfoDAO)) {
             throw new ConverterException("Failed to convert, fileDownloadInfoDAO is null");
+        }
+
+        if (nonNull(fileDownloadInfoDAO.getHeaders())) {
+            headers = dataConverter.fromJson(fileDownloadInfoDAO.getHeaders(), headersType);
+        } else {
+            headers = null;
         }
 
         FileDownloadInfo fileDownloadInfo =
@@ -151,7 +174,7 @@ public interface Converter {
                                     .addFileSizeInBytes(fileDownloadInfoDAO.getFileSizeInBytes())
                                     .addFileURL(fileDownloadInfoDAO.getFileURL())
                                     .addStartDownloadingTime(fileDownloadInfoDAO.getStartDownloadingTimestamp())
-                                    .addHeaders(Collections.emptyMap())
+                                    .addHeaders(headers)
                                     .build();
 
         return fileDownloadInfo;

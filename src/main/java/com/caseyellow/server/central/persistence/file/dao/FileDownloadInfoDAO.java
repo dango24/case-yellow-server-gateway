@@ -1,5 +1,7 @@
 package com.caseyellow.server.central.persistence.file.dao;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 
 /**
@@ -26,6 +28,10 @@ public class FileDownloadInfoDAO {
     @Column(name = "trace_post")
     private String traceRouteOutputAfterDownloadFile;
 
+    @Type(type = "jsonb")
+    @Column(name = "headers", columnDefinition = "jsonb")
+    private String headers;
+
     public FileDownloadInfoDAO() {}
 
     public FileDownloadInfoDAO(String url) {
@@ -46,6 +52,7 @@ public class FileDownloadInfoDAO {
         startDownloadingTimestamp = fileDownloadInfoBuilder.startDownloadingTimestamp;
         traceRouteOutputPreviousDownloadFile = fileDownloadInfoBuilder.traceRouteOutputPreviousDownloadFile;
         traceRouteOutputAfterDownloadFile = fileDownloadInfoBuilder.traceRouteOutputAfterDownloadFile;
+        headers = fileDownloadInfoBuilder.headers;
     }
 
     public String getFileURL() {
@@ -94,6 +101,30 @@ public class FileDownloadInfoDAO {
         this.fileURL = fileURL;
     }
 
+    public String getTraceRouteOutputPreviousDownloadFile() {
+        return traceRouteOutputPreviousDownloadFile;
+    }
+
+    public void setTraceRouteOutputPreviousDownloadFile(String traceRouteOutputPreviousDownloadFile) {
+        this.traceRouteOutputPreviousDownloadFile = traceRouteOutputPreviousDownloadFile;
+    }
+
+    public String getTraceRouteOutputAfterDownloadFile() {
+        return traceRouteOutputAfterDownloadFile;
+    }
+
+    public void setTraceRouteOutputAfterDownloadFile(String traceRouteOutputAfterDownloadFile) {
+        this.traceRouteOutputAfterDownloadFile = traceRouteOutputAfterDownloadFile;
+    }
+
+    public String getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(String headers) {
+        this.headers = headers;
+    }
+
     @Override
     public String toString() {
         return "FileDownloadInfoDAO{" +
@@ -116,6 +147,7 @@ public class FileDownloadInfoDAO {
         private long startDownloadingTimestamp;
         private String traceRouteOutputPreviousDownloadFile;
         private String traceRouteOutputAfterDownloadFile;
+        private String headers;
 
         public FileDownloadInfoBuilder(String fileName) {
             this.fileName = fileName;
@@ -158,6 +190,11 @@ public class FileDownloadInfoDAO {
 
         public FileDownloadInfoBuilder addTraceRouteOutputAfterDownloadFile(String traceRouteOutputAfterDownloadFile) {
             this.traceRouteOutputAfterDownloadFile = traceRouteOutputAfterDownloadFile;
+            return this;
+        }
+
+        public FileDownloadInfoBuilder addHeaders(String headers) {
+            this.headers = headers;
             return this;
         }
 
