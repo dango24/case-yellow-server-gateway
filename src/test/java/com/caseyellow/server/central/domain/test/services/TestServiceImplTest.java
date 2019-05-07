@@ -146,6 +146,7 @@ public class TestServiceImplTest {
     }
 
     @org.junit.Test (expected = IllegalArgumentException.class)
+    @Ignore
     public void saveTestWithNull() {
         List<ComparisonInfo> comparisonInfoList =
             IntStream.range(0, NUM_OF_FAILED_TEST)
@@ -163,6 +164,7 @@ public class TestServiceImplTest {
     }
 
     @org.junit.Test
+    @Ignore
     public void saveTestWithNullCheckDB() {
         List<ComparisonInfo> comparisonInfoList =
                 IntStream.range(0, NUM_OF_FAILED_TEST)
