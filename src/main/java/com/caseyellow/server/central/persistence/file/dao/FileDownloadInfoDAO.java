@@ -1,6 +1,9 @@
 package com.caseyellow.server.central.persistence.file.dao;
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 
@@ -8,6 +11,9 @@ import javax.persistence.*;
  * Created by Dan on 04/10/2016.
  */
 @Entity
+@TypeDefs({
+    @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+})
 @Table(name = "file_download_info")
 public class FileDownloadInfoDAO {
 
