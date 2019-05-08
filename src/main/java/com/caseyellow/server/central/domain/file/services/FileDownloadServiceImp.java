@@ -64,7 +64,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
 
         nextFileDownloadIdentifiers = fileDownloadInfoCounterRepository.getActiveIdentifiers();
 
-        if (nonNull(userName) && userName.equals("dev2")) {
+        if (nonNull(userName)) {
             nextFileDownloadIdentifiers.addAll(esotericFilesLocations);
         }
 
