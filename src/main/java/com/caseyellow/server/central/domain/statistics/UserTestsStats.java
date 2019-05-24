@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserTestsStats implements Comparable<UserTestsStats> {
 
+    public static final int TEST_COUNT_PER_CONNECTION = 3000;
+
     private String name;
     private boolean isActive;
     private long lanCount;
@@ -27,7 +29,13 @@ public class UserTestsStats implements Comparable<UserTestsStats> {
 
     @Override
     public int compareTo(UserTestsStats o) {
-        return name.toLowerCase().compareTo(o.name.toLowerCase());
+        return getRemainingTests(this) - getRemainingTests(o);
+    }
+
+    private int getRemainingTests(UserTestsStats userTestsStats) {
+        long remainingTests = (TEST_COUNT_PER_CONNECTION*2) -
+                (Math.min(TEST_COUNT_PER_CONNECTION, userTestsStats.getLanCount()) + Math.min(TEST_COUNT_PER_CONNECTION, userTestsStats.getWifiCount()));
+        return Math.toIntExact(remainingTests);
     }
 
     @Data

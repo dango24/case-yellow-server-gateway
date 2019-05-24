@@ -80,7 +80,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
     public boolean runClassicTest(String userName) {
         int coinToss = new Random().nextInt(2);
 
-        return coinToss % 2 ==0 ;
+        return coinToss % 2 == 0 ;
     }
 
     private FileDownloadProperties generateFileDownloadProperties(String identifier) {
