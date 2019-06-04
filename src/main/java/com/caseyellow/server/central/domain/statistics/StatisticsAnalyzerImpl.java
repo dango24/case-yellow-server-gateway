@@ -265,8 +265,8 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
         List<UserTestsStats> doneUsers =
             users.stream()
-                 .filter(user -> user.getLanCount() > 3000)
-                 .filter(user -> user.getWifiCount() > 3000)
+                 .filter(user -> user.getLanCount() >= 2000)
+                 .filter(user -> user.getWifiCount() >= 2000)
                  .sorted()
                  .collect(toList());
 
