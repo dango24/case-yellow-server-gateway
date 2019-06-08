@@ -84,7 +84,7 @@ public class EmailServiceImpl implements EmailService {
         log.info(String.format("Send email to: %s with body: %s", emails, mailBody));
 
         emails.stream()
-              .filter(user -> user.getRole().equals("admin"))
+              .filter(user -> user.getRole().equals("admin") || user.getRole().equals("lawyer"))
               .forEach(email -> sendMessage(email.getEmail(), subject, mailBody));
     }
 
