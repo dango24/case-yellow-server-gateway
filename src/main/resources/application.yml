@@ -93,6 +93,7 @@ connection-details:
     - 40
     - 100
     - 200
+    - 500
     - 1000
 
   infrastructure:
