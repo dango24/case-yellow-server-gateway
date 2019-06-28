@@ -78,9 +78,9 @@ public class FileDownloadServiceImp implements FileDownloadService {
 
     @Override
     public boolean runClassicTest(String userName) {
-        int coinToss = new Random().nextInt(2);
+        int coinToss = new Random().nextInt(10);
 
-        return coinToss % 2 == 0 ;
+        return coinToss != 0;
     }
 
     private FileDownloadProperties generateFileDownloadProperties(String identifier) {
