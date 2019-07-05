@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromKBpsToMbps;
 import static com.caseyellow.server.central.common.Utils.calculateDownloadRateFromMbpsToKBps;
 import static com.caseyellow.server.central.common.Utils.log;
+import static com.caseyellow.server.central.domain.statistics.UserTestsStats.TEST_COUNT_PER_CONNECTION;
 import static com.caseyellow.server.central.persistence.metrics.MetricAverageRepository.AVERAGE_DECIMAL_FORMAT;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -265,8 +266,8 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
         List<UserTestsStats> doneUsers =
             users.stream()
-                 .filter(user -> user.getLanCount() > 3000)
-                 .filter(user -> user.getWifiCount() > 3000)
+                 .filter(user -> user.getLanCount() > TEST_COUNT_PER_CONNECTION)
+                 .filter(user -> user.getWifiCount() > TEST_COUNT_PER_CONNECTION)
                  .sorted()
                  .collect(toList());
 

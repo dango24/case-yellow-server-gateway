@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserTestsStats implements Comparable<UserTestsStats> {
 
-    public static final int TEST_COUNT_PER_CONNECTION = 3000;
+    public static final int TEST_COUNT_PER_CONNECTION = 2000;
 
     private String name;
     private boolean isActive;
