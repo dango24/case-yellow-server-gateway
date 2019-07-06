@@ -268,7 +268,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
             users.stream()
                  .filter(user -> user.getLanCount() > TEST_COUNT_PER_CONNECTION)
                  .filter(user -> user.getWifiCount() > TEST_COUNT_PER_CONNECTION)
-                 .sorted()
+                 .sorted(Comparator.comparing(UserTestsStats::getName))
                  .collect(toList());
 
         List<UserTestsStats> activeRunningUsers =
