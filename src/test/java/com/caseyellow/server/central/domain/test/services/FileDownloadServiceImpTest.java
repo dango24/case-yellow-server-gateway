@@ -79,7 +79,7 @@ public class FileDownloadServiceImpTest {
         UrlConfig urlMapper = new UrlConfig();
 
         urlMapper.setFileDownloadProperties(fileDownloadUrls);
-        fileDownloadService = new FileDownloadServiceImp(fileDownloadInfoCounterRepository, null,urlMapper, null);
+        fileDownloadService = new FileDownloadServiceImp(fileDownloadInfoCounterRepository, null, null,urlMapper, null);
 
         IntStream.range(0, 100).forEach(i -> addFileDownloadInfo(FIREFOX, FIREFOX_URL));
         IntStream.range(0, 53).forEach(i -> addFileDownloadInfo(GO, GO_URL));

@@ -69,6 +69,19 @@
 			<version>6.2.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockftpserver</groupId>
+			<artifactId>MockFtpServer</artifactId>
+			<version>2.7.1</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!--Zip4j-->
 		<dependency>
 			<groupId>net.lingala.zip4j</groupId>

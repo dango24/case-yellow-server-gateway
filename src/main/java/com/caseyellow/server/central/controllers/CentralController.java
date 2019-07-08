@@ -116,7 +116,7 @@ public class CentralController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public boolean runClassicTest(@RequestHeader(value = USER_HEADER, required=false) String userName) {
         logger.info("Received runClassicTest GET request");
-        return fileDownloadService.runClassicTest(userName);
+        return fileDownloadService.runClassicTest();
     }
 
     @GetMapping(value = "/chrome-options-arguments",

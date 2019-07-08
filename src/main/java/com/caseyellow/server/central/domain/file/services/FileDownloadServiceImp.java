@@ -6,6 +6,7 @@ import com.caseyellow.server.central.configuration.UrlConfig;
 import com.caseyellow.server.central.domain.file.model.FileDownloadProperties;
 import com.caseyellow.server.central.exceptions.FileDownloadInfoException;
 import com.caseyellow.server.central.persistence.file.repository.FileDownloadInfoCounterRepository;
+import com.caseyellow.server.central.services.storage.FTPService;
 import com.caseyellow.server.central.services.storage.FileStorageService;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +22,6 @@ import java.util.Set;
 
 import static com.caseyellow.server.central.common.Utils.convertToMD5;
 import static java.lang.Math.min;
-import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -29,6 +29,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
 
     private static final int ESOTERIC_FILE_SIZE = 1600000; // The number of iterations to generate a 30MB file size
     private static final String S3_ESOTERIC_FILES_BUCKET_PREFIX = "esoteric-files";
+    public static final String CACHE_IDENTIFIER = "cache";
 
     @Value("${num_of_comparison_per_test:3}")
     private int numOfComparisonPerTest;
@@ -38,16 +39,19 @@ public class FileDownloadServiceImp implements FileDownloadService {
 
     private UrlConfig urlConfig;
     private FileStorageService fileStorageService;
+    private FTPService ftpService;
     private FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository;
 
     @Autowired
     public FileDownloadServiceImp(FileDownloadInfoCounterRepository fileDownloadInfoCounterRepository,
                                   FileStorageService fileStorageService,
+                                  FTPService ftpService,
                                   UrlConfig urlConfig,
                                   AWSRegions regions) {
 
         this.urlConfig = urlConfig;
         this.fileStorageService = fileStorageService;
+        this.ftpService = ftpService;
         this.fileDownloadInfoCounterRepository = fileDownloadInfoCounterRepository;
         this.esotericFilesLocations = regions.getRegions().keySet();
     }
@@ -63,10 +67,8 @@ public class FileDownloadServiceImp implements FileDownloadService {
         }
 
         nextFileDownloadIdentifiers = fileDownloadInfoCounterRepository.getActiveIdentifiers();
-
-        if (nonNull(userName)) {
-            nextFileDownloadIdentifiers.addAll(esotericFilesLocations);
-        }
+        nextFileDownloadIdentifiers.add(CACHE_IDENTIFIER);
+        nextFileDownloadIdentifiers.addAll(esotericFilesLocations);
 
         Collections.shuffle(nextFileDownloadIdentifiers);
 
@@ -77,7 +79,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
     }
 
     @Override
-    public boolean runClassicTest(String userName) {
+    public boolean runClassicTest() {
         int coinToss = new Random().nextInt(10);
 
         return coinToss != 0;
@@ -86,7 +88,9 @@ public class FileDownloadServiceImp implements FileDownloadService {
     private FileDownloadProperties generateFileDownloadProperties(String identifier) {
         FileDownloadProperties fileDownloadProperties;
 
-        if (esotericFilesLocations.contains(identifier)) {
+        if (CACHE_IDENTIFIER.equals(identifier)) {
+            fileDownloadProperties = generateCacheFileDownloadProperties();
+        } else if (esotericFilesLocations.contains(identifier)) {
             fileDownloadProperties = generateEsotericFileDownloadProperties(identifier);
         } else {
             fileDownloadProperties =  urlConfig.getFileDownloadProperties(identifier);
@@ -115,6 +119,26 @@ public class FileDownloadServiceImp implements FileDownloadService {
 
         } finally {
             Utils.deleteFile(esotericFile);
+        }
+    }
+
+    private FileDownloadProperties generateCacheFileDownloadProperties() {
+        File cacheFile = null;
+
+        try {
+            cacheFile = Utils.generateLargeFile(ESOTERIC_FILE_SIZE);
+            long fileSize = cacheFile.length();
+            String md5 = convertToMD5(cacheFile);
+            String filePath = String.format("%s-%s", CACHE_IDENTIFIER, md5);
+            String fileUrl = ftpService.uploadFileToCache(filePath, cacheFile);
+
+            return new FileDownloadProperties(CACHE_IDENTIFIER, fileUrl, Math.toIntExact(fileSize), md5, 10);
+
+        } catch (Exception e) {
+            throw new FileDownloadInfoException("Failed to generate cache file download info: " + e.getMessage(), e);
+
+        } finally {
+            Utils.deleteFile(cacheFile);
         }
     }
 }

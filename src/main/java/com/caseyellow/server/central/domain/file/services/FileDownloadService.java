@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface FileDownloadService {
     List<FileDownloadProperties> getNextFileDownloadMetaData(String userName);
-    boolean runClassicTest(String userName);
+    boolean runClassicTest();
 }
