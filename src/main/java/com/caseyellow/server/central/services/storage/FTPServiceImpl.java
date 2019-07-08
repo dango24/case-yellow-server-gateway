@@ -48,7 +48,11 @@ public class FTPServiceImpl implements FTPService {
             throw new IOException("Exception in connecting to FTP Server");
         }
 
-        ftp.login(USER, password);
+        boolean connectSuccessful = ftp.login(USER, password);
+
+        if (!connectSuccessful) {
+            throw new IOException("Failed to connect to FTP Server");
+        }
     }
 
     @PreDestroy
