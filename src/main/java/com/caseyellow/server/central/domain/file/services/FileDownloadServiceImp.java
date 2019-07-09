@@ -10,6 +10,7 @@ import com.caseyellow.server.central.services.storage.FTPService;
 import com.caseyellow.server.central.services.storage.FileStorageService;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 public class FileDownloadServiceImp implements FileDownloadService {
+
+    private Logger logger = Logger.getLogger(FileDownloadServiceImp.class);
 
     private static final int ESOTERIC_FILE_SIZE = 1600000; // The number of iterations to generate a 30MB file size
     private static final String S3_ESOTERIC_FILES_BUCKET_PREFIX = "esoteric-files";
@@ -126,6 +129,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
         File cacheFile = null;
 
         try {
+            logger.info("Generate cache file download info");
             cacheFile = Utils.generateLargeFile(ESOTERIC_FILE_SIZE);
             long fileSize = cacheFile.length();
             String md5 = convertToMD5(cacheFile);

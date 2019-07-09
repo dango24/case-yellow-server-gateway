@@ -53,6 +53,8 @@ public class FTPServiceImpl implements FTPService {
         if (!connectSuccessful) {
             throw new IOException("Failed to connect to FTP Server");
         }
+
+        logger.info("Connect to Ftp service successfully");
     }
 
     @PreDestroy
@@ -72,6 +74,7 @@ public class FTPServiceImpl implements FTPService {
 
         if (!directoryExists.isPresent()) {
             ftp.makeDirectory(currentDirectory);
+            logger.info(String.format("create directory: %s", currentDirectory));
         }
 
         return currentDirectory;
@@ -89,6 +92,8 @@ public class FTPServiceImpl implements FTPService {
             if (!isUploadSucceed) {
                 throw new IOException();
             }
+
+            logger.info(String.format("Uploaded cache file: %s", filePath));
 
         } catch (IOException e) {
             String errorMessage = String.format("Failed to upload file: %s, cause: %s", fileToUpload.getAbsolutePath(), e.getMessage());
