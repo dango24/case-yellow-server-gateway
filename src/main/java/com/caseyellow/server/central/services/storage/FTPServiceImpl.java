@@ -51,10 +51,10 @@ public class FTPServiceImpl implements FTPService {
         boolean connectSuccessful = ftp.login(USER, password);
 
         if (!connectSuccessful) {
-            throw new IOException("Failed to connect to FTP Server");
+            throw new IOException(String.format("Failed to connect to FTP Server with replay code: %s", ftp.getReplyCode()));
         }
 
-        logger.info("Connect to Ftp service successfully");
+        logger.info(String.format("Connect to Ftp service successfully with replay code: %s", ftp.getReplyCode()));
     }
 
     @PreDestroy
