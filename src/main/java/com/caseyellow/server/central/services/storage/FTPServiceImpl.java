@@ -62,7 +62,7 @@ public class FTPServiceImpl implements FTPService {
         ftp.disconnect();
     }
 
-    private String getDirectory() throws IOException {
+    private synchronized String getDirectory() throws IOException {
         FTPFile[] directories = ftp.listDirectories();
         String currentDirectory = DAY_FORMAT.format(new Date());
 
