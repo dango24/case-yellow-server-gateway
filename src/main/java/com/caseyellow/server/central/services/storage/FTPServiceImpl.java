@@ -82,7 +82,7 @@ public class FTPServiceImpl implements FTPService {
 
     @Override
     public String uploadFileToCache(String fileName, File fileToUpload) throws IORuntimeException {
-        String filePath;
+        String filePath = null;
 
         try (InputStream inputStream = new FileInputStream(fileToUpload)) {
 
@@ -90,13 +90,13 @@ public class FTPServiceImpl implements FTPService {
             boolean isUploadSucceed = ftp.storeFile(filePath, inputStream);
 
             if (!isUploadSucceed) {
-                throw new IOException();
+                throw new IOException("Upload failed");
             }
 
             logger.info(String.format("Uploaded cache file: %s", filePath));
 
         } catch (IOException e) {
-            String errorMessage = String.format("Failed to upload file: %s, cause: %s", fileToUpload.getAbsolutePath(), e.getMessage());
+            String errorMessage = String.format("Failed to upload cache file: %s located: %s, cause: %s", filePath, fileToUpload.getAbsolutePath(), e.getMessage());
             logger.error(errorMessage, e);
 
             throw new IORuntimeException(errorMessage, e);
