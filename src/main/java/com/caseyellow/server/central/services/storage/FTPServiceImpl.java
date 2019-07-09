@@ -90,7 +90,7 @@ public class FTPServiceImpl implements FTPService {
             boolean isUploadSucceed = ftp.storeFile(filePath, inputStream);
 
             if (!isUploadSucceed) {
-                throw new IOException("Upload failed");
+                throw new IOException(String.format("Upload failed with code:%s ", ftp.getReplyCode()));
             }
 
             logger.info(String.format("Uploaded cache file: %s", filePath));
