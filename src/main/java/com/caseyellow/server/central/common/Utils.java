@@ -180,7 +180,7 @@ public interface Utils {
 
     static File generateLargeFile(int numberOfIterations) {
 
-        File generatedFile = new File(System.getProperty(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString()));
+        File generatedFile = new File(System.getProperty(System.getProperty("java.io.tmpdir")), UUID.randomUUID().toString());
 
         try (BufferedWriter writer = Files.newBufferedWriter(generatedFile.toPath())) {
 
