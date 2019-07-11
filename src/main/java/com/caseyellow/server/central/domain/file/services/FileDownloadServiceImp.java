@@ -70,7 +70,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
         }
 
         nextFileDownloadIdentifiers = fileDownloadInfoCounterRepository.getActiveIdentifiers();
-        nextFileDownloadIdentifiers.add(CACHE_IDENTIFIER);
+//        nextFileDownloadIdentifiers.add(CACHE_IDENTIFIER);
         nextFileDownloadIdentifiers.addAll(esotericFilesLocations);
 
         Collections.shuffle(nextFileDownloadIdentifiers);
