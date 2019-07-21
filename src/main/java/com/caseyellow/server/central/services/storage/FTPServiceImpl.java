@@ -23,8 +23,7 @@ public class FTPServiceImpl implements FTPService {
 
 
     @Override
-    public String uploadFileToCache(String fileName, File fileToUpload) throws IORuntimeException {
-        String filePath = renameFile(fileToUpload, fileName);
+    public String uploadFileToCache(String fileName, String filePath) throws IORuntimeException {
         String directory = getDirectory();
 
         logger.info("Upload file: " + filePath);
@@ -33,7 +32,7 @@ public class FTPServiceImpl implements FTPService {
         return DOMAIN + directory + "/" + fileName;
     }
 
-    private synchronized String getDirectory() {
+    private String getDirectory() {
         return DAY_FORMAT.format(new Date());
     }
 

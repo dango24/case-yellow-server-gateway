@@ -22,6 +22,7 @@ import java.util.Random;
 import java.util.Set;
 
 import static com.caseyellow.server.central.common.Utils.convertToMD5;
+import static com.caseyellow.server.central.common.Utils.renameFile;
 import static java.lang.Math.min;
 import static java.util.stream.Collectors.toList;
 
@@ -127,14 +128,16 @@ public class FileDownloadServiceImp implements FileDownloadService {
 
     private FileDownloadProperties generateCacheFileDownloadProperties() {
         File cacheFile = null;
+        File newRenamedFile = null;
 
         try {
             logger.info("Generate cache file download info");
-            cacheFile = Utils.generateLargeFile(ESOTERIC_FILE_SIZE);
+            cacheFile = Utils.generateLargeFile(ESOTERIC_FILE_SIZE); // Return generated file with UUID
             long fileSize = cacheFile.length();
             String md5 = convertToMD5(cacheFile);
             String fileName = String.format("%s-%s", CACHE_IDENTIFIER, md5);
-            String fileUrl = ftpService.uploadFileToCache(fileName, cacheFile);
+            newRenamedFile = renameFile(cacheFile, fileName); // Need to rename the file with file MD5 as identifier before upload file to cache server
+            String fileUrl = ftpService.uploadFileToCache(fileName, newRenamedFile.getAbsolutePath());
 
             return new FileDownloadProperties(CACHE_IDENTIFIER, fileUrl, Math.toIntExact(fileSize), md5, 10);
 
@@ -143,6 +146,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
 
         } finally {
             Utils.deleteFile(cacheFile);
+            Utils.deleteFile(newRenamedFile);
         }
     }
 }

@@ -202,4 +202,15 @@ public interface Utils {
 
         return generatedFile;
     }
+
+    static File renameFile(File origin, String fileName) {
+        File newFile = new File(System.getProperty(System.getProperty("java.io.tmpdir"), fileName));
+        boolean success = origin.renameTo(newFile);
+
+        if (!success) {
+            throw new IORuntimeException(String.format("Failed to rename file, origin: %s, old :%s", newFile.getAbsoluteFile(), origin.getAbsoluteFile()));
+        }
+
+        return newFile;
+    }
 }
