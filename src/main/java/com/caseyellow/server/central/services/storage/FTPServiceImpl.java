@@ -1,22 +1,14 @@
 package com.caseyellow.server.central.services.storage;
 
+import com.caseyellow.server.central.common.Utils;
 import com.caseyellow.server.central.exceptions.IORuntimeException;
-import org.apache.commons.net.PrintCommandListener;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 @Profile("prod")
 @Service
@@ -24,84 +16,35 @@ public class FTPServiceImpl implements FTPService {
 
     private Logger logger = Logger.getLogger(FTPServiceImpl.class);
 
-    private static SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("dd_MM_yyyy");
+    private final static String FTP_COMMAND = "/home/ec2-user/ftp %s %s"; // ftp <File path> <Directory>
+    private final static SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("dd_MM_yyyy");
 
     private final static String DOMAIN = "http://yellow.tempurl.co.il/";
-    private final static int PORT = 21;
-    private final static String SERVER = "yellow.tempurl.co.il";
-    private final static String USER = "case@yellow.tempurl.co.il";
 
-    @Value("${ftp_service_key}")
-    private String password;
-
-    private FTPClient ftp;
-
-    @PostConstruct
-    public void init() throws IOException {
-        ftp = new FTPClient();
-
-        ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
-        ftp.connect(SERVER, PORT);
-
-        if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-            ftp.disconnect();
-            throw new IOException("Exception in connecting to FTP Server");
-        }
-
-        boolean connectSuccessful = ftp.login(USER, password);
-
-        if (!connectSuccessful) {
-            throw new IOException(String.format("Failed to connect to FTP Server with replay code: %s", ftp.getReplyCode()));
-        }
-
-        logger.info(String.format("Connect to Ftp service successfully with replay code: %s", ftp.getReplyCode()));
-    }
-
-    @PreDestroy
-    public void close() throws IOException {
-        ftp.disconnect();
-    }
-
-    private synchronized String getDirectory() throws IOException {
-        FTPFile[] directories = ftp.listDirectories();
-        String currentDirectory = DAY_FORMAT.format(new Date());
-
-        Optional<String> directoryExists =
-            Stream.of(directories)
-                  .map(FTPFile::getName)
-                  .filter(dirName -> dirName.equals(currentDirectory))
-                  .findFirst();
-
-        if (!directoryExists.isPresent()) {
-            ftp.makeDirectory(currentDirectory);
-            logger.info(String.format("create directory: %s", currentDirectory));
-        }
-
-        return currentDirectory;
-    }
 
     @Override
     public String uploadFileToCache(String fileName, File fileToUpload) throws IORuntimeException {
-        String filePath = null;
+        String filePath = renameFile(fileToUpload, fileName);
+        String directory = getDirectory();
 
-        try (InputStream inputStream = new FileInputStream(fileToUpload)) {
+        logger.info("Upload file: " + filePath);
+        Utils.executeCommand(String.format(FTP_COMMAND, filePath, directory));
 
-            filePath = String.format("%s/%s", getDirectory(), fileName);
-            boolean isUploadSucceed = ftp.storeFile(filePath, inputStream);
+        return DOMAIN + directory + "/" + fileName;
+    }
 
-            if (!isUploadSucceed) {
-                throw new IOException(String.format("Upload failed with code:%s ", ftp.getReplyCode()));
-            }
+    private synchronized String getDirectory() {
+        return DAY_FORMAT.format(new Date());
+    }
 
-            logger.info(String.format("Uploaded cache file: %s", filePath));
+    private String renameFile(File origin, String fileName) {
+        File newFile = new File(System.getProperty(System.getProperty("java.io.tmpdir"), fileName));
+        boolean success = origin.renameTo(newFile);
 
-        } catch (IOException e) {
-            String errorMessage = String.format("Failed to upload cache file: %s located: %s, cause: %s", filePath, fileToUpload.getAbsolutePath(), e.getMessage());
-            logger.error(errorMessage, e);
-
-            throw new IORuntimeException(errorMessage, e);
+        if (!success) {
+            throw new IORuntimeException(String.format("Failed to rename file, origin: %s, old :%s", newFile.getAbsoluteFile(), origin.getAbsoluteFile()));
         }
 
-        return DOMAIN + filePath;
+        return newFile.getAbsolutePath();
     }
 }

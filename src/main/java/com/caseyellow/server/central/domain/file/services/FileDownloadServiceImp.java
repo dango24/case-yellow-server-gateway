@@ -32,7 +32,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
 
     private static final int ESOTERIC_FILE_SIZE = 1600000; // The number of iterations to generate a 30MB file size
     private static final String S3_ESOTERIC_FILES_BUCKET_PREFIX = "esoteric-files";
-    public static final String CACHE_IDENTIFIER = "cache";
+    public static final String CACHE_IDENTIFIER = "israel_cache";
 
     @Value("${num_of_comparison_per_test:3}")
     private int numOfComparisonPerTest;
@@ -70,7 +70,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
         }
 
         nextFileDownloadIdentifiers = fileDownloadInfoCounterRepository.getActiveIdentifiers();
-//        nextFileDownloadIdentifiers.add(CACHE_IDENTIFIER);
+        nextFileDownloadIdentifiers.add(CACHE_IDENTIFIER);
         nextFileDownloadIdentifiers.addAll(esotericFilesLocations);
 
         Collections.shuffle(nextFileDownloadIdentifiers);
@@ -133,8 +133,8 @@ public class FileDownloadServiceImp implements FileDownloadService {
             cacheFile = Utils.generateLargeFile(ESOTERIC_FILE_SIZE);
             long fileSize = cacheFile.length();
             String md5 = convertToMD5(cacheFile);
-            String filePath = String.format("%s-%s", CACHE_IDENTIFIER, md5);
-            String fileUrl = ftpService.uploadFileToCache(filePath, cacheFile);
+            String fileName = String.format("%s-%s", CACHE_IDENTIFIER, md5);
+            String fileUrl = ftpService.uploadFileToCache(fileName, cacheFile);
 
             return new FileDownloadProperties(CACHE_IDENTIFIER, fileUrl, Math.toIntExact(fileSize), md5, 10);
 
