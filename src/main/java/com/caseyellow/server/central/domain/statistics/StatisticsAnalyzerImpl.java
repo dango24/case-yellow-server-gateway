@@ -266,8 +266,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
         List<UserTestsStats> doneUsers =
             users.stream()
-                 .filter(user -> user.getLanCount() > TEST_COUNT_PER_CONNECTION)
-                 .filter(user -> user.getWifiCount() > TEST_COUNT_PER_CONNECTION)
+                 .filter(user -> FullyDoneUsers(user) || FinishOneConnection(user))
                  .sorted(Comparator.comparing(UserTestsStats::getName))
                  .collect(toList());
 
@@ -279,6 +278,14 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                  .collect(toList());
 
         emailService.sendUsersDoneTests(doneUsers, activeRunningUsers);
+    }
+
+    private boolean FinishOneConnection(UserTestsStats user) {
+        return user.getLanCount() >= 3000 || user.getWifiCount() >= 3000;
+    }
+
+    private boolean FullyDoneUsers(UserTestsStats user) {
+        return user.getLanCount() > TEST_COUNT_PER_CONNECTION &&  user.getWifiCount() > TEST_COUNT_PER_CONNECTION;
     }
 
     @Override
