@@ -84,7 +84,7 @@ public class FileDownloadServiceImp implements FileDownloadService {
 
     @Override
     public boolean runClassicTest() {
-        int coinToss = new Random().nextInt(4);
+        int coinToss = new Random().nextInt(12);
 
         return coinToss != 0;
     }
