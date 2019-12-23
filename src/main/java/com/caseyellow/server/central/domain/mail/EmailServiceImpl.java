@@ -106,8 +106,8 @@ public class EmailServiceImpl implements EmailService {
         String activeUsersMessage = buildActiveRunningUsersMailBody(activeRunningUsers);
         String doneUsersMessage = buildDoneUsersMailBody(doneUsers);
 
-//        activeUsersMessage = addTabPrefix(activeUsersMessage);
-//        doneUsersMessage = addTabPrefix(doneUsersMessage);
+        activeUsersMessage = addTabPrefix(activeUsersMessage);
+        doneUsersMessage = addTabPrefix(doneUsersMessage);
 
         String message = activeUsersMessage + "\n\n";
         message += doneUsersMessage;
