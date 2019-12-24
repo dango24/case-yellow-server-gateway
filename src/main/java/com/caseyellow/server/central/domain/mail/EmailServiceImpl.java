@@ -145,7 +145,7 @@ public class EmailServiceImpl implements EmailService {
         stringBuilder.append(
             doneUsers.stream()
                      .map(UserTestsStats::getName)
-                     .collect(Collectors.joining("\n")));
+                     .collect(Collectors.joining("\n\t")));
 
         return stringBuilder.toString();
     }
@@ -166,7 +166,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private String ActiveRunningUserMessage(UserTestsStats userTestsStats) {
-        return String.format("%s: LAN: %d, Wifi: %d\n", userTestsStats.getName(), userTestsStats.getLanCount(), userTestsStats.getWifiCount());
+        return String.format("\t%s: LAN: %d, Wifi: %d\n", userTestsStats.getName(), userTestsStats.getLanCount(), userTestsStats.getWifiCount());
     }
 
     private String addTabPrefix(String str) {
