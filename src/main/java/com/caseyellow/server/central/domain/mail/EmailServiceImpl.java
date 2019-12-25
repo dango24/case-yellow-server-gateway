@@ -138,9 +138,9 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private String buildDoneUsersMailBody(List<UserTestsStats> doneUsers) {
-        StringBuilder stringBuilder = new StringBuilder("\n\t");
+        StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(String.format("Done users: %d\n\n", doneUsers.size()));
+        stringBuilder.append(String.format("Done users: %d\n\n\t", doneUsers.size()));
 
         stringBuilder.append(
             doneUsers.stream()
