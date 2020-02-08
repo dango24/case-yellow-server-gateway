@@ -14,6 +14,7 @@ import org.apache.log4j.MDC;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -212,5 +213,10 @@ public interface Utils {
         }
 
         return newFile;
+    }
+
+
+    static String readFile(String path) throws IOException {
+        return org.apache.commons.io.FileUtils.readFileToString(new File(path), Charset.forName("UTF-8"));
     }
 }

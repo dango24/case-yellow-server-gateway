@@ -36,4 +36,9 @@ public class FileStorageStub implements FileStorageService {
     public boolean isObjectExist(String path) {
         return false;
     }
+
+    @Override
+    public boolean isObjectExist(String bucket, String path) {
+        return false;
+    }
 }

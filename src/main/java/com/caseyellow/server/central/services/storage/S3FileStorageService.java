@@ -122,6 +122,12 @@ public class S3FileStorageService implements FileStorageService {
         return client.doesObjectExist(awsConfiguration.bucketName(), path);
     }
 
+    @Override
+    public boolean isObjectExist(String bucket, String path) {
+        AmazonS3 client = s3Clients.get(DEFAULT_REGION);
+        return client.doesObjectExist(bucket, path);
+    }
+
     public boolean isHealthy() {
         AmazonS3 client = s3Clients.get(DEFAULT_REGION);
         if (client.doesObjectExist(awsConfiguration.bucketName(), awsConfiguration.healthPath())) {

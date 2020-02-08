@@ -10,4 +10,5 @@ public interface FileStorageService {
     String uploadFileToBucket(String region, String bucketName, String path, File fileToUpload);
     PreSignedUrl generatePreSignedUrl(String fileKey);
     boolean isObjectExist(String path);
+    boolean isObjectExist(String bucket, String path);
 }
