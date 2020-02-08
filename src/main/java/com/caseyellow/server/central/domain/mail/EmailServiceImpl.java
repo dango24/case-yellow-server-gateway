@@ -106,8 +106,8 @@ public class EmailServiceImpl implements EmailService {
         String activeUsersMessage = buildActiveRunningUsersMailBody(activeRunningUsers);
         String doneUsersMessage = buildDoneUsersMailBody(doneUsers);
 
-//        activeUsersMessage = addTabPrefix(activeUsersMessage);
-//        doneUsersMessage = addTabPrefix(doneUsersMessage);
+        activeUsersMessage = addTabPrefix(activeUsersMessage);
+        doneUsersMessage = addTabPrefix(doneUsersMessage);
 
         String message = activeUsersMessage + "\n\n";
         message += doneUsersMessage;
@@ -140,12 +140,12 @@ public class EmailServiceImpl implements EmailService {
     private String buildDoneUsersMailBody(List<UserTestsStats> doneUsers) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(String.format("Done users: %d\n\n", doneUsers.size()));
+        stringBuilder.append(String.format("Done users: %d\n\n\t", doneUsers.size()));
 
         stringBuilder.append(
             doneUsers.stream()
                      .map(UserTestsStats::getName)
-                     .collect(Collectors.joining("\n")));
+                     .collect(Collectors.joining("\n\t")));
 
         return stringBuilder.toString();
     }
@@ -166,7 +166,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private String ActiveRunningUserMessage(UserTestsStats userTestsStats) {
-        return String.format("%s: LAN: %d, Wifi: %d\n", userTestsStats.getName(), userTestsStats.getLanCount(), userTestsStats.getWifiCount());
+        return String.format("\t%s: LAN: %d, Wifi: %d\n", userTestsStats.getName(), userTestsStats.getLanCount(), userTestsStats.getWifiCount());
     }
 
     private String addTabPrefix(String str) {
