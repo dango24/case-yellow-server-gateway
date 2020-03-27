@@ -15,16 +15,18 @@ public class UserTestsStats implements Comparable<UserTestsStats> {
     private boolean isActive;
     private long lanCount;
     private long wifiCount;
+    private String spotMasterReferral;
 
     private UserTestsStats(UserTestsCountBuilder userTestsCountBuilder) {
         this.name = userTestsCountBuilder.getName();
         this.isActive = userTestsCountBuilder.isActive();
         this.lanCount = userTestsCountBuilder.getLanCount();
         this.wifiCount = userTestsCountBuilder.getWifiCount();
+        this.spotMasterReferral = userTestsCountBuilder.getSpotMasterReferral();
     }
 
-    public static UserTestsCountBuilder createUserTestsCountBuilder(String user, boolean enable) {
-        return UserTestsCountBuilder.createUserTestsCountBuilder(user, enable);
+    public static UserTestsCountBuilder createUserTestsCountBuilder(String user, boolean enable, String spotMasterReferral) {
+        return UserTestsCountBuilder.createUserTestsCountBuilder(user, enable, spotMasterReferral);
     }
 
     @Override
@@ -45,17 +47,24 @@ public class UserTestsStats implements Comparable<UserTestsStats> {
         private boolean isActive;
         private long lanCount;
         private long wifiCount;
+        private String spotMasterReferral;
 
-        private static UserTestsCountBuilder createUserTestsCountBuilder(String user, boolean enable) {
+        private static UserTestsCountBuilder createUserTestsCountBuilder(String user, boolean enable, String spotMasterReferral) {
             UserTestsCountBuilder userTestsCountBuilder = new UserTestsCountBuilder();
             userTestsCountBuilder.setName(user);
             userTestsCountBuilder.setActive(enable);
+            userTestsCountBuilder.setSpotMasterReferral(spotMasterReferral);
 
             return userTestsCountBuilder;
         }
 
         public UserTestsCountBuilder addLanCount(long lanCount) {
             this.lanCount = lanCount;
+            return this;
+        }
+
+        public UserTestsCountBuilder addSpotMasterReferral(String spotMasterReferral) {
+            this.spotMasterReferral = spotMasterReferral;
             return this;
         }
 

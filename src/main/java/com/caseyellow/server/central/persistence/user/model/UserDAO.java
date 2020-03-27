@@ -25,6 +25,9 @@ public class UserDAO {
     private long dateCreated;
     private String phone;
 
+    @Column(name = "spot_master_referral")
+    private String spotMasterReferral;
+
     @Column(name = "has_computer")
     @JsonProperty("has_computer")
     private Boolean hasComputer;

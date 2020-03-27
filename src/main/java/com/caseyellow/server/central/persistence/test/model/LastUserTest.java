@@ -17,6 +17,7 @@ public class LastUserTest {
     private String user;
     private long timestamp;
     private String phone;
+    private String spotMasterReferral;
 
     public LastUserTest(String user, long timestamp) {
         this.user = user;

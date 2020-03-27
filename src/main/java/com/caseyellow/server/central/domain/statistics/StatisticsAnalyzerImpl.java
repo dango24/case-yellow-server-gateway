@@ -166,11 +166,10 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
         List<UserDAO> users =
                 userService.getAllUsers()
-                        .stream()
-                        .filter(user -> !user.getUserName().equals("dev"))
-                        .filter(user -> !user.getUserName().equals("dev2"))
-                        .filter(UserDAO::isEnabled)
-                        .collect(Collectors.toList());
+                          .stream()
+                          .filter(user -> !user.getUserName().toLowerCase().startsWith("dev"))
+                          .filter(UserDAO::isEnabled)
+                          .collect(Collectors.toList());
 
 
         List<LastUserTest> allUsersTests = testService.lastUserTests();
@@ -178,6 +177,8 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
 
         if (!lastUserTests.isEmpty()) {
             emailService.sendEmails(lastUserTests);
+        } else {
+            emailService.sendEmails(Collections.emptyList());
         }
     }
 
@@ -256,9 +257,8 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
         List<UserTestsStats> users =
                 userService.getAllUsers()
                            .stream()
-                           .filter(user -> !user.getUserName().equals("dev"))
-                           .filter(user -> !user.getUserName().equals("dev2"))
-                           .map(userDAO -> UserTestsStats.createUserTestsCountBuilder(userDAO.getUserName(), userDAO.isEnabled()))
+                           .filter(user -> !user.getUserName().toLowerCase().startsWith("dev"))
+                           .map(userDAO -> UserTestsStats.createUserTestsCountBuilder(userDAO.getUserName(), userDAO.isEnabled(), userDAO.getSpotMasterReferral()))
                            .map(userTestBuilder -> userTestBuilder.addLanCount(testService.userConnectionCount(userTestBuilder.getName(), "LAN")))
                            .map(userTestBuilder -> userTestBuilder.addWifiCount(testService.userConnectionCount(userTestBuilder.getName(), "Wifi")))
                            .map(UserTestsStats.UserTestsCountBuilder::build)
@@ -423,6 +423,7 @@ public class StatisticsAnalyzerImpl implements StatisticsAnalyzer {
                              .collect(Collectors.toList());
 
         lastUserTests.forEach(user -> user.setPhone(activeUsers.get(user.getUser()).getPhone()));
+        lastUserTests.forEach(user -> user.setSpotMasterReferral(activeUsers.get(user.getUser()).getSpotMasterReferral()));
 
         return lastUserTests;
     }

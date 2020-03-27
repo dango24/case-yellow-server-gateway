@@ -30,13 +30,19 @@ ftp_service_key: nokey
 # Email service
 email.username: caseyellow22@gmail.com
 
-emails:
+emailUsers:
   - name: dan
     email: dangolan24@gmail.com
     role: admin
+
   - name: oren
     email: koriatoren@gmail.com
-    role: admin
+    role: analyst
+
   - name: ori
     email: oriamitay82@gmail.com
     role: lawyer
+
+  - name: david
+    role: spotMaster
+    email: david@gmail.com

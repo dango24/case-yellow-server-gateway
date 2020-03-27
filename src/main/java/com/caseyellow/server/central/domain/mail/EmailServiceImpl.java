@@ -26,6 +26,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Objects.nonNull;
+
 @Slf4j
 @Service
 @Profile("prod")
@@ -51,7 +53,7 @@ public class EmailServiceImpl implements EmailService {
     private String emailUser;
 
     @Getter @Setter
-    private List<EmailUser> emails;
+    private List<EmailUser> emailUsers;
 
     private TestService testService;
     private AmazonSimpleEmailService emailService;
@@ -75,36 +77,50 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendEmails(List<LastUserTest> lastUserTests) {
-        if (CollectionUtils.isEmpty(lastUserTests)) {
-            return;
-        }
+        emailUsers.stream()
+                .filter(emailUser -> emailUser.getRole().equals("admin") || emailUser.getRole().equals("spotMaster"))
+                .forEach(emailUser -> sendEmails(emailUser, lastUserTests));
+    }
+
+    public void sendEmails(EmailUser emailUser, List<LastUserTest> lastUserTests) {
 
         String subject = String.format("%s - %s", MISSING_IN_ACTION_EMAIL_SUBJECT, DAY_FORMAT.format(new Date()));
-        String mailBody = buildLastUserTestsMailBody(lastUserTests);
-        log.info(String.format("Send email to: %s with body: %s", emails, mailBody));
+        String mailBody;
 
-        emails.stream()
-              .filter(user -> user.getRole().equals("admin"))
-              .forEach(email -> sendMessage(email.getEmail(), subject, mailBody));
+        if (CollectionUtils.isEmpty(lastUserTests)) {
+            mailBody = "Everything is running smoothly, you can go to a party...";
+        } else {
+            mailBody = buildLastUserTestsMailBody(emailUser, lastUserTests);
+        }
+
+        log.info(String.format("Send email to: %s with body: %s", emailUsers, mailBody));
+
+        sendMessage(emailUser.getEmail(), subject, mailBody);
     }
 
     @Override
     public void sendImageSanity(String imageSanityPath) {
         String subject = String.format("%s - %s", SANITY_EMAIL_SUBJECT, DAY_FORMAT.format(new Date()));
 
-        emails.stream()
-              .filter(user -> user.getRole().equals("admin"))
-              .forEach(user -> sendMessage(user.getEmail(), subject, imageSanityPath));
+        emailUsers.stream()
+                  .filter(user -> user.getRole().equals("admin"))
+                  .forEach(user -> sendMessage(user.getEmail(), subject, imageSanityPath));
     }
 
     @Override
     public void sendUsersDoneTests(List<UserTestsStats> doneUsers, List<UserTestsStats> activeRunningUsers) {
+        emailUsers.stream()
+                  .filter(emailUser -> emailUser.getRole().equals("admin") || emailUser.getRole().equals("spotMaster"))
+                  .forEach(emailUser -> sendUsersDoneTestEmail(emailUser, doneUsers, activeRunningUsers));
+    }
+
+    private void sendUsersDoneTestEmail(EmailUser emailUser, List<UserTestsStats> doneUsers, List<UserTestsStats> activeRunningUsers) {
         String mailBody;
         String subject = String.format("%s - %s", "Users Tests Status", DAY_FORMAT.format(new Date()));
 
 
-        String activeUsersMessage = buildActiveRunningUsersMailBody(activeRunningUsers);
-        String doneUsersMessage = buildDoneUsersMailBody(doneUsers);
+        String activeUsersMessage = buildActiveRunningUsersMailBody(emailUser, activeRunningUsers);
+        String doneUsersMessage = buildDoneUsersMailBody(emailUser, doneUsers);
 
         activeUsersMessage = addTabPrefix(activeUsersMessage);
         doneUsersMessage = addTabPrefix(doneUsersMessage);
@@ -114,38 +130,60 @@ public class EmailServiceImpl implements EmailService {
 
         mailBody = message;
 
-        emails.stream()
-              .filter(email -> !email.getRole().equals("preacher"))
-              .forEach(email -> sendMessage(email.getEmail(), subject, mailBody));
+        sendMessage(emailUser.getEmail(), subject, mailBody);
     }
 
-    private String buildLastUserTestsMailBody(List<LastUserTest> lastUserTests) {
+    private String buildLastUserTestsMailBody(EmailUser emailUser,List<LastUserTest> lastUserTests) {
 
         return lastUserTests.stream()
+                            .filter(lastUserTest -> emailUser.getRole().equals("admin") || isSpotMasterUser(emailUser, lastUserTest))
                             .map(LastUserTest::toString)
                             .collect(Collectors.joining("\n\n"));
     }
 
-    private String buildActiveRunningUsersMailBody(List<UserTestsStats> activeRunningUsers) {
+    private String buildActiveRunningUsersMailBody(EmailUser emailUser, List<UserTestsStats> activeRunningUsers) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(String.format("Active users: %d\n\n", activeRunningUsers.size()));
-        activeRunningUsers.stream()
-                      .map(this::ActiveRunningUserMessage)
-                      .forEach(stringBuilder::append);
+        List<UserTestsStats> emailActiveRunningUsers =
+                activeRunningUsers.stream()
+                                  .filter(userTestsStats -> emailUser.getRole().equals("admin") || isSpotMasterUser(emailUser, userTestsStats))
+                                  .collect(Collectors.toList());
+
+        stringBuilder.append(String.format("Active users: %d\n\n", emailActiveRunningUsers.size()));
+
+        emailActiveRunningUsers.stream()
+                               .map(this::ActiveRunningUserMessage)
+                               .forEach(stringBuilder::append);
 
         return stringBuilder.toString();
     }
 
-    private String buildDoneUsersMailBody(List<UserTestsStats> doneUsers) {
+    private boolean isSpotMasterUser(EmailUser emailUser, LastUserTest lastUserTest) {
+        return emailUser.getRole().equals("spotMaster") &&
+               nonNull(lastUserTest.getSpotMasterReferral()) &&
+               lastUserTest.getSpotMasterReferral().equals(emailUser.getName());
+    }
+
+    private boolean isSpotMasterUser(EmailUser emailUser, UserTestsStats userTestsStats) {
+        return emailUser.getRole().equals("spotMaster") &&
+               nonNull(userTestsStats.getSpotMasterReferral()) &&
+               userTestsStats.getSpotMasterReferral().equals(emailUser.getName());
+    }
+
+    private String buildDoneUsersMailBody(EmailUser emailUser, List<UserTestsStats> doneUsers) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(String.format("Done users: %d\n\n\t", doneUsers.size()));
+        List<UserTestsStats> emailDoneUsers =
+                doneUsers.stream()
+                        .filter(doneUser -> emailUser.getRole().equals("admin") || isSpotMasterUser(emailUser, doneUser))
+                        .collect(Collectors.toList());
+
+        stringBuilder.append(String.format("Done users: %d\n\n\t", emailDoneUsers.size()));
 
         stringBuilder.append(
-            doneUsers.stream()
-                     .map(UserTestsStats::getName)
-                     .collect(Collectors.joining("\n\t")));
+                emailDoneUsers.stream()
+                              .map(UserTestsStats::getName)
+                              .collect(Collectors.joining("\n\t")));
 
         return stringBuilder.toString();
     }
