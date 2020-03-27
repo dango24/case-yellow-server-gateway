@@ -43,6 +43,6 @@ emailUsers:
     email: oriamitay82@gmail.com
     role: lawyer
 
-  - name: david
-    role: spotMaster
-    email: david@gmail.com
+#  - name: david
+#    role: spotMaster
+#    email: david@gmail.com
